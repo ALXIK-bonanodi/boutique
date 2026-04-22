@@ -16,7 +16,6 @@
       --fuchsia-lt: #e0558a;
       --fuchsia-dk: #8f1a4e;
       --ink:        #1a1510;
-      --ink-lt:     #2c2318;
       --cream:      #faf5e8;
       --silver:     #9a9070;
       --glass:      rgba(232,201,122,0.04);
@@ -26,89 +25,39 @@
       --font-mono:    'DM Mono', monospace;
     }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--ink); color: var(--cream);
-      font-family: var(--font-body); font-size: 18px;
-      line-height: 1.6; overflow-x: hidden;
-    }
-    body::before {
-      content: ''; position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.03; pointer-events: none; z-index: 9999;
-    }
+    body { background: var(--ink); color: var(--cream); font-family: var(--font-body); font-size: 18px; line-height: 1.6; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.03; pointer-events: none; z-index: 9999; }
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-thumb { background: var(--fuchsia); }
 
     /* HEADER */
-    header {
-      position: sticky; top: 0; z-index: 300;
-      background: rgba(26,21,16,0.95); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .header-top {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.55rem 2.5rem; min-height: 54px;
-    }
+    header { position: sticky; top: 0; z-index: 300; background: rgba(26,21,16,0.95); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 2.5rem; min-height: 54px; }
     .logo-link { text-decoration: none; display: flex; align-items: center; gap: 0.7rem; }
     .logo-img { height: 38px; width: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); }
     .logo-text { display: flex; flex-direction: column; line-height: 1; }
     .logo-text .l1 { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.2em; color: var(--sand); }
     .logo-text .l2 { font-family: var(--font-body); font-style: italic; font-weight: 300; font-size: 0.62rem; letter-spacing: 0.32em; color: var(--fuchsia-lt); text-transform: uppercase; }
 
-    .nav-carousel-wrap {
-      position: relative; overflow: hidden;
-      border-top: 1px solid var(--border); padding: 0 2.5rem;
-      background: rgba(26,21,16,0.6);
-    }
+    .nav-carousel-wrap { position: relative; overflow: hidden; border-top: 1px solid var(--border); padding: 0 2.5rem; background: rgba(26,21,16,0.6); }
     .nav-carousel { display: flex; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; }
     .nav-carousel::-webkit-scrollbar { display: none; }
-    .nav-link {
-      display: flex; align-items: center; gap: 0.45rem;
-      padding: 0.5rem 1.3rem;
-      font-family: var(--font-mono); font-size: 0.58rem;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--silver); text-decoration: none;
-      border-right: 1px solid var(--border);
-      white-space: nowrap; flex-shrink: 0;
-      transition: color 0.2s, background 0.2s; position: relative;
-    }
+    .nav-link { display: flex; align-items: center; gap: 0.45rem; padding: 0.5rem 1.3rem; font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--silver); text-decoration: none; border-right: 1px solid var(--border); white-space: nowrap; flex-shrink: 0; transition: color 0.2s, background 0.2s; position: relative; }
     .nav-link:first-child { border-left: 1px solid var(--border); }
     .nav-link:hover, .nav-link.active { color: var(--sand); background: rgba(232,201,122,0.04); }
-    .nav-link.active::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px; background: var(--fuchsia);
-    }
-    .nav-carousel-wrap::before, .nav-carousel-wrap::after {
-      content: ''; position: absolute; top: 0; bottom: 0; width: 2rem;
-      pointer-events: none; z-index: 1;
-    }
+    .nav-link.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--fuchsia); }
+    .nav-carousel-wrap::before, .nav-carousel-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2rem; pointer-events: none; z-index: 1; }
     .nav-carousel-wrap::before { left: 0; background: linear-gradient(to right, rgba(26,21,16,0.95), transparent); }
-    .nav-carousel-wrap::after  { right: 0; background: linear-gradient(to left, rgba(26,21,16,0.95), transparent); }
+    .nav-carousel-wrap::after  { right: 0; background: linear-gradient(to left,  rgba(26,21,16,0.95), transparent); }
 
     /* HERO */
-    .hero {
-      padding: 3rem 2.5rem 2.5rem;
-      display: grid; grid-template-columns: 1fr auto;
-      gap: 2rem; align-items: center;
-      border-bottom: 1px solid var(--border);
-      position: relative; overflow: hidden;
-    }
-    .hero::after {
-      content: '✦'; position: absolute; right: 130px; top: 50%; transform: translateY(-50%);
-      font-size: 12rem; color: var(--fuchsia); opacity: 0.05; pointer-events: none;
-    }
+    .hero { padding: 3rem 2.5rem 2.5rem; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .hero::after { content: '✦'; position: absolute; right: 130px; top: 50%; transform: translateY(-50%); font-size: 12rem; color: var(--fuchsia); opacity: 0.05; pointer-events: none; }
     .hero-eyebrow { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--fuchsia-lt); margin-bottom: 0.7rem; }
     .hero-title { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 6rem); line-height: 0.88; letter-spacing: 0.05em; color: var(--sand); margin-bottom: 0.6rem; }
     .hero-title em { font-family: var(--font-body); font-style: italic; font-weight: 300; font-size: 0.42em; color: var(--fuchsia-lt); letter-spacing: 0.15em; }
     .hero-sub { font-size: 1rem; font-weight: 300; color: var(--silver); max-width: 44ch; line-height: 1.75; margin-bottom: 1.5rem; }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      background: var(--fuchsia); color: var(--cream);
-      font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
-      text-decoration: none; padding: 0.75rem 1.5rem; border: none; cursor: pointer;
-      clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-      transition: background 0.2s, transform 0.15s;
-    }
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--fuchsia); color: var(--cream); font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; padding: 0.75rem 1.5rem; border: none; cursor: pointer; clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); transition: background 0.2s, transform 0.15s; }
     .btn-primary:hover { background: var(--fuchsia-lt); transform: translateY(-2px); }
     .hero-logo-big { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; opacity: 0.92; box-shadow: 0 0 40px rgba(196,40,110,0.3); border: 1px solid var(--border); position: relative; z-index: 1; }
 
@@ -119,33 +68,18 @@
     .marquee .sep { color: var(--border); }
     @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-    /* PLACEHOLDER SECTIONS */
-    .section-placeholder {
-      display: none; padding: 6rem 2.5rem;
-      flex-direction: column; align-items: center; gap: 1.5rem; text-align: center;
-    }
+    /* PLACEHOLDER */
+    .section-placeholder { display: none; padding: 6rem 2.5rem; flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
     .section-placeholder.active { display: flex; }
     .placeholder-icon { font-size: 3rem; opacity: 0.3; }
     .placeholder-title { font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.2em; color: var(--sand); }
     .placeholder-sub { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--silver); max-width: 40ch; line-height: 1.8; }
 
     /* FILTERS */
-    .filters-bar {
-      padding: 0.85rem 2.5rem;
-      display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 88px; z-index: 200;
-      background: rgba(26,21,16,0.97); backdrop-filter: blur(12px);
-    }
+    .filters-bar { padding: 0.85rem 2.5rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); position: sticky; top: 88px; z-index: 200; background: rgba(26,21,16,0.97); backdrop-filter: blur(12px); }
     .filters-label { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--silver); flex-shrink: 0; }
     .filter-chips { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-    .chip {
-      font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.28rem 0.8rem; border: 1px solid var(--border); background: transparent;
-      color: var(--silver); cursor: pointer;
-      clip-path: polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));
-      transition: all 0.2s;
-    }
+    .chip { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.28rem 0.8rem; border: 1px solid var(--border); background: transparent; color: var(--silver); cursor: pointer; clip-path: polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px)); transition: all 0.2s; }
     .chip:hover { border-color: var(--fuchsia); color: var(--cream); }
     .chip.active { background: var(--fuchsia); border-color: var(--fuchsia); color: var(--cream); }
 
@@ -160,13 +94,7 @@
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1px; }
 
     /* CARD */
-    .product-card {
-      position: relative; background: var(--glass);
-      border: 1px solid var(--border); overflow: hidden;
-      cursor: pointer; transition: border-color 0.3s;
-      aspect-ratio: 3/4; display: flex; flex-direction: column;
-      animation: fadeUp 0.35s ease both;
-    }
+    .product-card { position: relative; background: var(--glass); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: border-color 0.3s; aspect-ratio: 3/4; display: flex; flex-direction: column; animation: fadeUp 0.35s ease both; }
     .product-card:hover { border-color: rgba(196,40,110,0.5); z-index: 2; }
     .product-card:hover .card-overlay { opacity: 1; }
     .product-card:hover .card-img { transform: scale(1.05); }
@@ -177,15 +105,8 @@
     .card-img-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; }
     .card-img-placeholder svg { width: 30px; height: 30px; opacity: 0.15; color: var(--sand); }
     .card-img-placeholder span { font-family: var(--font-mono); font-size: 0.46rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--silver); }
-
     .card-overlay { position: absolute; inset: 0; background: rgba(26,21,16,0.72); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
-    .card-overlay-btn {
-      font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase;
-      border: 1px solid var(--sand); color: var(--sand); padding: 0.5rem 1.1rem;
-      background: transparent; cursor: pointer;
-      clip-path: polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
-      transition: background 0.2s, color 0.2s;
-    }
+    .card-overlay-btn { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; border: 1px solid var(--sand); color: var(--sand); padding: 0.5rem 1.1rem; background: transparent; cursor: pointer; clip-path: polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px)); transition: background 0.2s, color 0.2s; }
     .card-overlay-btn:hover { background: var(--fuchsia); border-color: var(--fuchsia); color: var(--cream); }
 
     .card-badge { position: absolute; top: 0.6rem; left: 0.6rem; font-family: var(--font-mono); font-size: 0.46rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.16rem 0.42rem; background: rgba(26,21,16,0.88); border: 1px solid var(--border); }
@@ -207,20 +128,15 @@
     .stock-out { color: var(--fuchsia); opacity: 0.75; }
     .stock-cmd { color: var(--fuchsia-lt); }
 
-    /* EMPTY */
     .boutique-empty { padding: 6rem 2.5rem; text-align: center; }
     .boutique-empty p { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--silver); }
 
-    /* STATES */
     .loading-state { padding: 6rem 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
     .spinner { width: 32px; height: 32px; border: 1px solid var(--border); border-top-color: var(--fuchsia); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to{transform:rotate(360deg)} }
     .loading-text { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--silver); }
     .error-state { padding: 6rem 2.5rem; text-align: center; }
     .error-state p { font-family: var(--font-mono); font-size: 0.66rem; color: var(--fuchsia); letter-spacing: 0.1em; }
-
-    /* DEBUG */
-    #debug-box { display:none; margin: 1rem 2.5rem; padding: 1rem; background: rgba(196,40,110,0.08); border: 1px solid rgba(196,40,110,0.3); font-family: var(--font-mono); font-size: 0.6rem; color: var(--fuchsia-lt); letter-spacing: 0.05em; }
 
     footer { border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .foot-logo { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 0.2em; color: var(--sand); opacity: 0.35; }
@@ -246,7 +162,7 @@
   </div>
   <div class="nav-carousel-wrap">
     <nav class="nav-carousel">
-      <a href="#" class="nav-link active" data-section="boutique"><span>✦</span> Accueil</a>
+      <a href="#" class="nav-link active" data-section="boutique" id="nav-accueil"><span>✦</span> Accueil</a>
       <a href="#" class="nav-link" data-section="boutique"><span>◆</span> Boutique</a>
       <a href="#" class="nav-link" data-section="poisson"><span>🐟</span> Personnaliser mon poisson</a>
       <a href="#" class="nav-link" data-section="bundle"><span>✧</span> Personnaliser mon bundle</a>
@@ -275,7 +191,6 @@
   </div>
 </div>
 
-<!-- BOUTIQUE -->
 <div id="section-boutique">
   <div class="filters-bar">
     <span class="filters-label">Filtrer —</span>
@@ -287,7 +202,6 @@
       <button class="chip" data-filter="Porte">Porte-clefs</button>
     </div>
   </div>
-  <div id="debug-box"></div>
   <div class="loading-state" id="loading"><div class="spinner"></div><p class="loading-text">Chargement des créations…</p></div>
   <div class="error-state" id="error-state" style="display:none"><p id="error-msg"></p></div>
   <div id="collections-wrap" style="display:none"></div>
@@ -296,7 +210,7 @@
 <div id="section-poisson" class="section-placeholder">
   <div class="placeholder-icon">🐟</div>
   <p class="placeholder-title">PERSONNALISER MON POISSON</p>
-  <p class="placeholder-sub">Le configurateur de poisson perles arrive bientôt — choisis les couleurs de chaque partie en visualisation temps réel.</p>
+  <p class="placeholder-sub">Le configurateur arrive bientôt — choisis les couleurs de chaque partie en temps réel.</p>
 </div>
 
 <div id="section-bundle" class="section-placeholder">
@@ -319,14 +233,19 @@
 
   function getLC() { try { return JSON.parse(localStorage.getItem('bn_content')||'{}'); } catch { return {}; } }
 
-  /* NAVIGATION */
+  /* NAV */
   function showSection(name) {
-    ['boutique','poisson','bundle'].forEach(s => {
+    document.getElementById('section-boutique').style.display = name==='boutique' ? 'block' : 'none';
+    ['poisson','bundle'].forEach(s => {
       const el = document.getElementById('section-'+s);
-      if (s === 'boutique') el.style.display = s===name ? 'block' : 'none';
-      else { el.classList.toggle('active', s===name); }
+      el.classList.toggle('active', s===name);
     });
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.section===name && l.textContent.trim().toLowerCase().includes(name==='boutique'?'accueil':name)));
+    document.querySelectorAll('.nav-link').forEach(l => {
+      const match = l.dataset.section === name;
+      const txt = l.textContent.trim().toLowerCase();
+      l.classList.toggle('active', match && (name!=='boutique' || txt.includes('accueil') || txt.includes('boutique')));
+    });
+    window.scrollTo({ top: document.querySelector('header').offsetHeight, behavior: 'smooth' });
   }
 
   document.querySelectorAll('[data-section]').forEach(el => {
@@ -334,18 +253,13 @@
   });
   document.getElementById('home-link').addEventListener('click', e => { e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
 
-  /* UTILS */
-  function getPrix(b) {
-    for (const c of ['prix_vente','prixVente','prix vente','prix','price','tarif']) {
-      if (b[c] != null && b[c] !== '') return parseFloat(b[c]);
-    }
-    return null;
-  }
+  /* PRIX — colonne pv */
+  const getPrix = b => b.pv != null ? parseFloat(b.pv) : null;
   const fmtPrice = p => p != null ? new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p) : null;
 
   function stockHtml(b, ld) {
     if (ld?.sur_commande) return '<span class="card-stock stock-cmd">Sur commande</span>';
-    const qty = b.stock ?? b.quantite ?? b.qty ?? null;
+    const qty = b.stock ?? b.quantite ?? null;
     if (qty == null) return '';
     if (qty <= 0)  return '<span class="card-stock stock-out">Épuisé</span>';
     if (qty <= 3)  return `<span class="card-stock stock-low">Derniers (${qty})</span>`;
@@ -362,19 +276,17 @@
   }
 
   function cardHTML(b, lc, idx) {
-    const ld      = lc[b.ref] || {};
-    const name    = ld.nom_public || b.nom || b.designation || b.ref || '—';
-    const photo   = ld.photo_principale || null;
-    const prix    = getPrix(b);
-    const col     = b.collection || '';
-    const delay   = Math.min(idx * 32, 480);
-
+    const ld    = lc[b.ref] || {};
+    const name  = ld.nom_public || b.nom || b.ref || '—';
+    const photo = ld.photo_principale || null;
+    const prix  = getPrix(b);
+    const col   = b.collection || '';
+    const delay = Math.min(idx * 32, 480);
     return `<div class="product-card" style="animation-delay:${delay}ms">
       <div class="card-img-wrap">
-        ${photo ? `<img class="card-img" src="${photo}" alt="${name}" loading="lazy">`
-          : `<div class="card-img-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Photo à venir</span></div>`}
+        ${photo
+          ? `<img class="card-img" src="${photo}" alt="${name}" loading="lazy">`
+          : `<div class="card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo à venir</span></div>`}
         <div class="card-overlay"><button class="card-overlay-btn" onclick="openProduct('${b.ref}')">Voir la fiche</button></div>
         ${col ? `<span class="card-badge ${badgeCls(col)}">${col}</span>` : ''}
         ${ld.sur_commande ? `<span class="card-badge-commande">Sur commande</span>` : ''}
@@ -393,25 +305,15 @@
   function renderCollections(bijoux, lc) {
     const wrap = document.getElementById('collections-wrap');
     const groups = {};
-    bijoux.forEach(b => { const k = b.collection||'Autres'; if(!groups[k]) groups[k]=[]; groups[k].push(b); });
-
-    let html = '', gi = 0;
-    Object.entries(groups).forEach(([col, items]) => {
+    bijoux.forEach(b => { const k=b.collection||'Autres'; if(!groups[k]) groups[k]=[]; groups[k].push(b); });
+    let html='', gi=0;
+    Object.entries(groups).forEach(([col,items]) => {
       html += `<div class="coll-group" data-collection="${col}">
-        <div class="coll-header">
-          <span class="coll-title">${col.toUpperCase()}</span>
-          <div class="coll-line"></div>
-          <span class="coll-count">${items.length} pièce${items.length>1?'s':''}</span>
-        </div>
+        <div class="coll-header"><span class="coll-title">${col.toUpperCase()}</span><div class="coll-line"></div><span class="coll-count">${items.length} pièce${items.length>1?'s':''}</span></div>
         <div class="grid-wrap"><div class="product-grid">${items.map(b=>cardHTML(b,lc,gi++)).join('')}</div></div>
       </div>`;
     });
-
-    if (!html) {
-      wrap.innerHTML = '<div class="boutique-empty"><p>Aucun produit publié pour le moment</p></div>';
-    } else {
-      wrap.innerHTML = html;
-    }
+    wrap.innerHTML = html || '<div class="boutique-empty"><p>Aucun produit publié pour le moment</p></div>';
     wrap.style.display = 'block';
   }
 
@@ -423,11 +325,9 @@
   }
 
   document.getElementById('filter-chips').addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    applyFilter(chip.dataset.filter);
+    const chip = e.target.closest('.chip'); if(!chip) return;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active'); applyFilter(chip.dataset.filter);
   });
 
   function openProduct(ref) { alert(`Fiche produit "${ref}" — page détail en Phase 2 !`); }
@@ -436,37 +336,26 @@
     try {
       const { data, error } = await sb.from('bijoux').select('*').order('collection');
       if (error) throw error;
-
       document.getElementById('loading').style.display = 'none';
       if (!data?.length) {
         document.getElementById('error-state').style.display = 'block';
         document.getElementById('error-msg').textContent = 'Aucun bijou trouvé.';
         return;
       }
-
       const lc = getLC();
-
-      /* Debug prix */
-      const sample = data[0];
-      if (getPrix(sample) === null) {
-        const box = document.getElementById('debug-box');
-        box.style.display = 'block';
-        box.innerHTML = `⚠ Colonne prix introuvable. Colonnes disponibles : <strong>${Object.keys(sample).join(', ')}</strong>`;
-      }
-
-      /* Filtres : exclure COMP + afficher seulement visible:true */
+      /* Exclure COMP, no_sell, et non-publiés */
       const vendables = data.filter(b => {
-        if (!b.ref || b.ref.toUpperCase().startsWith('COMP')) return false;
-        const ld = lc[b.ref] || {};
-        return ld.visible === true; // caché par défaut si jamais activé
+        if (!b.ref) return false;
+        if (b.ref.toUpperCase().startsWith('COMP')) return false;
+        if (b.no_sell) return false;
+        if (b.draft) return false;
+        return (lc[b.ref]||{}).visible === true;
       });
-
       renderCollections(vendables, lc);
-
     } catch(err) {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('error-state').style.display = 'block';
-      document.getElementById('error-msg').textContent = `Erreur Supabase : ${err.message}`;
+      document.getElementById('error-msg').textContent = `Erreur : ${err.message}`;
     }
   }
 
