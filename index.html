@@ -9,28 +9,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
-      --sand:       #e8c97a;
-      --fuchsia:    #c4286e;
-      --fuchsia-lt: #e0558a;
-      --ink:        #1a1510;
-      --cream:      #faf5e8;
-      --silver:     #9a9070;
-      --glass:      rgba(232,201,122,0.04);
-      --border:     rgba(232,201,122,0.14);
-      --font-display: 'Bebas Neue', sans-serif;
-      --font-body:    'Cormorant Garamond', serif;
-      --font-mono:    'DM Mono', monospace;
+      --sand:#e8c97a; --fuchsia:#c4286e; --fuchsia-lt:#e0558a;
+      --ink:#1a1510; --cream:#faf5e8; --silver:#9a9070;
+      --glass:rgba(232,201,122,0.04); --border:rgba(232,201,122,0.14);
+      --font-display:'Bebas Neue',sans-serif;
+      --font-body:'Cormorant Garamond',serif;
+      --font-mono:'DM Mono',monospace;
     }
-    html { scroll-behavior: smooth; }
-    body { background: var(--ink); color: var(--cream); font-family: var(--font-body); font-size: 18px; line-height: 1.6; overflow-x: hidden; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--ink); color:var(--cream); font-family:var(--font-body); font-size:18px; line-height:1.6; overflow-x:hidden; }
     body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity:0.03; pointer-events:none; z-index:9999; }
     ::-webkit-scrollbar { width:3px; }
     ::-webkit-scrollbar-thumb { background:var(--fuchsia); }
 
     /* NAVBAR */
-    .navbar { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center; justify-content:space-between; padding:0.6rem 2.5rem; background:rgba(26,21,16,0); transition:background 0.4s,backdrop-filter 0.4s; }
+    .navbar { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center; padding:0.6rem 2.5rem; background:rgba(26,21,16,0); transition:background 0.4s,backdrop-filter 0.4s; }
     .navbar.scrolled { background:rgba(26,21,16,0.93); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
     .nav-logo { text-decoration:none; display:flex; align-items:center; gap:0.65rem; }
     .nav-logo-img { height:36px; width:36px; border-radius:50%; object-fit:cover; border:1px solid rgba(232,201,122,0.3); }
@@ -38,39 +33,58 @@
     .nav-logo-text .l1 { font-family:var(--font-display); font-size:1.25rem; letter-spacing:0.2em; color:var(--sand); }
     .nav-logo-text .l2 { font-family:var(--font-body); font-style:italic; font-weight:300; font-size:0.58rem; letter-spacing:0.3em; color:var(--fuchsia-lt); text-transform:uppercase; }
 
-    /* HERO CAROUSEL — hauteur variable */
-    .hero-carousel {
-      position: relative;
-      /* hauteur définie par JS depuis localStorage */
-      height: var(--hero-h, 55vh);
-      min-height: 320px;
-      overflow: hidden;
-    }
+    /* ══ HERO CAROUSEL ══ */
+    .hero-carousel { position:relative; height:var(--hero-h,55vh); min-height:300px; overflow:hidden; }
 
-    .slide { position:absolute; inset:0; display:flex; align-items:flex-end; padding:0 0 3.5rem 2.5rem; opacity:0; transition:opacity 0.8s ease; pointer-events:none; }
+    .slide { position:absolute; inset:0; opacity:0; transition:opacity 0.8s ease; pointer-events:none; }
     .slide.active { opacity:1; pointer-events:auto; }
     .slide-bg { position:absolute; inset:0; background-size:cover; background-position:center; transform:scale(1.04); transition:transform 6s ease; }
     .slide.active .slide-bg { transform:scale(1); }
-    .slide-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(26,21,16,0.88) 0%,rgba(26,21,16,0.35) 50%,rgba(26,21,16,0.08) 100%); }
+    .slide-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(26,21,16,0.88) 0%,rgba(26,21,16,0.3) 55%,rgba(26,21,16,0.08) 100%); }
     .slide-bg.no-photo { background-color:var(--ink); background-image:radial-gradient(ellipse at 70% 40%,rgba(196,40,110,0.12) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(232,201,122,0.06) 0%,transparent 50%); }
 
-    .slide-content { position:relative; z-index:2; max-width:600px; }
+    /* bloc contenu — décalé du bord gauche pour éviter les flèches (désormais à droite) */
+    .slide-content {
+      position:absolute; bottom:3.5rem; z-index:2;
+      max-width:520px;
+      left:2.5rem;  /* côté gauche : pas de flèche, on peut être proche du bord */
+      right:6rem;   /* côté droit : laisser de la place aux flèches */
+    }
+    .slide-content.pos-right {
+      left:6rem;    /* laisser place aux flèches à droite */
+      right:2.5rem;
+      text-align:right;
+    }
+    .slide-content.pos-right .slide-btn { margin-left:auto; }
+
+    /* logo PNG optionnel dans le slide (remplace le titre texte) */
+    .slide-logo { max-height:120px; max-width:320px; object-fit:contain; margin-bottom:0.8rem; display:block; }
+    .slide-content.pos-right .slide-logo { margin-left:auto; }
+
     .slide-eyebrow { font-family:var(--font-mono); font-size:0.54rem; letter-spacing:0.26em; text-transform:uppercase; color:var(--fuchsia-lt); margin-bottom:0.6rem; }
     .slide-title { font-family:var(--font-display); font-size:clamp(2.5rem,5.5vw,5.5rem); line-height:0.88; letter-spacing:0.04em; color:var(--sand); margin-bottom:0.5rem; }
     .slide-title em { font-family:var(--font-body); font-style:italic; font-weight:300; font-size:0.42em; color:var(--fuchsia-lt); letter-spacing:0.15em; }
-    .slide-sub { font-size:0.95rem; font-weight:300; color:rgba(250,245,232,0.75); max-width:42ch; line-height:1.7; margin-bottom:1.4rem; }
+    .slide-sub { font-size:0.95rem; font-weight:300; color:rgba(250,245,232,0.75); max-width:40ch; line-height:1.7; margin-bottom:1.3rem; }
     .slide-btn { display:inline-flex; align-items:center; gap:0.55rem; background:var(--fuchsia); color:var(--cream); font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; padding:0.7rem 1.4rem; border:none; cursor:pointer; clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px)); transition:background 0.2s,transform 0.15s; }
     .slide-btn:hover { background:var(--fuchsia-lt); transform:translateY(-2px); }
     .slide-btn.secondary { background:transparent; border:1px solid rgba(232,201,122,0.5); color:var(--sand); }
     .slide-btn.secondary:hover { background:rgba(232,201,122,0.1); }
 
-    .carousel-dots { position:absolute; bottom:1.2rem; right:2rem; display:flex; gap:0.45rem; z-index:10; }
+    /* ── flèches côté DROIT, en bas ── */
+    .carousel-arrow {
+      position:absolute; bottom:3rem; z-index:10;
+      background:rgba(26,21,16,0.5); border:1px solid var(--border);
+      color:var(--sand); width:34px; height:34px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:1rem; transition:background 0.2s; backdrop-filter:blur(4px);
+    }
+    .carousel-arrow:hover { background:rgba(196,40,110,0.35); }
+    .carousel-arrow.prev { right:3.2rem; }  /* juste à gauche de next */
+    .carousel-arrow.next { right:1.2rem; }  /* tout à droite */
+
+    .carousel-dots { position:absolute; bottom:1.2rem; left:50%; transform:translateX(-50%); display:flex; gap:0.45rem; z-index:10; }
     .dot { width:5px; height:5px; border-radius:50%; background:rgba(232,201,122,0.3); cursor:pointer; transition:background 0.3s,transform 0.3s; }
     .dot.active { background:var(--fuchsia); transform:scale(1.5); }
-    .carousel-arrow { position:absolute; top:50%; transform:translateY(-50%); z-index:10; background:rgba(26,21,16,0.4); border:1px solid var(--border); color:var(--sand); width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; transition:background 0.2s; backdrop-filter:blur(4px); }
-    .carousel-arrow:hover { background:rgba(196,40,110,0.3); }
-    .carousel-arrow.prev { left:1.2rem; }
-    .carousel-arrow.next { right:1.2rem; }
 
     /* MARQUEE */
     .marquee-wrap { overflow:hidden; padding:0.4rem 0; background:rgba(196,40,110,0.07); border-bottom:1px solid var(--border); }
@@ -110,7 +124,7 @@
     .card-overlay-btn:hover { background:var(--fuchsia); border-color:var(--fuchsia); color:var(--cream); }
     .card-badge { position:absolute; top:0.6rem; left:0.6rem; font-family:var(--font-mono); font-size:0.46rem; letter-spacing:0.14em; text-transform:uppercase; padding:0.16rem 0.42rem; background:rgba(26,21,16,0.88); border:1px solid var(--border); }
     .card-badge.chainmail { border-color:var(--silver); color:var(--silver); }
-    .card-badge.poisson   { border-color:var(--sand); color:var(--sand); }
+    .card-badge.poisson   { border-color:var(--sand);   color:var(--sand); }
     .card-badge.sac       { border-color:var(--fuchsia-lt); color:var(--fuchsia-lt); }
     .card-badge.porteclef { border-color:var(--fuchsia-lt); color:var(--fuchsia-lt); }
     .card-badge-commande { position:absolute; top:0.6rem; right:0.6rem; font-family:var(--font-mono); font-size:0.44rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.16rem 0.42rem; background:rgba(196,40,110,0.15); border:1px solid rgba(196,40,110,0.5); color:var(--fuchsia-lt); }
@@ -122,10 +136,8 @@
     .card-footer { display:flex; align-items:center; justify-content:space-between; }
     .card-price { font-family:var(--font-display); font-size:1.15rem; letter-spacing:0.05em; color:var(--fuchsia-lt); }
     .card-stock { font-family:var(--font-mono); font-size:0.46rem; letter-spacing:0.1em; text-transform:uppercase; }
-    .stock-ok  { color:#7ecf8a; }
-    .stock-low { color:var(--sand); }
-    .stock-out { color:var(--fuchsia); opacity:0.75; }
-    .stock-cmd { color:var(--fuchsia-lt); }
+    .stock-ok  { color:#7ecf8a; } .stock-low { color:var(--sand); }
+    .stock-out { color:var(--fuchsia); opacity:0.75; } .stock-cmd { color:var(--fuchsia-lt); }
 
     .boutique-empty { padding:6rem 2.5rem; text-align:center; }
     .boutique-empty p { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--silver); }
@@ -142,10 +154,10 @@
 
     @media (max-width:700px) {
       .navbar { padding:0.5rem 1rem; }
-      .slide { padding:0 0 3rem 1.2rem; }
+      .slide-content { left:1.2rem; right:5rem; }
+      .slide-content.pos-right { left:5rem; right:1.2rem; }
       .filters-bar,.grid-wrap,.coll-header { padding-left:1rem; padding-right:1rem; }
       .product-grid { grid-template-columns:1fr 1fr; }
-      .carousel-arrow { display:none; }
     }
   </style>
 </head>
@@ -160,9 +172,9 @@
 
 <section class="hero-carousel" id="hero">
   <div id="slides-container"></div>
-  <div class="carousel-dots" id="dots"></div>
   <button class="carousel-arrow prev" id="arrow-prev">‹</button>
   <button class="carousel-arrow next" id="arrow-next">›</button>
+  <div class="carousel-dots" id="dots"></div>
 </section>
 
 <div class="marquee-wrap">
@@ -206,57 +218,50 @@
 
   function getLC() { try { return JSON.parse(localStorage.getItem('bn_content')||'{}'); } catch { return {}; } }
 
-  /* NAVBAR scroll */
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
-  });
-  document.getElementById('home-link').addEventListener('click', e => { e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
+  window.addEventListener('scroll',()=>{ document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40); });
+  document.getElementById('home-link').addEventListener('click',e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
 
-  /* ══ HAUTEUR HERO ══ */
-  const HEIGHT_MAP = { full:'100vh', half:'50vh', third:'35vh' };
-  function applyHeroHeight() {
-    const lc = getLC();
-    const h = HEIGHT_MAP[lc.__hero_height] || '55vh';
-    document.getElementById('hero').style.height = h;
-  }
-  applyHeroHeight();
+  /* hauteur hero */
+  const H_MAP={full:'100vh',half:'50vh',third:'35vh',default:'55vh'};
+  (()=>{ const lc=getLC(); document.getElementById('hero').style.height=H_MAP[lc.__hero_height]||'55vh'; })();
 
-  /* ══ CARROUSEL ══ */
-  const DEFAULT_SLIDES = [
-    { eyebrow:'✦ Collection artisanale · fait main', title:'BONA', title_em:'&', title2:'NODI',
-      sub:'Entre la brutalité du métal et la douceur des perles — chaque pièce tissée à la main.',
-      btn_label:'→ Découvrir la boutique', btn_href:'#boutique', btn_style:'primary', photo:'' },
-    { eyebrow:'✦ Personnalisation', title:'TON', title_em:'', title2:'POISSON',
-      sub:'Choisis les couleurs de chaque partie et visualise ton bijou en temps réel.',
-      btn_label:'→ Personnaliser mon poisson', btn_href:'#personnaliser', btn_style:'secondary', photo:'' }
+  /* slides par défaut */
+  const BUILTIN_SLIDES=[
+    {id:'__builtin_0',eyebrow:'✦ Collection artisanale · fait main',title:'BONA',title_em:'&',title2:'NODI',sub:'Entre la brutalité du métal et la douceur des perles — chaque pièce tissée à la main.',btn_label:'→ Découvrir la boutique',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'},
+    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie et visualise ton bijou en temps réel.',btn_label:'→ Personnaliser',btn_href:'#personnaliser',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
   ];
 
-  let slides=[], current=0, autoTimer=null;
-
-  function getSlides() {
+  function getSlides(){
     const lc=getLC();
-    return (lc.__hero_slides&&lc.__hero_slides.length>0) ? lc.__hero_slides : DEFAULT_SLIDES;
+    const edited=lc.__slides_edited||{};
+    const custom=lc.__hero_slides||[];
+    const builtins=BUILTIN_SLIDES.map(s=>({...s,...(edited[s.id]||{})}));
+    return [...builtins,...custom];
   }
 
-  function buildCarousel() {
+  let slides=[],current=0,autoTimer=null;
+
+  function buildCarousel(){
     slides=getSlides();
-    const container=document.getElementById('slides-container');
+    const cont=document.getElementById('slides-container');
     const dotsEl=document.getElementById('dots');
-    container.innerHTML=slides.map((s,i)=>`
+    cont.innerHTML=slides.map((s,i)=>`
       <div class="slide ${i===0?'active':''}" id="slide-${i}">
         <div class="slide-bg ${s.photo?'':'no-photo'}" ${s.photo?`style="background-image:url('${s.photo}')"`:''} ></div>
-        <div class="slide-content">
+        <div class="slide-content ${s.pos==='right'?'pos-right':''}">
           ${s.eyebrow?`<p class="slide-eyebrow">${s.eyebrow}</p>`:''}
-          <h1 class="slide-title">${s.title||''}${s.title_em?` <em>${s.title_em}</em>`:''}${s.title2?' '+s.title2:''}</h1>
+          ${s.logo_url
+            ? `<img src="${s.logo_url}" alt="logo" class="slide-logo">`
+            : `<h1 class="slide-title">${s.title||''}${s.title_em?` <em>${s.title_em}</em>`:''}${s.title2?' '+s.title2:''}</h1>`}
           ${s.sub?`<p class="slide-sub">${s.sub}</p>`:''}
           ${s.btn_label?`<a href="${s.btn_href||'#boutique'}" class="slide-btn ${s.btn_style==='secondary'?'secondary':''}">${s.btn_label}</a>`:''}
         </div>
       </div>`).join('');
     dotsEl.innerHTML=slides.map((_,i)=>`<div class="dot ${i===0?'active':''}" data-idx="${i}"></div>`).join('');
-    dotsEl.addEventListener('click',e=>{const d=e.target.closest('.dot');if(d)goTo(parseInt(d.dataset.idx));});
+    dotsEl.addEventListener('click',e=>{ const d=e.target.closest('.dot'); if(d) goTo(parseInt(d.dataset.idx)); });
   }
 
-  function goTo(idx) {
+  function goTo(idx){
     document.getElementById('slide-'+current)?.classList.remove('active');
     document.querySelector('.dot.active')?.classList.remove('active');
     current=(idx+slides.length)%slides.length;
@@ -264,13 +269,12 @@
     document.querySelector(`.dot[data-idx="${current}"]`)?.classList.add('active');
     resetTimer();
   }
-  function resetTimer(){clearInterval(autoTimer);autoTimer=setInterval(()=>goTo(current+1),6000);}
-
+  function resetTimer(){ clearInterval(autoTimer); autoTimer=setInterval(()=>goTo(current+1),6000); }
   document.getElementById('arrow-prev').addEventListener('click',()=>goTo(current-1));
   document.getElementById('arrow-next').addEventListener('click',()=>goTo(current+1));
   buildCarousel(); resetTimer();
 
-  /* ══ PRODUITS ══ */
+  /* produits */
   const getPrix=b=>b.pv!=null?parseFloat(b.pv):null;
   const fmtP=p=>p!=null?new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p):null;
 
@@ -282,30 +286,18 @@
     if(qty<=3)return `<span class="card-stock stock-low">Derniers (${qty})</span>`;
     return '<span class="card-stock stock-ok">En stock</span>';
   }
-
-  function badgeCls(col){
-    const c=(col||'').toLowerCase();
-    if(c.includes('chainmail'))return 'chainmail';
-    if(c.includes('poisson'))return 'poisson';
-    if(c.includes('sac'))return 'sac';
-    if(c.includes('porte'))return 'porteclef';
-    return '';
-  }
+  function badgeCls(col){ const c=(col||'').toLowerCase(); if(c.includes('chainmail'))return 'chainmail'; if(c.includes('poisson'))return 'poisson'; if(c.includes('sac'))return 'sac'; if(c.includes('porte'))return 'porteclef'; return ''; }
 
   function cardHTML(b,lc,idx){
     const ld=lc[b.ref]||{};
     const name=ld.nom_public||b.nom||b.ref||'—';
     const photo=ld.photo_principale||null;
-    const prix=getPrix(b);
-    const col=b.collection||'';
+    const prix=getPrix(b); const col=b.collection||'';
     const delay=Math.min(idx*32,480);
     const matieres=ld.matieres||[];
-
     return `<div class="product-card" style="animation-delay:${delay}ms">
       <div class="card-img-wrap">
-        ${photo
-          ?`<img class="card-img" src="${photo}" alt="${name}" loading="lazy">`
-          :`<div class="card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo à venir</span></div>`}
+        ${photo?`<img class="card-img" src="${photo}" alt="${name}" loading="lazy">`:`<div class="card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo à venir</span></div>`}
         <div class="card-overlay"><button class="card-overlay-btn" onclick="openProduct('${b.ref}')">Voir la fiche</button></div>
         ${col?`<span class="card-badge ${badgeCls(col)}">${col}</span>`:''}
         ${ld.sur_commande?`<span class="card-badge-commande">Sur commande</span>`:''}
@@ -325,7 +317,7 @@
   function renderCollections(bijoux,lc){
     const wrap=document.getElementById('collections-wrap');
     const groups={};
-    bijoux.forEach(b=>{const k=b.collection||'Autres';if(!groups[k])groups[k]=[];groups[k].push(b);});
+    bijoux.forEach(b=>{ const k=b.collection||'Autres'; if(!groups[k])groups[k]=[]; groups[k].push(b); });
     let html='',gi=0;
     Object.entries(groups).forEach(([col,items])=>{
       html+=`<div class="coll-group" data-collection="${col}">
@@ -337,28 +329,18 @@
     wrap.style.display='block';
   }
 
-  function applyFilter(f){document.querySelectorAll('.coll-group').forEach(g=>{const col=g.dataset.collection||'';g.style.display=(f==='all'||col.toLowerCase().includes(f.toLowerCase()))?'':'none';});}
-
-  document.getElementById('filter-chips').addEventListener('click',e=>{
-    const chip=e.target.closest('.chip');if(!chip)return;
-    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-    chip.classList.add('active');applyFilter(chip.dataset.filter);
-  });
-
-  function openProduct(ref){alert(`Fiche produit "${ref}" — page détail en Phase 2 !`);}
+  function applyFilter(f){ document.querySelectorAll('.coll-group').forEach(g=>{ const c=g.dataset.collection||''; g.style.display=(f==='all'||c.toLowerCase().includes(f.toLowerCase()))?'':'none'; }); }
+  document.getElementById('filter-chips').addEventListener('click',e=>{ const chip=e.target.closest('.chip'); if(!chip)return; document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); chip.classList.add('active'); applyFilter(chip.dataset.filter); });
+  function openProduct(ref){ alert(`Fiche produit "${ref}" — page détail en Phase 2 !`); }
 
   async function loadBijoux(){
     try{
       const{data,error}=await sb.from('bijoux').select('*').order('collection');
       if(error)throw error;
       document.getElementById('loading').style.display='none';
-      if(!data?.length){document.getElementById('error-state').style.display='block';document.getElementById('error-msg').textContent='Aucun bijou trouvé.';return;}
+      if(!data?.length){ document.getElementById('error-state').style.display='block'; document.getElementById('error-msg').textContent='Aucun bijou trouvé.'; return; }
       const lc=getLC();
-      const vendables=data.filter(b=>{
-        if(!b.ref||b.ref.toUpperCase().startsWith('COMP'))return false;
-        if(b.no_sell||b.draft)return false;
-        return (lc[b.ref]||{}).visible===true;
-      });
+      const vendables=data.filter(b=>{ if(!b.ref||b.ref.toUpperCase().startsWith('COMP'))return false; if(b.no_sell||b.draft)return false; return (lc[b.ref]||{}).visible===true; });
       renderCollections(vendables,lc);
     }catch(err){
       document.getElementById('loading').style.display='none';
