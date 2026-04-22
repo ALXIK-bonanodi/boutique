@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bona Nodi — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Bebas+Neue&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sand:       #e8c97a;
+      --fuchsia:    #c4286e;
+      --fuchsia-lt: #e0558a;
+      --ink:        #1a1510;
+      --ink-lt:     #2c2318;
+      --ink-md:     #221c13;
+      --cream:      #faf5e8;
+      --silver:     #9a9070;
+      --border:     rgba(232,201,122,0.15);
+      --ok:         #7ecf8a;
+      --new:        #e8c97a;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Cormorant Garamond', serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--ink); color: var(--cream); font-family: var(--font-body); font-size: 16px; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--fuchsia); }
+
+    /* LOGIN */
+    #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-box { width: 320px; padding: 2.5rem; border: 1px solid var(--border); background: var(--ink-md); display: flex; flex-direction: column; gap: 1.1rem; }
+    .login-box h1 { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 0.2em; color: var(--sand); text-align: center; }
+    .login-box .sub { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--silver); text-align: center; }
+    .login-box input { width: 100%; padding: 0.65rem 1rem; background: var(--ink-lt); border: 1px solid var(--border); color: var(--cream); font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; outline: none; transition: border-color 0.2s; }
+    .login-box input:focus { border-color: var(--fuchsia); }
+    .login-btn { width: 100%; padding: 0.75rem; background: var(--fuchsia); color: var(--cream); border: none; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); transition: background 0.2s; }
+    .login-btn:hover { background: var(--fuchsia-lt); }
+    .login-err { font-family: var(--font-mono); font-size: 0.56rem; color: var(--fuchsia); text-align: center; }
+
+    /* ADMIN */
+    #admin-app { display: none; }
+
+    .adm-header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.55rem 1.8rem;
+      background: rgba(26,21,16,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 0.5rem;
+    }
+    .adm-title { font-family: var(--font-display); font-size: 1.25rem; letter-spacing: 0.2em; color: var(--sand); }
+    .adm-title span { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.15em; color: var(--fuchsia-lt); margin-left: 0.5rem; text-transform: uppercase; }
+    .adm-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+
+    #save-status { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.26rem 0.6rem; border: 1px solid transparent; }
+    #save-status.saved   { color: var(--ok); border-color: rgba(126,207,138,0.3); }
+    #save-status.unsaved { color: var(--sand); border-color: rgba(232,201,122,0.3); }
+
+    .btn-adm {
+      padding: 0.36rem 0.85rem; font-family: var(--font-mono); font-size: 0.54rem;
+      letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+      border: 1px solid var(--border); background: transparent; color: var(--silver);
+      clip-path: polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));
+      transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;
+    }
+    .btn-adm:hover { border-color: var(--fuchsia); color: var(--cream); }
+    .btn-adm.primary { background: var(--fuchsia); border-color: var(--fuchsia); color: var(--cream); }
+    .btn-adm.primary:hover { background: var(--fuchsia-lt); }
+
+    /* STATS BAR */
+    .stats-bar {
+      padding: 0.7rem 1.8rem; border-bottom: 1px solid var(--border);
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      background: rgba(232,201,122,0.03);
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-val { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.1em; }
+    .stat-val.published { color: var(--ok); }
+    .stat-val.hidden    { color: var(--silver); }
+    .stat-val.new-count { color: var(--new); }
+    .stat-label { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--silver); }
+
+    main { padding: 1.1rem 1.8rem; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .tab {
+      font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.55rem 1.2rem; cursor: pointer; border: none; background: transparent;
+      color: var(--silver); border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color 0.2s;
+    }
+    .tab:hover { color: var(--cream); }
+    .tab.active { color: var(--sand); border-bottom-color: var(--fuchsia); }
+    .tab .tab-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%;
+      font-size: 0.5rem; margin-left: 0.4rem;
+    }
+    .tab-count.new-badge { background: var(--sand); color: var(--ink); }
+    .tab-count.pub-badge { background: rgba(126,207,138,0.2); color: var(--ok); }
+
+    .search-bar { margin-bottom: 1rem; }
+    .search-bar input {
+      width: 100%; padding: 0.52rem 1rem;
+      background: var(--ink-lt); border: 1px solid var(--border);
+      color: var(--cream); font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.06em; outline: none; transition: border-color 0.2s;
+    }
+    .search-bar input:focus { border-color: var(--fuchsia); }
+    .search-bar input::placeholder { color: var(--silver); }
+
+    /* PRODUCT LIST */
+    .product-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .product-row {
+      background: var(--ink-md); border: 1px solid var(--border);
+      overflow: hidden; transition: border-color 0.2s;
+    }
+    .product-row.is-new     { border-left: 3px solid var(--sand); }
+    .product-row.is-visible { border-left: 3px solid var(--ok); }
+    .product-row.is-hidden  { opacity: 0.6; }
+    .product-row.expanded   { border-color: rgba(196,40,110,0.4); opacity: 1; }
+
+    .row-header {
+      display: grid; grid-template-columns: 52px 1fr auto auto auto;
+      align-items: center; gap: 0.8rem;
+      padding: 0.6rem 1rem; cursor: pointer; transition: background 0.15s;
+    }
+    .row-header:hover { background: rgba(232,201,122,0.03); }
+
+    .row-thumb { width: 46px; height: 46px; object-fit: cover; border: 1px solid var(--border); background: var(--ink-lt); flex-shrink: 0; display: block; }
+    .row-thumb-ph { width: 46px; height: 46px; flex-shrink: 0; border: 1px dashed var(--border); background: var(--ink-lt); display: flex; align-items: center; justify-content: center; color: var(--border); font-size: 1rem; }
+
+    .row-info { min-width: 0; }
+    .row-name { font-family: var(--font-body); font-style: italic; font-size: 0.98rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row-meta { font-family: var(--font-mono); font-size: 0.48rem; letter-spacing: 0.1em; color: var(--silver); margin-top: 0.1rem; }
+
+    /* NEW badge */
+    .new-tag {
+      font-family: var(--font-mono); font-size: 0.46rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.14rem 0.4rem; background: rgba(232,201,122,0.15);
+      border: 1px solid rgba(232,201,122,0.4); color: var(--sand);
+      flex-shrink: 0;
+    }
+
+    /* VISIBLE TOGGLE in row */
+    .visibility-toggle {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.28rem 0.65rem;
+      font-family: var(--font-mono); font-size: 0.5rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--silver); cursor: pointer;
+      clip-path: polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,4px 100%,0 calc(100% - 4px));
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .visibility-toggle:hover { border-color: var(--ok); }
+    .visibility-toggle.on  { background: rgba(126,207,138,0.12); border-color: rgba(126,207,138,0.5); color: var(--ok); }
+    .visibility-toggle.off { background: transparent; border-color: var(--border); color: var(--silver); }
+
+    .row-toggle { font-family: var(--font-mono); font-size: 0.6rem; color: var(--fuchsia-lt); padding: 0 0.3rem; transition: transform 0.2s; flex-shrink: 0; }
+    .product-row.expanded .row-toggle { transform: rotate(180deg); }
+
+    /* PANEL */
+    .row-panel { display: none; padding: 1rem 1rem 1.3rem; border-top: 1px solid var(--border); background: rgba(26,21,16,0.4); flex-direction: column; gap: 1rem; }
+    .product-row.expanded .row-panel { display: flex; }
+
+    .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+
+    .field { display: flex; flex-direction: column; gap: 0.3rem; }
+    .field label { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--silver); }
+    .field input, .field textarea {
+      padding: 0.48rem 0.72rem; background: var(--ink-lt); border: 1px solid var(--border);
+      color: var(--cream); font-family: var(--font-body); font-size: 0.95rem;
+      outline: none; resize: vertical; transition: border-color 0.2s; width: 100%;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--fuchsia); }
+    .field textarea { min-height: 72px; }
+    .field input[readonly] { opacity: 0.35; cursor: not-allowed; }
+
+    /* TOGGLES */
+    .toggles-row { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+    .panel-toggle {
+      flex: 1; min-width: 200px;
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.65rem 0.9rem;
+      background: var(--ink-lt); border: 1px solid var(--border);
+      cursor: pointer; transition: border-color 0.2s; user-select: none;
+    }
+    .panel-toggle:hover { border-color: var(--fuchsia); }
+    .panel-toggle.active-ok  { border-color: rgba(126,207,138,0.5); background: rgba(126,207,138,0.07); }
+    .panel-toggle.active-fus { border-color: rgba(196,40,110,0.5); background: rgba(196,40,110,0.07); }
+
+    .tog-dot {
+      width: 30px; height: 17px; border-radius: 9px;
+      background: var(--border); position: relative; flex-shrink: 0; transition: background 0.2s;
+    }
+    .panel-toggle.active-ok  .tog-dot { background: var(--ok); }
+    .panel-toggle.active-fus .tog-dot { background: var(--fuchsia); }
+    .tog-dot::after {
+      content: ''; position: absolute; width: 11px; height: 11px;
+      border-radius: 50%; background: var(--cream); top: 3px; left: 3px; transition: transform 0.2s;
+    }
+    .panel-toggle.active-ok .tog-dot::after,
+    .panel-toggle.active-fus .tog-dot::after { transform: translateX(13px); }
+
+    .tog-text { display: flex; flex-direction: column; gap: 0.1rem; }
+    .tog-label { font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--silver); }
+    .panel-toggle.active-ok  .tog-label { color: var(--ok); }
+    .panel-toggle.active-fus .tog-label { color: var(--fuchsia-lt); }
+    .tog-desc { font-family: var(--font-mono); font-size: 0.44rem; letter-spacing: 0.08em; color: var(--silver); opacity: 0.7; }
+
+    /* PHOTOS */
+    .photos-zone { display: flex; flex-direction: column; gap: 0.6rem; }
+    .photos-label { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--silver); }
+    .photos-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; min-height: 20px; }
+    .photo-item { position: relative; width: 68px; height: 68px; flex-shrink: 0; }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--border); }
+    .photo-item.is-main img { border-color: var(--fuchsia); }
+    .ph-del { position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; border-radius: 50%; background: var(--fuchsia); color: var(--cream); border: none; cursor: pointer; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; }
+    .ph-main-badge { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(196,40,110,0.88); font-family: var(--font-mono); font-size: 0.38rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream); text-align: center; padding: 2px; }
+    .ph-set-main { position: absolute; top: -5px; left: -5px; width: 16px; height: 16px; border-radius: 50%; background: var(--sand); color: var(--ink); border: none; cursor: pointer; font-size: 0.5rem; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+    .photo-item:not(.is-main):hover .ph-set-main { opacity: 1; }
+
+    .upload-zone {
+      border: 1px dashed var(--border); padding: 0.9rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      cursor: pointer; transition: border-color 0.2s; position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--fuchsia); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-icon { font-size: 1.3rem; opacity: 0.35; }
+    .upload-text { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--silver); text-align: center; line-height: 1.6; }
+    .upload-progress { width: 100%; height: 2px; background: var(--border); margin-top: 0.3rem; display: none; }
+    .upload-progress-bar { height: 100%; background: var(--fuchsia); width: 0%; transition: width 0.3s; }
+
+    /* STATES */
+    .loading-state { padding: 5rem 1.8rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .spinner { width: 30px; height: 30px; border: 1px solid var(--border); border-top-color: var(--fuchsia); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .loading-text { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--silver); }
+
+    #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.65rem 1.2rem; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); background: var(--fuchsia); clip-path: polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px)); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
+    #toast.show { opacity: 1; }
+    #toast.err  { background: #6b1f1f; }
+
+    @media (max-width: 600px) {
+      .adm-header, main { padding-left: 1rem; padding-right: 1rem; }
+      .panel-grid { grid-template-columns: 1fr; }
+      .row-header { grid-template-columns: 46px 1fr auto auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>BONA NODI</h1>
+    <p class="sub">Administration</p>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" autocomplete="current-password" />
+    <button class="login-btn" id="login-btn">Entrer</button>
+    <p class="login-err" id="login-err" style="display:none">Mot de passe incorrect</p>
+  </div>
+</div>
+
+<div id="admin-app">
+  <header class="adm-header">
+    <span class="adm-title">BONA NODI <span>Admin</span></span>
+    <div class="adm-actions">
+      <span id="save-status" class="saved">✓ Sauvegardé</span>
+      <button class="btn-adm primary" id="save-btn">Sauvegarder</button>
+      <a href="index.html" class="btn-adm">← Site</a>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat"><span class="stat-val published" id="stat-pub">—</span><span class="stat-label">Publiés</span></div>
+    <div class="stat"><span class="stat-val hidden"    id="stat-hid">—</span><span class="stat-label">Masqués</span></div>
+    <div class="stat"><span class="stat-val new-count" id="stat-new">—</span><span class="stat-label">Nouveaux à configurer</span></div>
+  </div>
+
+  <main>
+    <!-- TABS -->
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="all">Tous</button>
+      <button class="tab" data-tab="new">Nouveaux <span class="tab-count new-badge" id="tab-new-count">0</span></button>
+      <button class="tab" data-tab="visible">Publiés <span class="tab-count pub-badge" id="tab-pub-count">0</span></button>
+      <button class="tab" data-tab="hidden">Masqués</button>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Rechercher par nom ou référence…" />
+    </div>
+
+    <div id="loading" class="loading-state"><div class="spinner"></div><p class="loading-text">Chargement…</p></div>
+    <div class="product-list" id="product-list" style="display:none"></div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const ADMIN_PASSWORD = 'bonanodi2025'; // ← changer ici
+  const SUPABASE_URL   = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
+  const SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
+  const STORAGE_BUCKET = 'produits';
+
+  /* LOGIN */
+  document.getElementById('login-btn').addEventListener('click', tryLogin);
+  document.getElementById('pwd-input').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+  function tryLogin() {
+    if (document.getElementById('pwd-input').value === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'block';
+      loadBijoux();
+    } else {
+      document.getElementById('login-err').style.display = 'block';
+      document.getElementById('pwd-input').value = '';
+    }
+  }
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  /* LOCAL CONTENT */
+  let localContent = {};
+  let allBijoux = [];
+  let dirty = false;
+  let currentTab = 'all';
+  let currentSearch = '';
+
+  function getLC() { try { return JSON.parse(localStorage.getItem('bn_content')||'{}'); } catch { return {}; } }
+
+  function markDirty() {
+    dirty = true;
+    const el = document.getElementById('save-status');
+    el.textContent = '● Non sauvegardé'; el.className = 'unsaved';
+  }
+
+  document.getElementById('save-btn').addEventListener('click', () => {
+    localStorage.setItem('bn_content', JSON.stringify(localContent));
+    dirty = false;
+    document.getElementById('save-status').textContent = '✓ Sauvegardé';
+    document.getElementById('save-status').className = 'saved';
+    toast('Sauvegardé ✦');
+    updateStats();
+  });
+
+  window.addEventListener('beforeunload', e => { if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+  /* TOAST */
+  function toast(msg, isErr=false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = isErr ? 'show err' : 'show';
+    setTimeout(() => t.className='', 2500);
+  }
+
+  /* UTILS */
+  function safeId(ref) { return (ref||'').replace(/[^a-zA-Z0-9]/g,'_'); }
+
+  function isNew(ref) {
+    const ld = localContent[ref] || {};
+    return ld.visible === undefined; // jamais touché
+  }
+  function isVisible(ref) { return localContent[ref]?.visible === true; }
+
+  function getPrix(b) {
+    for (const c of ['prix_vente','prixVente','prix vente','prix','price','tarif']) {
+      if (b[c] != null && b[c] !== '') return parseFloat(b[c]);
+    }
+    return null;
+  }
+  const fmtPrice = p => p != null ? new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p) : null;
+
+  /* STATS */
+  function updateStats() {
+    const pub = allBijoux.filter(b => isVisible(b.ref)).length;
+    const nw  = allBijoux.filter(b => isNew(b.ref)).length;
+    const hid = allBijoux.length - pub - nw;
+    document.getElementById('stat-pub').textContent = pub;
+    document.getElementById('stat-hid').textContent = hid < 0 ? 0 : hid;
+    document.getElementById('stat-new').textContent = nw;
+    document.getElementById('tab-new-count').textContent = nw;
+    document.getElementById('tab-pub-count').textContent = pub;
+  }
+
+  /* VISIBILITY TOGGLE */
+  function toggleVisibility(ref, e) {
+    e.stopPropagation();
+    if (!localContent[ref]) localContent[ref] = {};
+    localContent[ref].visible = !localContent[ref].visible;
+    markDirty();
+    /* update button in row */
+    const btn = document.getElementById('vis-btn-' + safeId(ref));
+    if (btn) {
+      const on = localContent[ref].visible;
+      btn.className = 'visibility-toggle ' + (on?'on':'off');
+      btn.innerHTML = on ? '● Publié' : '○ Masqué';
+    }
+    /* update row classes */
+    const row = document.getElementById('row-' + safeId(ref));
+    if (row) {
+      row.classList.remove('is-new','is-visible','is-hidden');
+      if (localContent[ref].visible) row.classList.add('is-visible');
+      else row.classList.add('is-hidden');
+    }
+    updateStats();
+  }
+
+  /* FIELD UPDATE */
+  function updateField(ref, key, val) {
+    if (!localContent[ref]) localContent[ref] = {};
+    localContent[ref][key] = val;
+    markDirty();
+  }
+
+  /* COMMANDE TOGGLE */
+  function toggleCommande(ref) {
+    if (!localContent[ref]) localContent[ref] = {};
+    localContent[ref].sur_commande = !localContent[ref].sur_commande;
+    markDirty();
+    const el = document.getElementById('tog-cmd-' + safeId(ref));
+    if (el) el.classList.toggle('active-fus', !!localContent[ref].sur_commande);
+    const lbl = el?.querySelector('.tog-label');
+    if (lbl) lbl.textContent = localContent[ref].sur_commande ? 'Sur commande' : 'Disponible en stock';
+  }
+
+  /* PHOTOS */
+  function refreshPhotosGrid(ref) {
+    const grid = document.getElementById('pg-' + safeId(ref));
+    if (!grid) return;
+    const photos = localContent[ref]?.photos || [];
+    grid.innerHTML = photos.map((url, i) => `
+      <div class="photo-item ${i===0?'is-main':''}">
+        <img src="${url}" alt="" onerror="this.style.opacity='0.2'">
+        ${i===0?'<div class="ph-main-badge">Principale</div>':''}
+        ${i>0?`<button class="ph-set-main" onclick="setMain('${ref}',${i})">★</button>`:''}
+        <button class="ph-del" onclick="rmPhoto('${ref}',${i})">×</button>
+      </div>`).join('');
+    const row = document.getElementById('row-' + safeId(ref));
+    if (row && photos[0]) {
+      const old = row.querySelector('.row-thumb,.row-thumb-ph');
+      if (old) old.outerHTML = `<img class="row-thumb" src="${photos[0]}" alt="">`;
+    }
+  }
+
+  function rmPhoto(ref, idx) {
+    const photos = localContent[ref]?.photos || [];
+    photos.splice(idx,1);
+    if (!localContent[ref]) localContent[ref]={};
+    localContent[ref].photos = photos;
+    localContent[ref].photo_principale = photos[0]||null;
+    markDirty(); refreshPhotosGrid(ref);
+  }
+  function setMain(ref, idx) {
+    const photos = localContent[ref]?.photos||[];
+    const [m] = photos.splice(idx,1); photos.unshift(m);
+    localContent[ref].photos = photos;
+    localContent[ref].photo_principale = photos[0];
+    markDirty(); refreshPhotosGrid(ref);
+  }
+
+  async function uploadPhotos(ref, files) {
+    const pw = document.getElementById('prog-' + safeId(ref));
+    const pb = document.getElementById('pb-'   + safeId(ref));
+    if (pw) pw.style.display = 'block';
+    const urls = [];
+    for (let i=0; i<files.length; i++) {
+      const f = files[i];
+      const ext = f.name.split('.').pop().toLowerCase();
+      const path = `${ref}/${Date.now()}_${i}.${ext}`;
+      if (pb) pb.style.width = Math.round((i/files.length)*80)+'%';
+      const { error } = await sb.storage.from(STORAGE_BUCKET).upload(path, f, {upsert:true, contentType:f.type});
+      if (error) { toast(`Erreur : ${error.message}`, true); continue; }
+      const { data: ud } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      if (ud?.publicUrl) urls.push(ud.publicUrl);
+    }
+    if (pb) pb.style.width = '100%';
+    setTimeout(() => { if(pw) pw.style.display='none'; }, 600);
+    if (urls.length) {
+      if (!localContent[ref]) localContent[ref]={};
+      if (!localContent[ref].photos) localContent[ref].photos=[];
+      localContent[ref].photos.push(...urls);
+      if (!localContent[ref].photo_principale) localContent[ref].photo_principale=localContent[ref].photos[0];
+      markDirty(); refreshPhotosGrid(ref);
+      toast(`${urls.length} photo${urls.length>1?'s':''} ajoutée${urls.length>1?'s':''} ✦`);
+    }
+  }
+
+  function handleDrop(e, ref) {
+    e.preventDefault(); e.currentTarget.classList.remove('drag');
+    if (e.dataTransfer.files.length) uploadPhotos(ref, e.dataTransfer.files);
+  }
+
+  /* TOGGLE ROW */
+  function toggleRow(ref) {
+    document.getElementById('row-'+safeId(ref))?.classList.toggle('expanded');
+  }
+
+  /* RENDER ROW */
+  function renderRow(b) {
+    const ld      = localContent[b.ref]||{};
+    const name    = ld.nom_public || b.nom || b.designation || b.ref || '—';
+    const sbName  = b.nom || b.designation || b.ref;
+    const prix    = getPrix(b); const prixFmt = fmtPrice(prix);
+    const col     = b.collection||''; const variante = b.variante||'';
+    const photos  = ld.photos||[];
+    const newItem = isNew(b.ref);
+    const visible = isVisible(b.ref);
+    const surCom  = ld.sur_commande||false;
+    const sid     = safeId(b.ref);
+
+    const rowCls = newItem ? 'is-new' : visible ? 'is-visible' : 'is-hidden';
+    const visBtnCls = visible ? 'on' : 'off';
+    const visBtnTxt = visible ? '● Publié' : '○ Masqué';
+
+    return `
+    <div class="product-row ${rowCls}" id="row-${sid}">
+      <div class="row-header" onclick="toggleRow('${b.ref}')">
+        ${photos[0] ? `<img class="row-thumb" src="${photos[0]}" alt="">` : `<div class="row-thumb-ph">✦</div>`}
+        <div class="row-info">
+          <p class="row-name">${name}</p>
+          <p class="row-meta">${col}${variante?' · '+variante:''}</p>
+        </div>
+        ${newItem ? '<span class="new-tag">Nouveau</span>' : ''}
+        <button class="visibility-toggle ${visBtnCls}" id="vis-btn-${sid}"
+          onclick="toggleVisibility('${b.ref}',event)">${visBtnTxt}</button>
+        <span class="row-toggle">▼</span>
+      </div>
+
+      <div class="row-panel">
+        <!-- TEXTE -->
+        <div class="panel-grid">
+          <div class="field">
+            <label>Nom public</label>
+            <input type="text" value="${ld.nom_public||''}" placeholder="${sbName}"
+              oninput="updateField('${b.ref}','nom_public',this.value)">
+          </div>
+          <div class="field">
+            <label>Référence (Supabase)</label>
+            <input type="text" value="${b.ref||''}" readonly>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Description marketing</label>
+            <textarea placeholder="Description visible par les clients…"
+              oninput="updateField('${b.ref}','description',this.value)">${ld.description||''}</textarea>
+          </div>
+          ${prixFmt ? `<div class="field"><label>Prix (depuis Supabase)</label><input type="text" value="${prixFmt}" readonly></div>` : ''}
+        </div>
+
+        <!-- TOGGLES -->
+        <div class="toggles-row">
+          <div class="panel-toggle ${visible?'active-ok':''}" id="tog-vis-${sid}"
+            onclick="toggleVisibility('${b.ref}',event)">
+            <div class="tog-dot"></div>
+            <div class="tog-text">
+              <span class="tog-label">${visible?'Publié sur la boutique':'Masqué de la boutique'}</span>
+              <span class="tog-desc">${newItem?'Nouveau produit — activer pour publier':'Désactiver pour retirer de la boutique'}</span>
+            </div>
+          </div>
+          <div class="panel-toggle ${surCom?'active-fus':''}" id="tog-cmd-${sid}"
+            onclick="toggleCommande('${b.ref}')">
+            <div class="tog-dot"></div>
+            <div class="tog-text">
+              <span class="tog-label">${surCom?'Sur commande':'Disponible en stock'}</span>
+              <span class="tog-desc">Affiché sur la fiche produit</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHOTOS -->
+        <div class="photos-zone">
+          <p class="photos-label">Photos produit — la première = photo principale</p>
+          <div class="photos-grid" id="pg-${sid}">
+            ${photos.map((url,i)=>`
+              <div class="photo-item ${i===0?'is-main':''}">
+                <img src="${url}" alt="" onerror="this.style.opacity='0.2'">
+                ${i===0?'<div class="ph-main-badge">Principale</div>':''}
+                ${i>0?`<button class="ph-set-main" onclick="setMain('${b.ref}',${i})">★</button>`:''}
+                <button class="ph-del" onclick="rmPhoto('${b.ref}',${i})">×</button>
+              </div>`).join('')}
+          </div>
+          <div class="upload-zone"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDrop(event,'${b.ref}')">
+            <input type="file" accept="image/*" multiple onchange="uploadPhotos('${b.ref}',this.files)">
+            <div class="upload-icon">📷</div>
+            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP · plusieurs fichiers</p>
+            <div class="upload-progress" id="prog-${sid}">
+              <div class="upload-progress-bar" id="pb-${sid}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  /* FILTER + RENDER */
+  function getFiltered() {
+    let list = [...allBijoux];
+    if (currentTab === 'new')     list = list.filter(b => isNew(b.ref));
+    if (currentTab === 'visible') list = list.filter(b => isVisible(b.ref));
+    if (currentTab === 'hidden')  list = list.filter(b => !isNew(b.ref) && !isVisible(b.ref));
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      list = list.filter(b => {
+        const n = (localContent[b.ref]?.nom_public||b.nom||b.designation||b.ref||'').toLowerCase();
+        return n.includes(q)||(b.ref||'').toLowerCase().includes(q);
+      });
+    }
+    // Nouveaux en tête
+    list.sort((a,b) => {
+      const an = isNew(a.ref)?0:isVisible(a.ref)?1:2;
+      const bn = isNew(b.ref)?0:isVisible(b.ref)?1:2;
+      return an-bn;
+    });
+    return list;
+  }
+
+  function renderList() {
+    const list = document.getElementById('product-list');
+    const filtered = getFiltered();
+    list.innerHTML = filtered.length
+      ? filtered.map(b => renderRow(b)).join('')
+      : `<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em">Aucun produit dans cette catégorie</p>`;
+  }
+
+  /* TABS */
+  document.getElementById('tabs').addEventListener('click', e => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTab = tab.dataset.tab;
+    renderList();
+  });
+
+  /* SEARCH */
+  document.getElementById('search-input').addEventListener('input', function() {
+    currentSearch = this.value;
+    renderList();
+  });
+
+  /* LOAD */
+  async function loadBijoux() {
+    try {
+      const { data, error } = await sb.from('bijoux').select('*').order('collection');
+      if (error) throw error;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('product-list').style.display = 'flex';
+      document.getElementById('stats-bar').style.display = 'flex';
+
+      allBijoux = (data||[]).filter(b => b.ref && !b.ref.toUpperCase().startsWith('COMP'));
+      localContent = getLC();
+      updateStats();
+      renderList();
+    } catch(err) {
+      document.getElementById('loading').innerHTML =
+        `<p style="color:var(--fuchsia);font-family:var(--font-mono);font-size:0.7rem">Erreur : ${err.message}</p>`;
+    }
+  }
+</script>
+</body>
+</html>
