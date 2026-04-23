@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bona Nodi — Fiche produit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --sand:#e8c97a; --fuchsia:#c4286e; --fuchsia-lt:#e0558a;
+      --ink:#1a1510; --ink-lt:#2c2318; --ink-md:#221c13;
+      --cream:#faf5e8; --silver:#9a9070;
+      --glass:rgba(232,201,122,0.04); --border:rgba(232,201,122,0.14);
+      --font-display:'Bebas Neue',sans-serif;
+      --font-body:'Cormorant Garamond',serif;
+      --font-mono:'DM Mono',monospace;
+    }
+    html { scroll-behavior:smooth; }
+    body { background:var(--ink); color:var(--cream); font-family:var(--font-body); font-size:18px; line-height:1.6; }
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity:0.03; pointer-events:none; z-index:9999; }
+    ::-webkit-scrollbar { width:3px; }
+    ::-webkit-scrollbar-thumb { background:var(--fuchsia); }
+
+    /* NAV */
+    .navbar { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0.6rem 2.5rem; background:rgba(26,21,16,0.95); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-logo { text-decoration:none; display:flex; align-items:center; gap:0.65rem; }
+    .nav-logo-img { height:36px; width:36px; border-radius:50%; object-fit:cover; border:1px solid rgba(232,201,122,0.3); }
+    .nav-logo-text { display:flex; flex-direction:column; line-height:1; }
+    .nav-logo-text .l1 { font-family:var(--font-display); font-size:1.25rem; letter-spacing:0.2em; color:var(--sand); }
+    .nav-logo-text .l2 { font-family:var(--font-body); font-style:italic; font-weight:300; font-size:0.58rem; letter-spacing:0.3em; color:var(--fuchsia-lt); text-transform:uppercase; }
+
+    /* cart */
+    .cart-btn { position:relative; background:transparent; border:1px solid var(--border); color:var(--cream); cursor:pointer; padding:0.4rem 0.8rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.15em; display:flex; align-items:center; gap:0.5rem; clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px)); transition:all 0.2s; }
+    .cart-btn:hover { border-color:var(--fuchsia); color:var(--sand); }
+    .cart-count { background:var(--fuchsia); color:var(--cream); font-family:var(--font-mono); font-size:0.5rem; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .cart-count.hidden { display:none; }
+
+    /* BREADCRUMB */
+    .breadcrumb { padding:1rem 2.5rem; display:flex; align-items:center; gap:0.5rem; }
+    .breadcrumb a { font-family:var(--font-mono); font-size:0.54rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--silver); text-decoration:none; transition:color 0.2s; }
+    .breadcrumb a:hover { color:var(--sand); }
+    .breadcrumb span { font-family:var(--font-mono); font-size:0.54rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--border); }
+    .breadcrumb .current { color:var(--cream); }
+
+    /* PRODUCT LAYOUT */
+    .product-page { max-width:1100px; margin:0 auto; padding:0 2.5rem 5rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+
+    /* GALERIE */
+    .gallery { position:sticky; top:80px; }
+    .gallery-main { width:100%; aspect-ratio:1/1; object-fit:cover; background:#221a11; display:block; transition:opacity 0.2s; }
+    .gallery-main.placeholder { display:flex; align-items:center; justify-content:center; color:var(--border); font-size:4rem; }
+    .gallery-thumbs { display:flex; gap:0.5rem; margin-top:0.6rem; flex-wrap:wrap; }
+    .gallery-thumb { width:68px; height:68px; object-fit:cover; cursor:pointer; border:1px solid var(--border); opacity:0.6; transition:opacity 0.2s,border-color 0.2s; }
+    .gallery-thumb:hover { opacity:0.9; }
+    .gallery-thumb.active { opacity:1; border-color:var(--fuchsia); }
+
+    /* INFOS */
+    .product-info { display:flex; flex-direction:column; gap:1.4rem; }
+
+    .product-collection { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--fuchsia-lt); }
+    .product-ref { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--silver); margin-top:0.2rem; }
+
+    .product-name { font-family:var(--font-display); font-size:clamp(2rem,4vw,3.5rem); letter-spacing:0.06em; line-height:0.92; color:var(--sand); }
+    .product-variante { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--silver); margin-top:0.4rem; }
+
+    .product-price { font-family:var(--font-display); font-size:2.2rem; color:var(--fuchsia-lt); letter-spacing:0.05em; }
+
+    /* VARIANTS */
+    .variants-section { display:flex; flex-direction:column; gap:0.6rem; }
+    .variants-label { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--silver); }
+    .variants-grid { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .variant-btn {
+      font-family:var(--font-mono); font-size:0.54rem; letter-spacing:0.1em; text-transform:uppercase;
+      padding:0.4rem 1rem; border:1px solid var(--border); background:transparent; color:var(--silver);
+      cursor:pointer; transition:all 0.2s;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+    }
+    .variant-btn:hover { border-color:var(--sand); color:var(--cream); }
+    .variant-btn.active { background:rgba(232,201,122,0.15); border-color:var(--sand); color:var(--sand); }
+
+    /* DESCRIPTION */
+    .product-desc { font-size:1rem; font-weight:300; color:rgba(250,245,232,0.85); line-height:1.8; }
+
+    /* MATIÈRES */
+    .matieres-section { display:flex; flex-direction:column; gap:0.5rem; }
+    .matieres-title { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--silver); }
+    .matieres-list { display:flex; gap:0.35rem; flex-wrap:wrap; }
+    .matiere-tag { font-family:var(--font-mono); font-size:0.48rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.2rem 0.55rem; border:1px solid var(--border); color:var(--silver); }
+
+    /* STOCK */
+    .stock-line { font-family:var(--font-mono); font-size:0.54rem; letter-spacing:0.14em; text-transform:uppercase; }
+    .stock-ok  { color:#7ecf8a; } .stock-low { color:var(--sand); }
+    .stock-out { color:var(--fuchsia); } .stock-cmd { color:var(--fuchsia-lt); }
+
+    /* CTA */
+    .cta-group { display:flex; flex-direction:column; gap:0.6rem; }
+    .btn-add-cart {
+      width:100%; padding:1rem;
+      background:var(--fuchsia); color:var(--cream); border:none; cursor:pointer;
+      font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase;
+      clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+      transition:background 0.2s, transform 0.15s;
+    }
+    .btn-add-cart:hover { background:var(--fuchsia-lt); transform:translateY(-2px); }
+    .btn-add-cart:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+    .btn-back {
+      width:100%; padding:0.75rem;
+      background:transparent; color:var(--sand); border:1px solid rgba(232,201,122,0.3);
+      cursor:pointer; font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.18em; text-transform:uppercase; text-decoration:none;
+      display:block; text-align:center; transition:all 0.2s;
+    }
+    .btn-back:hover { background:rgba(232,201,122,0.06); border-color:var(--sand); }
+
+    /* NOTE COMMANDE */
+    .commande-note { padding:0.8rem 1rem; border:1px solid rgba(196,40,110,0.3); background:rgba(196,40,110,0.06); }
+    .commande-note p { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.1em; color:var(--fuchsia-lt); line-height:1.6; }
+
+    /* LOADING */
+    .page-loading { min-height:60vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem; }
+    .spinner { width:32px; height:32px; border:1px solid var(--border); border-top-color:var(--fuchsia); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .loading-text { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--silver); }
+
+    /* PANIER PANEL */
+    .overlay { position:fixed; inset:0; background:rgba(26,21,16,0.7); z-index:400; opacity:0; pointer-events:none; transition:opacity 0.3s; backdrop-filter:blur(4px); }
+    .overlay.open { opacity:1; pointer-events:auto; }
+    .cart-panel { position:fixed; top:0; right:0; bottom:0; width:min(400px,100vw); background:var(--ink-md); border-left:1px solid var(--border); z-index:401; transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); display:flex; flex-direction:column; }
+    .cart-panel.open { transform:translateX(0); }
+    .cart-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.4rem; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .cart-title { font-family:var(--font-display); font-size:1.4rem; letter-spacing:0.2em; color:var(--sand); }
+    .close-btn { background:transparent; border:1px solid var(--border); color:var(--silver); width:32px; height:32px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+    .close-btn:hover { border-color:var(--fuchsia); color:var(--fuchsia-lt); }
+    .cart-body { flex:1; overflow-y:auto; padding:1rem 1.4rem; }
+    .cart-empty { padding:3rem 0; text-align:center; }
+    .cart-empty p { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--silver); }
+    .cart-item { display:flex; gap:0.8rem; align-items:center; padding:0.8rem 0; border-bottom:1px solid var(--border); }
+    .cart-item-img { width:52px; height:52px; object-fit:cover; border:1px solid var(--border); flex-shrink:0; background:var(--ink-lt); }
+    .cart-item-info { flex:1; min-width:0; }
+    .cart-item-name { font-family:var(--font-body); font-style:italic; font-size:0.95rem; color:var(--cream); }
+    .cart-item-meta { font-family:var(--font-mono); font-size:0.48rem; letter-spacing:0.1em; color:var(--silver); margin-top:0.15rem; }
+    .cart-item-price { font-family:var(--font-display); font-size:1.05rem; color:var(--fuchsia-lt); flex-shrink:0; }
+    .cart-item-del { background:transparent; border:none; color:var(--silver); cursor:pointer; font-size:1rem; padding:0.2rem; transition:color 0.2s; flex-shrink:0; }
+    .cart-item-del:hover { color:var(--fuchsia-lt); }
+    .cart-qty { display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem; }
+    .cart-qty-btn { background:transparent; border:1px solid var(--border); color:var(--cream); width:22px; height:22px; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; transition:border-color 0.2s; }
+    .cart-qty-btn:hover { border-color:var(--fuchsia); }
+    .cart-qty-val { font-family:var(--font-mono); font-size:0.62rem; min-width:20px; text-align:center; }
+    .cart-footer { padding:1rem 1.4rem; border-top:1px solid var(--border); flex-shrink:0; }
+    .cart-total { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.8rem; }
+    .cart-total-label { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--silver); }
+    .cart-total-val { font-family:var(--font-display); font-size:1.6rem; color:var(--sand); }
+    .cart-checkout-btn { width:100%; padding:0.9rem; background:var(--fuchsia); color:var(--cream); border:none; cursor:pointer; font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); transition:background 0.2s; }
+    .cart-checkout-btn:hover { background:var(--fuchsia-lt); }
+
+    /* TOAST */
+    #toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); padding:0.65rem 1.4rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--cream); background:var(--fuchsia); clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px)); opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:500; white-space:nowrap; }
+    #toast.show { opacity:1; }
+
+    footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-top:2rem; }
+    .foot-logo { font-family:var(--font-display); font-size:1.2rem; letter-spacing:0.2em; color:var(--sand); opacity:0.35; }
+    .foot-copy { font-family:var(--font-mono); font-size:0.5rem; letter-spacing:0.1em; color:var(--silver); }
+
+    @media (max-width:750px) {
+      .product-page { grid-template-columns:1fr; gap:2rem; padding:0 1rem 4rem; }
+      .gallery { position:static; }
+      .breadcrumb { padding:1rem; }
+      .navbar { padding:0.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'" />
+    <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
+  </a>
+  <button class="cart-btn" id="cart-btn">
+    <span>🛒</span><span>Panier</span>
+    <span class="cart-count hidden" id="cart-count">0</span>
+  </button>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Accueil</a>
+  <span>›</span>
+  <a href="index.html#boutique">Boutique</a>
+  <span>›</span>
+  <span class="current" id="bc-name">Chargement…</span>
+</div>
+
+<!-- LOADING -->
+<div class="page-loading" id="page-loading">
+  <div class="spinner"></div>
+  <p class="loading-text">Chargement de la fiche…</p>
+</div>
+
+<!-- PRODUIT -->
+<div class="product-page" id="product-page" style="display:none">
+  <!-- GALERIE -->
+  <div class="gallery">
+    <div id="gallery-main-wrap"></div>
+    <div class="gallery-thumbs" id="gallery-thumbs"></div>
+  </div>
+
+  <!-- INFOS -->
+  <div class="product-info">
+    <div>
+      <p class="product-collection" id="p-collection"></p>
+      <p class="product-ref" id="p-ref"></p>
+    </div>
+    <div>
+      <h1 class="product-name" id="p-name"></h1>
+      <p class="product-variante" id="p-variante" style="display:none"></p>
+    </div>
+    <p class="product-price" id="p-price"></p>
+
+    <!-- VARIANTES -->
+    <div class="variants-section" id="variants-section" style="display:none">
+      <p class="variants-label">Choisir une variante</p>
+      <div class="variants-grid" id="variants-grid"></div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <p class="product-desc" id="p-desc"></p>
+
+    <!-- MATIÈRES -->
+    <div class="matieres-section" id="matieres-section" style="display:none">
+      <p class="matieres-title">Matières</p>
+      <div class="matieres-list" id="p-matieres"></div>
+    </div>
+
+    <!-- STOCK -->
+    <p class="stock-line" id="p-stock"></p>
+
+    <!-- NOTE COMMANDE -->
+    <div class="commande-note" id="commande-note" style="display:none">
+      <p>✦ Ce bijou est disponible uniquement sur commande. Délai de fabrication estimé : 1 à 2 semaines après confirmation.</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-group">
+      <button class="btn-add-cart" id="btn-add-cart">+ Ajouter au panier</button>
+      <a href="index.html#boutique" class="btn-back">← Retour à la boutique</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="foot-logo">BONA NODI</span>
+  <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <span class="cart-title">PANIER</span>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cart-total">0,00 €</span>
+    </div>
+    <button class="cart-checkout-btn" onclick="goCheckout()">→ Commander</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://twtstslwhvrhmjfcfvvu.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE'
+  );
+
+  function getLC() { try { return JSON.parse(localStorage.getItem('bn_content')||'{}'); } catch { return {}; } }
+  const fmtP = p => p!=null ? new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p) : null;
+  const getPrix = b => b.pv!=null ? parseFloat(b.pv) : null;
+  const getBaseRef = ref => ref ? ref.replace(/[A-Z]$/,'') : ref;
+  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+
+  /* PANIER — synchronisé avec index.html via localStorage */
+  let cart = [];
+  function loadCart(){ try{ cart=JSON.parse(localStorage.getItem('bn_cart')||'[]'); }catch{ cart=[]; } }
+  function saveCart(){ localStorage.setItem('bn_cart',JSON.stringify(cart)); }
+  function getCartItem(ref){ return cart.find(i=>i.ref===ref); }
+
+  function addToCart(ref,name,prix,photo,variante){
+    const existing=getCartItem(ref);
+    if(existing) existing.qty++;
+    else cart.push({ref,name,prix:prix||0,photo:photo||null,variante:variante||null,qty:1});
+    saveCart(); updateCartUI();
+    showToast(`${name} ajouté au panier ✦`);
+  }
+  function removeFromCart(ref){ cart=cart.filter(i=>i.ref!==ref); saveCart(); updateCartUI(); }
+  function changeQty(ref,delta){ const item=getCartItem(ref); if(!item)return; item.qty+=delta; if(item.qty<=0)removeFromCart(ref); else{ saveCart(); updateCartUI(); } }
+
+  function updateCartUI(){
+    const total=cart.reduce((s,i)=>s+i.prix*i.qty,0);
+    const count=cart.reduce((s,i)=>s+i.qty,0);
+    const countEl=document.getElementById('cart-count');
+    countEl.textContent=count; countEl.classList.toggle('hidden',count===0);
+    document.getElementById('cart-total').textContent=fmtP(total)||'0,00 €';
+    const body=document.getElementById('cart-body');
+    if(!cart.length){ body.innerHTML=`<div class="cart-empty"><p>Votre panier est vide</p></div>`; return; }
+    body.innerHTML=cart.map(item=>`
+      <div class="cart-item">
+        ${item.photo?`<img class="cart-item-img" src="${item.photo}" alt="">`:`<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;color:var(--border)">✦</div>`}
+        <div class="cart-item-info">
+          <p class="cart-item-name">${item.name}</p>
+          <p class="cart-item-meta">${item.variante||item.ref}</p>
+          <div class="cart-qty">
+            <button class="cart-qty-btn" onclick="changeQty('${item.ref}',-1)">−</button>
+            <span class="cart-qty-val">${item.qty}</span>
+            <button class="cart-qty-btn" onclick="changeQty('${item.ref}',1)">+</button>
+          </div>
+        </div>
+        <span class="cart-item-price">${fmtP(item.prix*item.qty)}</span>
+        <button class="cart-item-del" onclick="removeFromCart('${item.ref}')">✕</button>
+      </div>`).join('');
+  }
+
+  function openCart(){ document.getElementById('cart-panel').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeCart(){ document.getElementById('cart-panel').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('cart-btn').addEventListener('click',openCart);
+  document.getElementById('overlay').addEventListener('click',closeCart);
+  function goCheckout(){ localStorage.setItem('bn_cart',JSON.stringify(cart)); window.location.href='checkout.html'; }
+
+  /* PRODUCT DATA */
+  let allBijoux=[], lcData={}, currentRef=null;
+
+  function getRef(){ const p=new URLSearchParams(window.location.search); return p.get('ref'); }
+
+  function getVariantsOf(baseRef){ return allBijoux.filter(b=>getBaseRef(b.ref)===baseRef); }
+
+  /* GALERIE */
+  function buildGallery(photos){
+    const mainWrap=document.getElementById('gallery-main-wrap');
+    const thumbsWrap=document.getElementById('gallery-thumbs');
+    if(!photos||!photos.length){
+      mainWrap.innerHTML=`<div class="gallery-main placeholder" style="background:#221a11;display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--border)">📷</div>`;
+      thumbsWrap.innerHTML='';
+      return;
+    }
+    mainWrap.innerHTML=`<img class="gallery-main" id="gallery-main" src="${photos[0]}" alt="">`;
+    thumbsWrap.innerHTML=photos.map((url,i)=>`<img class="gallery-thumb ${i===0?'active':''}" src="${url}" alt="" onclick="switchImg(${i},'${url}')">`).join('');
+  }
+
+  function switchImg(idx,url){
+    const main=document.getElementById('gallery-main');
+    if(main){ main.style.opacity='0'; setTimeout(()=>{ main.src=url; main.style.opacity='1'; },150); }
+    document.querySelectorAll('.gallery-thumb').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  }
+
+  /* RENDER PRODUCT */
+  function renderProduct(ref){
+    const b=allBijoux.find(x=>x.ref===ref); if(!b) return;
+    const ld=lcData[ref]||{};
+    const name=ld.nom_public||b.nom||b.ref||'—';
+    const prix=getPrix(b);
+    const matieres=ld.matieres||[];
+    const photos=ld.photos||[];
+    const col=b.collection||'';
+    const surCom=ld.sur_commande||false;
+    currentRef=ref;
+
+    /* meta */
+    document.title=`${name} — Bona Nodi`;
+    document.getElementById('bc-name').textContent=name;
+    document.getElementById('p-collection').textContent=col;
+    document.getElementById('p-ref').textContent=ref;
+    document.getElementById('p-name').textContent=name;
+    document.getElementById('p-price').textContent=prix!=null?fmtP(prix):'Prix sur demande';
+    document.getElementById('p-desc').textContent=ld.description||'';
+
+    /* variante */
+    const varEl=document.getElementById('p-variante');
+    if(b.variante){ varEl.textContent=b.variante; varEl.style.display='block'; }
+    else varEl.style.display='none';
+
+    /* galerie */
+    buildGallery(photos);
+
+    /* matières */
+    const matSec=document.getElementById('matieres-section');
+    if(matieres.length){
+      matSec.style.display='block';
+      document.getElementById('p-matieres').innerHTML=matieres.map(m=>`<span class="matiere-tag">${m}</span>`).join('');
+    } else matSec.style.display='none';
+
+    /* stock */
+    const stockEl=document.getElementById('p-stock');
+    if(surCom){ stockEl.className='stock-line stock-cmd'; stockEl.textContent='Sur commande'; }
+    else {
+      const qty=b.stock??null;
+      if(qty==null){ stockEl.textContent=''; }
+      else if(qty<=0){ stockEl.className='stock-line stock-out'; stockEl.textContent='Épuisé — bientôt disponible'; }
+      else if(qty<=3){ stockEl.className='stock-line stock-low'; stockEl.textContent=`Derniers exemplaires (${qty} en stock)`; }
+      else { stockEl.className='stock-line stock-ok'; stockEl.textContent='En stock'; }
+    }
+
+    /* note commande */
+    document.getElementById('commande-note').style.display=surCom?'block':'none';
+
+    /* btn add */
+    const btnAdd=document.getElementById('btn-add-cart');
+    const qty=b.stock??null;
+    const outOfStock=!surCom&&qty!==null&&qty<=0;
+    btnAdd.disabled=outOfStock;
+    btnAdd.textContent=outOfStock?'Épuisé':'+ Ajouter au panier';
+
+    /* variantes */
+    const baseRef=getBaseRef(ref);
+    const variants=getVariantsOf(baseRef);
+    const vSec=document.getElementById('variants-section');
+    if(variants.length>1){
+      vSec.style.display='block';
+      document.getElementById('variants-grid').innerHTML=variants.map(v=>{
+        const vld=lcData[v.ref]||{};
+        const label=v.variante||(vld.nom_public||v.nom||v.ref);
+        return `<button class="variant-btn ${v.ref===ref?'active':''}" onclick="switchVariant('${v.ref}')">${label}</button>`;
+      }).join('');
+    } else vSec.style.display='none';
+
+    /* btn add action */
+    btnAdd.onclick=()=>{
+      addToCart(currentRef,name,prix,photos[0]||null,b.variante||null);
+      openCart();
+    };
+
+    document.getElementById('page-loading').style.display='none';
+    document.getElementById('product-page').style.display='grid';
+  }
+
+  function switchVariant(ref){
+    window.history.replaceState({},'',`product.html?ref=${encodeURIComponent(ref)}`);
+    renderProduct(ref);
+  }
+
+  /* LOAD */
+  async function init(){
+    const ref=getRef();
+    if(!ref){ window.location.href='index.html'; return; }
+    lcData=getLC();
+    loadCart(); updateCartUI();
+
+    try{
+      const{data,error}=await sb.from('bijoux').select('*').order('collection');
+      if(error)throw error;
+      allBijoux=(data||[]).filter(b=>{
+        if(!b.ref||b.ref.toUpperCase().startsWith('COMP'))return false;
+        if(b.no_sell||b.draft)return false;
+        return (lcData[b.ref]||{}).visible===true;
+      });
+      renderProduct(ref);
+    }catch(err){
+      document.getElementById('page-loading').innerHTML=`<p style="font-family:var(--font-mono);color:var(--fuchsia);font-size:0.7rem">Erreur : ${err.message}</p>`;
+    }
+  }
+  init();
+</script>
+</body>
+</html>
