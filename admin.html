@@ -607,7 +607,9 @@
               ondrop="handleSlideDrop(event,${i})">
               <input type="file" accept="image/*" onchange="uploadSlideBg(${i},this.files)">
               <div class="upload-icon">📷</div>
-              <p class="upload-text">Photo de fond · Glisser ou cliquer</p>
+              <p class="upload-text">Photo de fond · Glisser ou cliquer<br>
+                <span style="opacity:0.6">Optimal : 1920×800px · JPG/WEBP · max 2Mo<br>Format paysage recommandé</span>
+              </p>
             </div>
           </div>
 
@@ -621,11 +623,11 @@
             <div class="upload-zone" style="margin-top:0.5rem">
               <input type="file" accept="image/png,image/svg+xml,image/webp" onchange="uploadSlideLogo(${i},this.files)">
               <div class="upload-icon">🖼</div>
-              <p class="upload-text">Logo PNG/SVG/WEBP · fond transparent recommandé<br>
-                <span style="opacity:0.6">Si un logo est défini, le titre texte est masqué</span>
+              <p class="upload-text">Logo PNG/SVG · fond transparent obligatoire<br>
+                <span style="opacity:0.6">Optimal : 640×240px min · PNG ou SVG<br>Si défini, remplace le titre texte</span>
               </p>
             </div>
-            <p class="logo-note">Taille max affichée : 320×120px — le logo s'adapte à la taille réelle.</p>
+            <p class="logo-note">Conseil : exporte en PNG @2x (640×240px) pour un rendu net sur écrans Retina. Affiché max 320×120px sur le site.</p>
           </div>
 
           <!-- TEXTE -->
@@ -736,7 +738,9 @@
           <div class="upload-zone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${b.ref}')">
             <input type="file" accept="image/*" multiple onchange="uploadPhotos('${b.ref}',this.files)">
             <div class="upload-icon">📷</div>
-            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP</p>
+            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP<br>
+                <span style="opacity:0.6">Optimal : 800×1067px (ratio 3:4) · max 1Mo<br>Format portrait recommandé · fond neutre ou uni</span>
+              </p>
             <div class="upload-progress" id="prog-${sid}"><div class="upload-progress-bar" id="pb-${sid}"></div></div>
           </div>
         </div>
