@@ -39,7 +39,7 @@
     .adm-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1.8rem;background:rgba(26,21,16,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.5rem}
     .adm-title{font-family:var(--font-display);font-size:1.25rem;letter-spacing:0.2em;color:var(--sand)}
     .adm-title span{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.15em;color:var(--fuchsia-lt);margin-left:0.5rem;text-transform:uppercase}
-    .adm-actions{display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap}
+    .adm-actions{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap}
     #save-status{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.26rem 0.6rem;border:1px solid transparent}
     #save-status.saved{color:var(--ok);border-color:rgba(126,207,138,0.3)}
     #save-status.unsaved{color:var(--sand);border-color:rgba(232,201,122,0.3)}
@@ -47,6 +47,10 @@
     .btn-adm:hover{border-color:var(--fuchsia);color:var(--cream)}
     .btn-adm.primary{background:var(--fuchsia);border-color:var(--fuchsia);color:var(--cream)}
     .btn-adm.primary:hover{background:var(--fuchsia-lt)}
+    .btn-adm.export-btn{border-color:rgba(126,207,138,0.4);color:var(--ok)}
+    .btn-adm.export-btn:hover{background:rgba(126,207,138,0.1)}
+    .btn-adm.import-btn{border-color:rgba(232,201,122,0.4);color:var(--sand)}
+    .btn-adm.import-btn:hover{background:rgba(232,201,122,0.08)}
 
     /* STATS */
     .stats-bar{padding:0.7rem 1.8rem;border-bottom:1px solid var(--border);display:flex;gap:2rem;flex-wrap:wrap;background:rgba(232,201,122,0.02)}
@@ -72,14 +76,8 @@
     .tab-badge.new{background:var(--sand);color:var(--ink)}
     .tab-badge.pub{background:rgba(126,207,138,0.2);color:var(--ok)}
 
-    /* ── BARRE BULK STICKY ── */
-    .bulk-bar{
-      display:none;align-items:center;gap:0.7rem;flex-wrap:wrap;
-      padding:0.65rem 1rem;margin-bottom:0.8rem;
-      background:rgba(196,40,110,0.12);border:1px solid rgba(196,40,110,0.35);
-      position:sticky;top:54px;z-index:90; /* colle sous le header */
-      backdrop-filter:blur(8px);
-    }
+    /* BULK BAR */
+    .bulk-bar{display:none;align-items:center;gap:0.7rem;flex-wrap:wrap;padding:0.65rem 1rem;margin-bottom:0.8rem;background:rgba(196,40,110,0.12);border:1px solid rgba(196,40,110,0.35);position:sticky;top:54px;z-index:90;backdrop-filter:blur(8px)}
     .bulk-bar.visible{display:flex}
     .bulk-count{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--fuchsia-lt);flex-shrink:0}
     .bulk-action{padding:0.3rem 0.8rem;font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--silver);transition:all 0.2s}
@@ -185,7 +183,6 @@
     #page-hero{display:none}
     #page-hero.active{display:block}
     #page-produits.hidden{display:none}
-
     .hero-height-picker{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;padding:1rem;background:var(--ink-md);border:1px solid var(--border)}
     .hero-height-picker label{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)}
     .height-options{display:flex;gap:0.5rem;flex-wrap:wrap}
@@ -193,10 +190,8 @@
     .height-opt:hover{border-color:var(--sand);color:var(--cream)}
     .height-opt.active{background:rgba(232,201,122,0.12);border-color:var(--sand);color:var(--sand)}
     .height-preview{font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);letter-spacing:0.1em}
-
     .slides-section-title{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver);margin-bottom:0.6rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
     .hero-editor{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1rem}
-
     .slide-card{background:var(--ink-md);border:1px solid var(--border);overflow:hidden}
     .slide-card.is-builtin{border-left:3px solid rgba(232,201,122,0.3)}
     .slide-card-header{display:flex;align-items:center;gap:0.8rem;padding:0.7rem 1rem;cursor:pointer;transition:background 0.15s}
@@ -220,15 +215,12 @@
     .slide-bg-preview{width:100%;height:110px;object-fit:cover;border:1px solid var(--border);display:block;background:var(--ink-lt)}
     .slide-bg-ph{width:100%;height:110px;border:1px dashed var(--border);background:var(--ink-lt);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.4rem}
     .slide-bg-ph span{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
-
-    /* logo preview dans slide */
     .slide-logo-preview{max-height:80px;max-width:200px;object-fit:contain;border:1px solid var(--border);background:rgba(0,0,0,0.3);padding:0.5rem}
     .slide-logo-ph{height:60px;border:1px dashed var(--border);background:var(--ink-lt);display:flex;align-items:center;justify-content:center}
     .slide-logo-ph span{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
     .logo-remove{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid rgba(196,40,110,0.3);background:transparent;color:var(--fuchsia-lt);cursor:pointer;transition:all 0.2s;margin-top:0.3rem;display:inline-block}
     .logo-remove:hover{background:rgba(196,40,110,0.15)}
     .logo-note{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;color:var(--silver);line-height:1.5;margin-top:0.3rem}
-
     .pos-picker{display:flex;gap:0.4rem}
     .pos-opt{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.7rem;border:1px solid var(--border);background:transparent;color:var(--silver);cursor:pointer;transition:all 0.2s}
     .pos-opt:hover{border-color:var(--sand);color:var(--cream)}
@@ -267,6 +259,11 @@
     <div class="adm-actions">
       <span id="save-status" class="saved">✓ Sauvegardé</span>
       <button class="btn-adm primary" id="save-btn">Sauvegarder</button>
+      <button class="btn-adm export-btn" id="export-btn" title="Télécharger toutes vos données admin">⬇ Exporter</button>
+      <label class="btn-adm import-btn" style="cursor:pointer" title="Restaurer depuis un fichier exporté">
+        ⬆ Importer
+        <input type="file" accept=".json" id="import-input" style="display:none">
+      </label>
       <a href="index.html" class="btn-adm">← Site</a>
     </div>
   </header>
@@ -291,8 +288,6 @@
         <button class="tab" data-tab="visible">Publiés <span class="tab-badge pub" id="tb-pub">0</span></button>
         <button class="tab" data-tab="hidden">Masqués</button>
       </div>
-
-      <!-- BARRE BULK — sticky sous le header -->
       <div class="bulk-bar" id="bulk-bar">
         <span class="bulk-count" id="bulk-count">0 sélectionné(s)</span>
         <button class="bulk-action pub" onclick="bulkAction('publish')">✓ Publier</button>
@@ -304,7 +299,6 @@
         </div>
         <button class="bulk-deselect" onclick="clearSelection()">✕ Désélectionner</button>
       </div>
-
       <div class="search-bar"><input type="text" id="search-input" placeholder="Rechercher…"/></div>
       <div id="loading" class="loading-state"><div class="spinner"></div><p class="loading-text">Chargement…</p></div>
       <div class="product-list" id="product-list" style="display:none"></div>
@@ -337,12 +331,12 @@
   const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
   const BUCKET='produits';
   const MATIERES_LIST=['Acier inoxydable','Laiton','Métal','Cuivre','Argent','Or','Bronze','Verre','Cristal','Perles naturelles','Polystyrène','Acrylique','Coton','Fil nylon','Cordon ciré','Résine','Bois'];
-
   const BUILTIN_SLIDES=[
     {id:'__builtin_0',eyebrow:'✦ Collection artisanale · fait main',title:'BONA',title_em:'&',title2:'NODI',sub:'Entre la brutalité du métal et la douceur des perles — chaque pièce tissée à la main.',btn_label:'→ Découvrir la boutique',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'},
-    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie et visualise ton bijou en temps réel.',btn_label:'→ Personnaliser',btn_href:'#personnaliser',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
+    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie et visualise ton bijou en temps réel.',btn_label:'→ Personnaliser',btn_href:'product.html#configurateur',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
   ];
 
+  /* LOGIN */
   document.getElementById('login-btn').addEventListener('click',tryLogin);
   document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
   function tryLogin(){
@@ -368,6 +362,37 @@
   document.getElementById('save-btn').addEventListener('click',saveLC);
   window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
   function toast(msg,err=false){const t=document.getElementById('toast');t.textContent=msg;t.className=err?'show err':'show';setTimeout(()=>t.className='',2500);}
+
+  /* ══ EXPORT / IMPORT ══ */
+  document.getElementById('export-btn').addEventListener('click',()=>{
+    const data=localStorage.getItem('bn_content')||'{}';
+    const blob=new Blob([data],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`bona-nodi-admin-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Données exportées ✦');
+  });
+
+  document.getElementById('import-input').addEventListener('change',function(){
+    const file=this.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const parsed=JSON.parse(e.target.result);
+        localStorage.setItem('bn_content',JSON.stringify(parsed));
+        lc=parsed;
+        toast('Importé ✦ — rechargement dans 1s…');
+        setTimeout(()=>location.reload(),1200);
+      }catch{
+        toast('Fichier JSON invalide',true);
+      }
+    };
+    reader.readAsText(file);
+    this.value='';
+  });
 
   /* PAGE TABS */
   document.querySelectorAll('.page-tab').forEach(t=>{
@@ -402,9 +427,8 @@
   function toggleSelect(ref,e){
     e.stopPropagation();
     if(selected.has(ref))selected.delete(ref);else selected.add(ref);
-    const sid=safeId(ref);
-    document.getElementById('chk-'+sid)?.classList.toggle('checked',selected.has(ref));
-    document.getElementById('row-'+sid)?.classList.toggle('selected',selected.has(ref));
+    document.getElementById('chk-'+safeId(ref))?.classList.toggle('checked',selected.has(ref));
+    document.getElementById('row-'+safeId(ref))?.classList.toggle('selected',selected.has(ref));
     updateBulkBar();
   }
   function updateBulkBar(){
@@ -414,9 +438,8 @@
   }
   function clearSelection(){
     selected.forEach(ref=>{
-      const sid=safeId(ref);
-      document.getElementById('chk-'+sid)?.classList.remove('checked');
-      document.getElementById('row-'+sid)?.classList.remove('selected');
+      document.getElementById('chk-'+safeId(ref))?.classList.remove('checked');
+      document.getElementById('row-'+safeId(ref))?.classList.remove('selected');
     });
     selected.clear();updateBulkBar();
   }
@@ -426,7 +449,7 @@
     else if(action==='hide'){selected.forEach(ref=>setVisibility(ref,false));toast(`${selected.size} produit${selected.size>1?'s':''} masqué${selected.size>1?'s':''}`);}
     else if(action==='matiere'){
       const mat=document.getElementById('bulk-mat-select').value;
-      if(!mat){toast('Choisir une matière d\'abord',true);return;}
+      if(!mat){toast('Choisir une matière',true);return;}
       selected.forEach(ref=>{if(!lc[ref])lc[ref]={};if(!lc[ref].matieres)lc[ref].matieres=[];if(!lc[ref].matieres.includes(mat))lc[ref].matieres.push(mat);});
       markDirty();toast(`"${mat}" assignée à ${selected.size} produit${selected.size>1?'s':''} ✦`);
     }
@@ -481,7 +504,7 @@
     return `<div class="matieres-section"><p class="matieres-label">Matières utilisées</p><div class="matieres-grid" id="mat-grid-${safeId(ref)}">${chips}${custom}</div><div class="matiere-custom"><input type="text" id="custom-mat-${safeId(ref)}" placeholder="Autre matière…"/><button onclick="addCustomMatiere('${ref}')">+ Ajouter</button></div></div>`;
   }
 
-  /* PHOTOS PRODUIT */
+  /* PHOTOS */
   function refreshPG(ref){
     const sid=safeId(ref);const grid=document.getElementById('pg-'+sid);if(!grid)return;
     const ph=lc[ref]?.photos||[];
@@ -545,8 +568,6 @@
     }
     markDirty();
   }
-
-  /* upload photo de fond slide */
   async function uploadSlideBg(editorIdx,files){
     if(!files.length)return;
     const all=getAllSlidesForEditor();const s=all[editorIdx];if(!s)return;
@@ -557,8 +578,6 @@
     const{data:ud}=sb.storage.from(BUCKET).getPublicUrl(path);
     if(ud?.publicUrl){s.photo=ud.publicUrl;saveSlideEdit(s);renderHeroEditor();toast('Photo de fond mise à jour ✦');}
   }
-
-  /* upload logo PNG slide */
   async function uploadSlideLogo(editorIdx,files){
     if(!files.length)return;
     const all=getAllSlidesForEditor();const s=all[editorIdx];if(!s)return;
@@ -569,12 +588,10 @@
     const{data:ud}=sb.storage.from(BUCKET).getPublicUrl(path);
     if(ud?.publicUrl){s.logo_url=ud.publicUrl;saveSlideEdit(s);renderHeroEditor();toast('Logo mis à jour ✦');}
   }
-
   function removeSlideLogo(editorIdx){
     const all=getAllSlidesForEditor();const s=all[editorIdx];if(!s)return;
     s.logo_url='';saveSlideEdit(s);renderHeroEditor();
   }
-
   function handleSlideDrop(e,i){e.preventDefault();e.currentTarget.classList.remove('drag');if(e.dataTransfer.files.length)uploadSlideBg(i,e.dataTransfer.files);}
 
   function renderHeroEditor(){
@@ -585,7 +602,7 @@
         <div class="slide-card-header" onclick="toggleSC(${i})">
           ${s.photo?`<img class="slide-preview-thumb" src="${s.photo}" alt="">`:`<div class="slide-preview-ph">🖼</div>`}
           <div class="slide-card-info">
-            <p class="slide-card-title">${s.logo_url?'[Logo PNG] '+( s.title||''):(s.title||'Slide '+(i+1))}</p>
+            <p class="slide-card-title">${s.logo_url?'[Logo] '+(s.title||''):(s.title||'Slide '+(i+1))}</p>
             <p class="slide-card-sub">${s.sub?s.sub.substring(0,55)+'…':'Pas de description'}</p>
           </div>
           <div class="slide-card-actions">
@@ -596,41 +613,25 @@
           </div>
         </div>
         <div class="slide-panel">
-
-          <!-- PHOTO DE FOND -->
           <div class="field">
             <label>Photo de fond</label>
             ${s.photo?`<img class="slide-bg-preview" src="${s.photo}" alt="">`:`<div class="slide-bg-ph"><span>📷</span><span>Aucune photo</span></div>`}
-            <div class="upload-zone" style="margin-top:0.5rem"
-              ondragover="event.preventDefault();this.classList.add('drag')"
-              ondragleave="this.classList.remove('drag')"
-              ondrop="handleSlideDrop(event,${i})">
+            <div class="upload-zone" style="margin-top:0.5rem" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleSlideDrop(event,${i})">
               <input type="file" accept="image/*" onchange="uploadSlideBg(${i},this.files)">
               <div class="upload-icon">📷</div>
-              <p class="upload-text">Photo de fond · Glisser ou cliquer<br>
-                <span style="opacity:0.6">Optimal : 1920×800px · JPG/WEBP · max 2Mo<br>Format paysage recommandé</span>
-              </p>
+              <p class="upload-text">Photo de fond · Glisser ou cliquer<br><span style="opacity:0.6">Optimal : 1920×800px · JPG/WEBP · max 2Mo</span></p>
             </div>
           </div>
-
-          <!-- LOGO PNG (remplace le titre texte) -->
           <div class="field">
             <label>Logo PNG (optionnel — remplace le titre texte)</label>
-            ${s.logo_url
-              ?`<img src="${s.logo_url}" alt="logo" class="slide-logo-preview">
-                <button class="logo-remove" onclick="removeSlideLogo(${i})">✕ Supprimer le logo</button>`
-              :`<div class="slide-logo-ph"><span>Aucun logo</span></div>`}
+            ${s.logo_url?`<img src="${s.logo_url}" alt="logo" class="slide-logo-preview"><button class="logo-remove" onclick="removeSlideLogo(${i})">✕ Supprimer le logo</button>`:`<div class="slide-logo-ph"><span>Aucun logo</span></div>`}
             <div class="upload-zone" style="margin-top:0.5rem">
               <input type="file" accept="image/png,image/svg+xml,image/webp" onchange="uploadSlideLogo(${i},this.files)">
               <div class="upload-icon">🖼</div>
-              <p class="upload-text">Logo PNG/SVG · fond transparent obligatoire<br>
-                <span style="opacity:0.6">Optimal : 640×240px min · PNG ou SVG<br>Si défini, remplace le titre texte</span>
-              </p>
+              <p class="upload-text">Logo PNG/SVG · fond transparent<br><span style="opacity:0.6">Optimal : 640×240px min · Si défini, remplace le titre</span></p>
             </div>
-            <p class="logo-note">Conseil : exporte en PNG @2x (640×240px) pour un rendu net sur écrans Retina. Affiché max 320×120px sur le site.</p>
+            <p class="logo-note">Conseil : exporte en PNG @2x (640×240px) pour un rendu net sur écrans Retina.</p>
           </div>
-
-          <!-- TEXTE -->
           <div class="panel-grid">
             <div class="field"><label>Accroche</label><input type="text" value="${s.eyebrow||''}" placeholder="✦ Collection…" oninput="updateSF(${i},'eyebrow',this.value)"></div>
             <div class="field"><label>Titre (si pas de logo)</label><input type="text" value="${s.title||''}" placeholder="BONA NODI" oninput="updateSF(${i},'title',this.value)"></div>
@@ -638,8 +639,6 @@
             <div class="field"><label>Texte du bouton</label><input type="text" value="${s.btn_label||''}" placeholder="→ Découvrir" oninput="updateSF(${i},'btn_label',this.value)"></div>
             <div class="field"><label>Lien du bouton</label><input type="text" value="${s.btn_href||''}" placeholder="#boutique" oninput="updateSF(${i},'btn_href',this.value)"></div>
           </div>
-
-          <!-- POSITION + STYLE BOUTON -->
           <div class="panel-grid">
             <div class="field">
               <label>Position du bloc texte</label>
@@ -656,7 +655,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>`).join('');
   }
@@ -665,7 +663,7 @@
   function updateSF(i,key,val){
     const all=getAllSlidesForEditor();const s=all[i];if(!s)return;
     s[key]=val;saveSlideEdit(s);
-    if(key==='title'){const el=document.querySelector(`#sc-${i} .slide-card-title`);if(el)el.textContent=s.logo_url?'[Logo PNG] '+val:val||'Slide '+(i+1);}
+    if(key==='title'){const el=document.querySelector(`#sc-${i} .slide-card-title`);if(el)el.textContent=s.logo_url?'[Logo] '+val:val||'Slide '+(i+1);}
     if(key==='sub'){const el=document.querySelector(`#sc-${i} .slide-card-sub`);if(el)el.textContent=val?val.substring(0,55)+'…':'Pas de description';}
   }
   function setSlideProp(i,key,val,container){
@@ -734,13 +732,12 @@
         </div>
         <div class="photos-zone">
           <p class="photos-label">Photos — première = principale</p>
+          <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em;margin-top:-0.3rem">Optimal : 800×1067px · ratio 3:4 · JPG/WEBP · max 1Mo</p>
           <div class="photos-grid" id="pg-${sid}">${ph.map((url,i)=>`<div class="photo-item ${i===0?'is-main':''}"><img src="${url}" alt="" onerror="this.style.opacity='0.2'">${i===0?'<div class="ph-main-badge">Principale</div>':''}${i>0?`<button class="ph-set-main" onclick="setMain('${b.ref}',${i})">★</button>`:''}<button class="ph-del" onclick="rmPh('${b.ref}',${i})">×</button></div>`).join('')}</div>
           <div class="upload-zone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${b.ref}')">
             <input type="file" accept="image/*" multiple onchange="uploadPhotos('${b.ref}',this.files)">
             <div class="upload-icon">📷</div>
-            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP<br>
-                <span style="opacity:0.6">Optimal : 800×1067px (ratio 3:4) · max 1Mo<br>Format portrait recommandé · fond neutre ou uni</span>
-              </p>
+            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP<br><span style="opacity:0.6">800×1067px recommandé · fond neutre</span></p>
             <div class="upload-progress" id="prog-${sid}"><div class="upload-progress-bar" id="pb-${sid}"></div></div>
           </div>
         </div>
@@ -779,7 +776,7 @@
       allB=(data||[]).filter(b=>b.ref&&!b.ref.toUpperCase().startsWith('COMP')&&!b.no_sell);
       lc=getLC();updateStats();renderList();
     }catch(err){
-      document.getElementById('loading').innerHTML=`<p style="color:var(--fuchsia);font-family:var(--font-mono);font-size:0.7rem">Erreur : ${err.message}</p>`;
+      document.getElementById('loading').innerHTML=`<p style="color:var(--fuchsia);font-family:var(--font-mono);font-size:0.7rem;padding:2rem">Erreur : ${err.message}</p>`;
     }
   }
 </script>
