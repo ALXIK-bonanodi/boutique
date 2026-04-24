@@ -278,6 +278,7 @@
     <div class="page-tabs">
       <button class="page-tab active" data-page="produits">Produits</button>
       <button class="page-tab" data-page="hero">Page d'accueil</button>
+      <button class="page-tab" data-page="promos">Codes promo</button>
     </div>
 
     <!-- PRODUITS -->
@@ -304,7 +305,69 @@
       <div class="product-list" id="product-list" style="display:none"></div>
     </div>
 
-    <!-- PAGE D'ACCUEIL -->
+    <!-- PAGE CODES PROMO -->
+    <div id="page-promos">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem">
+        <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">Gérer les codes promotionnels</p>
+        <button class="btn-adm primary" onclick="openPromoModal()">+ Nouveau code</button>
+      </div>
+      <div id="promos-list"></div>
+    </div>
+
+    <!-- MODAL NOUVEAU CODE PROMO -->
+    <div id="promo-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(26,21,16,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+      <div style="background:var(--ink-md);border:1px solid var(--border);padding:1.5rem;width:min(480px,95vw);max-height:90vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <p style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.15em;color:var(--sand)" id="promo-modal-title">NOUVEAU CODE</p>
+          <button onclick="closePromoModal()" style="background:transparent;border:1px solid var(--border);color:var(--silver);width:28px;height:28px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.8rem">
+          <div class="field"><label>Code (ex: BONA10)</label><input type="text" id="pm-code" placeholder="BONA10" style="text-transform:uppercase"/></div>
+          <div class="field">
+            <label>Type de réduction</label>
+            <select id="pm-type" onchange="updatePromoModalType()">
+              <option value="pct">Pourcentage (ex: -10%)</option>
+              <option value="fixe">Montant fixe (ex: -5€)</option>
+              <option value="livraison">Livraison offerte</option>
+            </select>
+          </div>
+          <div class="field" id="pm-valeur-wrap">
+            <label id="pm-valeur-label">Valeur (%)</label>
+            <input type="number" id="pm-valeur" min="0" placeholder="10"/>
+          </div>
+          <div class="field">
+            <label>Applicable sur</label>
+            <select id="pm-scope">
+              <option value="all">Tous les produits</option>
+              <option value="collection">Une collection spécifique</option>
+              <option value="refs">Références spécifiques</option>
+            </select>
+          </div>
+          <div class="field" id="pm-scope-detail" style="display:none">
+            <label id="pm-scope-label">Préciser (séparés par virgule)</label>
+            <input type="text" id="pm-scope-val" placeholder="ex: Chainmail ou BIJ-001,BIJ-002"/>
+          </div>
+          <div class="field"><label>Date d'expiration (optionnel)</label><input type="date" id="pm-expiration"/></div>
+          <div class="field">
+            <label>Usage</label>
+            <select id="pm-usage">
+              <option value="illimite">Illimité</option>
+              <option value="unique">Usage unique</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.8rem;background:var(--ink-lt);border:1px solid var(--border);cursor:pointer;user-select:none" onclick="togglePromoActif()" id="pm-actif-wrap">
+            <div style="width:28px;height:16px;border-radius:8px;background:var(--ok);position:relative;transition:background 0.2s" id="pm-actif-track">
+              <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cream);top:3px;left:3px;transition:transform 0.2s;transform:translateX(12px)" id="pm-actif-dot"></div>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ok)" id="pm-actif-label">Actif</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.6rem;margin-top:1.2rem">
+          <button class="btn-adm primary" style="flex:1;justify-content:center" onclick="savePromo()">Enregistrer</button>
+          <button class="btn-adm" onclick="closePromoModal()">Annuler</button>
+        </div>
+      </div>
+    </div>
     <div id="page-hero">
       <div class="hero-height-picker">
         <label>Hauteur du carrousel</label>
@@ -402,7 +465,9 @@
       const p=t.dataset.page;
       document.getElementById('page-produits').classList.toggle('hidden',p!=='produits');
       document.getElementById('page-hero').classList.toggle('active',p==='hero');
+      document.getElementById('page-promos').style.display=p==='promos'?'block':'none';
       document.getElementById('stats-bar').style.display=p==='produits'?'flex':'none';
+      if(p==='promos') renderPromos();
     });
   });
 
@@ -766,7 +831,137 @@
   });
   document.getElementById('search-input').addEventListener('input',function(){curQ=this.value;renderList();});
 
-  async function loadBijoux(){
+  /* ══ CODES PROMO ══ */
+  let editingPromoIdx=null;
+  let pmActif=true;
+
+  function getPromos(){return lc.promos||[];}
+  function savePromos(p){lc.promos=p;markDirty();}
+
+  function renderPromos(){
+    const promos=getPromos();
+    const el=document.getElementById('promos-list');
+    if(!promos.length){
+      el.innerHTML=`<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em;border:1px dashed var(--border)">Aucun code promo — cliquer "+ Nouveau code" pour commencer</p>`;
+      return;
+    }
+    const typeLabel={pct:'%',fixe:'€ fixe',livraison:'Livraison offerte'};
+    el.innerHTML=promos.map((p,i)=>`
+      <div style="display:flex;align-items:center;gap:0.8rem;padding:0.7rem 1rem;background:var(--ink-md);border:1px solid var(--border);margin-bottom:2px;${!p.actif?'opacity:0.5':''}">
+        <div style="flex:1;min-width:0">
+          <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--sand)">${p.code}</p>
+          <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.15rem">
+            ${p.type==='livraison'?'Livraison offerte':p.valeur+(p.type==='pct'?'%':'€')} · 
+            ${p.scope==='all'?'Tous produits':p.scope==='collection'?'Collection: '+p.scope_val:'Réf: '+p.scope_val} · 
+            ${p.usage==='unique'?'Usage unique':'Illimité'} · 
+            ${p.expiration?'Exp: '+p.expiration:'Sans expiration'}
+          </p>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;padding:0.2rem 0.5rem;border:1px solid ${p.actif?'rgba(126,207,138,0.4)':'var(--border)'};color:${p.actif?'var(--ok)':'var(--silver)'}">${p.actif?'Actif':'Inactif'}</span>
+        <button class="btn-adm" onclick="editPromo(${i})">Modifier</button>
+        <button class="btn-adm" onclick="deletePromo(${i})" style="border-color:rgba(196,40,110,0.3);color:var(--fuchsia-lt)">Supprimer</button>
+      </div>`).join('');
+  }
+
+  function openPromoModal(idx=null){
+    editingPromoIdx=idx;
+    const modal=document.getElementById('promo-modal');
+    modal.style.display='flex';
+    document.getElementById('promo-modal-title').textContent=idx!==null?'MODIFIER CODE':'NOUVEAU CODE';
+    if(idx!==null){
+      const p=getPromos()[idx];
+      document.getElementById('pm-code').value=p.code;
+      document.getElementById('pm-type').value=p.type;
+      document.getElementById('pm-valeur').value=p.valeur||'';
+      document.getElementById('pm-scope').value=p.scope;
+      document.getElementById('pm-scope-val').value=p.scope_val||'';
+      document.getElementById('pm-expiration').value=p.expiration||'';
+      document.getElementById('pm-usage').value=p.usage;
+      pmActif=p.actif;
+    }else{
+      document.getElementById('pm-code').value='';
+      document.getElementById('pm-type').value='pct';
+      document.getElementById('pm-valeur').value='';
+      document.getElementById('pm-scope').value='all';
+      document.getElementById('pm-scope-val').value='';
+      document.getElementById('pm-expiration').value='';
+      document.getElementById('pm-usage').value='illimite';
+      pmActif=true;
+    }
+    updatePromoModalType();
+    updatePromoActifUI();
+  }
+
+  function closePromoModal(){document.getElementById('promo-modal').style.display='none';}
+
+  function updatePromoModalType(){
+    const type=document.getElementById('pm-type').value;
+    const vWrap=document.getElementById('pm-valeur-wrap');
+    const lbl=document.getElementById('pm-valeur-label');
+    if(type==='livraison'){vWrap.style.display='none';}
+    else{vWrap.style.display='flex';lbl.textContent=type==='pct'?'Valeur (%)':'Montant (€)';}
+    const sWrap=document.getElementById('pm-scope-detail');
+    const sVal=document.getElementById('pm-scope').value;
+    sWrap.style.display=sVal!=='all'?'flex':'none';
+  }
+
+  document.getElementById('pm-scope').addEventListener('change',()=>{
+    const v=document.getElementById('pm-scope').value;
+    const wrap=document.getElementById('pm-scope-detail');
+    const lbl=document.getElementById('pm-scope-label');
+    wrap.style.display=v!=='all'?'flex':'none';
+    lbl.textContent=v==='collection'?'Nom de la collection':'Références (séparées par virgule)';
+  });
+
+  function togglePromoActif(){pmActif=!pmActif;updatePromoActifUI();}
+  function updatePromoActifUI(){
+    const track=document.getElementById('pm-actif-track');
+    const dot=document.getElementById('pm-actif-dot');
+    const lbl=document.getElementById('pm-actif-label');
+    track.style.background=pmActif?'var(--ok)':'var(--border)';
+    dot.style.transform=pmActif?'translateX(12px)':'translateX(0)';
+    lbl.textContent=pmActif?'Actif':'Inactif';
+    lbl.style.color=pmActif?'var(--ok)':'var(--silver)';
+  }
+
+  function savePromo(){
+    const code=document.getElementById('pm-code').value.trim().toUpperCase();
+    if(!code){toast('Le code est requis',true);return;}
+    const type=document.getElementById('pm-type').value;
+    const valeur=type!=='livraison'?parseFloat(document.getElementById('pm-valeur').value)||0:0;
+    const scope=document.getElementById('pm-scope').value;
+    const scope_val=document.getElementById('pm-scope-val').value.trim();
+    const expiration=document.getElementById('pm-expiration').value||null;
+    const usage=document.getElementById('pm-usage').value;
+    const promo={code,type,valeur,scope,scope_val,expiration,usage,actif:pmActif};
+
+    const promos=getPromos();
+    /* vérifier doublon si nouveau */
+    if(editingPromoIdx===null){
+      if(promos.find(p=>p.code===code)){toast('Ce code existe déjà',true);return;}
+      promos.push(promo);
+    }else{
+      promos[editingPromoIdx]=promo;
+    }
+    savePromos(promos);
+    closePromoModal();
+    renderPromos();
+    toast('Code promo sauvegardé ✦');
+  }
+
+  function editPromo(idx){openPromoModal(idx);}
+
+  function deletePromo(idx){
+    if(!confirm('Supprimer ce code promo ?'))return;
+    const promos=getPromos();
+    promos.splice(idx,1);
+    savePromos(promos);
+    renderPromos();
+    toast('Code supprimé');
+  }
+
+  /* init page promos cachée */
+  document.getElementById('page-promos').style.display='none';
     try{
       const{data,error}=await sb.from('bijoux').select('*').order('collection');
       if(error)throw error;
