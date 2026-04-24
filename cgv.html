@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bona Nodi — Conditions Générales de Vente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --sand:#e8c97a;--fuchsia:#c4286e;--fuchsia-lt:#e0558a;
+      --ink:#1a1510;--ink-lt:#2c2318;--cream:#faf5e8;--silver:#9a9070;
+      --border:rgba(232,201,122,0.14);
+      --font-display:'Bebas Neue',sans-serif;
+      --font-body:'Cormorant Garamond',serif;
+      --font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--ink);color:var(--cream);font-family:var(--font-body);font-size:17px;line-height:1.7}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.03;pointer-events:none;z-index:9999}
+    ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--fuchsia)}
+
+    .navbar{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(26,21,16,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+    .nav-logo{text-decoration:none;display:flex;align-items:center;gap:0.65rem}
+    .nav-logo-img{height:34px;width:34px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
+    .nav-logo-text{display:flex;flex-direction:column;line-height:1}
+    .nav-logo-text .l1{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.2em;color:var(--sand)}
+    .nav-logo-text .l2{font-family:var(--font-body);font-style:italic;font-weight:300;font-size:0.56rem;letter-spacing:0.3em;color:var(--fuchsia-lt);text-transform:uppercase}
+    .nav-back{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);text-decoration:none;transition:color 0.2s}
+    .nav-back:hover{color:var(--sand)}
+
+    .cgv-hero{padding:3rem 2.5rem 2rem;border-bottom:1px solid var(--border)}
+    .cgv-hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,4rem);letter-spacing:0.1em;color:var(--sand);margin-bottom:0.5rem}
+    .cgv-hero p{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver)}
+
+    .cgv-content{max-width:760px;margin:0 auto;padding:3rem 2.5rem 6rem}
+
+    /* TOC */
+    .toc{background:rgba(232,201,122,0.04);border:1px solid var(--border);padding:1.2rem 1.4rem;margin-bottom:2.5rem}
+    .toc-title{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem}
+    .toc ol{list-style:none;display:flex;flex-direction:column;gap:0.3rem;padding:0}
+    .toc ol li a{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--fuchsia-lt);text-decoration:none;transition:color 0.2s}
+    .toc ol li a:hover{color:var(--sand)}
+    .toc ol li::before{content:counter(toc-item,decimal-leading-zero)' · ';font-family:var(--font-mono);font-size:0.52rem;color:var(--border);counter-increment:toc-item}
+    .toc ol{counter-reset:toc-item}
+
+    /* SECTIONS */
+    .cgv-section{margin-bottom:2.5rem;scroll-margin-top:80px}
+    .cgv-section h2{font-family:var(--font-display);font-size:1.4rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.8rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+    .cgv-section h3{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--fuchsia-lt);margin:1rem 0 0.4rem}
+    .cgv-section p{font-size:0.95rem;color:rgba(250,245,232,0.82);margin-bottom:0.7rem;line-height:1.8}
+    .cgv-section ul{list-style:none;padding:0;margin-bottom:0.7rem}
+    .cgv-section ul li{font-size:0.95rem;color:rgba(250,245,232,0.82);padding:0.25rem 0 0.25rem 1rem;border-left:1px solid var(--border);margin-bottom:0.3rem;line-height:1.7}
+    .cgv-section ul li::before{content:'✦ ';color:var(--fuchsia-lt);font-size:0.6rem}
+    .highlight{background:rgba(232,201,122,0.06);border-left:2px solid var(--sand);padding:0.8rem 1rem;margin:0.8rem 0}
+    .highlight p{margin-bottom:0;color:rgba(250,245,232,0.9)}
+    .placeholder{color:var(--fuchsia-lt);font-style:italic}
+
+    .update-date{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver);text-align:right;margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+    footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .foot-logo{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.2em;color:var(--sand);opacity:0.35}
+    .foot-copy{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;color:var(--silver)}
+
+    @media(max-width:700px){.navbar,.cgv-hero,.cgv-content{padding-left:1.2rem;padding-right:1.2rem}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'"/>
+    <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
+  </a>
+  <a href="index.html" class="nav-back">← Retour à la boutique</a>
+</nav>
+
+<div class="cgv-hero">
+  <h1>CONDITIONS GÉNÉRALES DE VENTE</h1>
+  <p>Bona Nodi · Bijoux artisanaux fait main · Dernière mise à jour : Mai 2025</p>
+</div>
+
+<div class="cgv-content">
+
+  <div class="toc">
+    <p class="toc-title">Sommaire</p>
+    <ol>
+      <li><a href="#art1">Identification du vendeur</a></li>
+      <li><a href="#art2">Produits</a></li>
+      <li><a href="#art3">Commandes</a></li>
+      <li><a href="#art4">Prix</a></li>
+      <li><a href="#art5">Livraison & délais</a></li>
+      <li><a href="#art6">Droit de rétractation</a></li>
+      <li><a href="#art7">Retours & remboursements</a></li>
+      <li><a href="#art8">Service après-vente (SAV)</a></li>
+      <li><a href="#art9">Garanties légales</a></li>
+      <li><a href="#art10">Données personnelles</a></li>
+      <li><a href="#art11">Propriété intellectuelle</a></li>
+      <li><a href="#art12">Droit applicable</a></li>
+    </ol>
+  </div>
+
+  <!-- ART 1 -->
+  <div class="cgv-section" id="art1">
+    <h2>Article 1 — Identification du vendeur</h2>
+    <p>La boutique en ligne Bona Nodi est exploitée par :</p>
+    <ul>
+      <li>Raison sociale : <strong>Bona Nodi</strong></li>
+      <li>Statut : <span class="placeholder">Auto-entrepreneur — SIRET : [à compléter lors de l'immatriculation]</span></li>
+      <li>Adresse : <span class="placeholder">[À compléter — domiciliation en cours]</span></li>
+      <li>Email : <strong>contact@bonanodi.fr</strong></li>
+    </ul>
+    <p>Les présentes Conditions Générales de Vente (CGV) s'appliquent à toutes les commandes passées sur le site bonanodi.fr.</p>
+  </div>
+
+  <!-- ART 2 -->
+  <div class="cgv-section" id="art2">
+    <h2>Article 2 — Produits</h2>
+    <p>Les bijoux proposés sur Bona Nodi sont fabriqués artisanalement à la main, un à un. Chaque pièce est unique et peut présenter de légères variations par rapport aux photos.</p>
+    <h3>Produits en stock</h3>
+    <p>Les bijoux marqués "En stock" ont été fabriqués et sont disponibles immédiatement à l'expédition dans les délais indiqués.</p>
+    <h3>Produits sur mesure / sur commande</h3>
+    <p>Les bijoux marqués "Sur commande" sont fabriqués après réception de la commande. Aucun droit de rétractation ne s'applique à ces produits conformément à l'article L221-28 du Code de la consommation (biens confectionnés selon les spécifications du consommateur).</p>
+  </div>
+
+  <!-- ART 3 -->
+  <div class="cgv-section" id="art3">
+    <h2>Article 3 — Commandes</h2>
+    <p>Pour passer commande, le client sélectionne les articles souhaités, renseigne ses coordonnées et choisit son mode de livraison. La commande est confirmée par email après validation.</p>
+    <p>Bona Nodi se réserve le droit d'annuler une commande en cas d'erreur manifeste de prix ou d'indisponibilité du produit. Le client sera remboursé intégralement dans ce cas.</p>
+    <div class="highlight">
+      <p>Un numéro de commande unique est attribué à chaque commande et figure dans l'email de confirmation. Conservez cet email pour tout suivi ou litige.</p>
+    </div>
+  </div>
+
+  <!-- ART 4 -->
+  <div class="cgv-section" id="art4">
+    <h2>Article 4 — Prix</h2>
+    <p>Les prix affichés sont en euros TTC. <span class="placeholder">[En tant qu'auto-entrepreneur non assujetti à la TVA, les prix sont nets de TVA — mention "TVA non applicable, art. 293 B du CGI" à ajouter lors de l'immatriculation.]</span></p>
+    <p>Les frais de livraison sont calculés et affichés avant la validation définitive de la commande.</p>
+    <p>Les éventuels codes promotionnels sont déduits du montant avant les frais de livraison, sauf indication contraire.</p>
+  </div>
+
+  <!-- ART 5 -->
+  <div class="cgv-section" id="art5">
+    <h2>Article 5 — Livraison & délais</h2>
+    <h3>Délais d'expédition</h3>
+    <ul>
+      <li><strong>Produits en stock :</strong> expédition sous 3 à 5 jours ouvrables après confirmation de commande</li>
+      <li><strong>Produits sur mesure :</strong> délai de fabrication estimé à 15 jours ouvrables, pouvant être étendu en cas de forte charge de l'atelier ou de commande complexe — le client sera informé par email</li>
+    </ul>
+    <h3>Modes de livraison</h3>
+    <ul>
+      <li><strong>Lettre Suivie La Poste :</strong> 5 à 7 jours ouvrables — sans signature</li>
+      <li><strong>Colissimo France :</strong> 3 à 5 jours ouvrables — avec suivi et signature</li>
+      <li><strong>Colissimo Europe :</strong> 5 à 8 jours ouvrables selon le pays de destination</li>
+    </ul>
+    <p>Ces délais sont indicatifs et peuvent varier selon les conditions d'acheminement de La Poste. Bona Nodi ne peut être tenu responsable des retards imputables au transporteur.</p>
+    <h3>Commandes cadeaux</h3>
+    <p>Si l'option "cadeau" est sélectionnée, la facture est envoyée uniquement par email à l'acheteur et n'est pas incluse dans le colis.</p>
+  </div>
+
+  <!-- ART 6 -->
+  <div class="cgv-section" id="art6">
+    <h2>Article 6 — Droit de rétractation</h2>
+    <div class="highlight">
+      <p>Conformément à l'article L221-18 du Code de la consommation, vous disposez d'un délai de <strong>14 jours calendaires</strong> à compter de la réception de votre commande pour exercer votre droit de rétractation, sans avoir à justifier de motifs.</p>
+    </div>
+    <h3>Exceptions</h3>
+    <p>Le droit de rétractation ne s'applique pas aux :</p>
+    <ul>
+      <li>Bijoux fabriqués sur mesure ou personnalisés selon les spécifications du client (art. L221-28 du Code de la consommation)</li>
+      <li>Produits descellés ou utilisés après livraison</li>
+    </ul>
+    <h3>Exercice du droit de rétractation</h3>
+    <p>Pour exercer ce droit, envoyez un email à <strong>contact@bonanodi.fr</strong> avec votre numéro de commande et la mention "Rétractation". Vous serez remboursé dans les 14 jours suivant la réception du produit retourné, dans son état d'origine.</p>
+    <p>Les frais de retour sont à la charge du client.</p>
+  </div>
+
+  <!-- ART 7 -->
+  <div class="cgv-section" id="art7">
+    <h2>Article 7 — Retours & remboursements</h2>
+    <h3>Conditions de retour</h3>
+    <ul>
+      <li>Délai : <strong>14 jours</strong> après réception</li>
+      <li>État du produit : intact, non porté, non endommagé, dans son emballage d'origine</li>
+      <li>Tout produit présentant des traces d'usure, de dégradation ou de modification ne pourra être remboursé</li>
+      <li>Frais de retour : à la charge du client</li>
+    </ul>
+    <h3>Procédure</h3>
+    <p>1. Envoyez un email à <strong>contact@bonanodi.fr</strong> avec votre numéro de commande<br>
+    2. Attendez la confirmation avant d'expédier le produit<br>
+    3. Utilisez un envoi suivi — Bona Nodi ne peut être tenu responsable d'un colis perdu lors du retour</p>
+    <h3>Remboursement</h3>
+    <p>Le remboursement est effectué dans les 14 jours suivant la réception et vérification du produit retourné, par le même moyen de paiement que celui utilisé lors de la commande.</p>
+  </div>
+
+  <!-- ART 8 -->
+  <div class="cgv-section" id="art8">
+    <h2>Article 8 — Service après-vente (SAV)</h2>
+    <div class="highlight">
+      <p>Bona Nodi s'engage à réparer gratuitement tout défaut de fabrication signalé dans les <strong>6 mois</strong> suivant la réception.</p>
+    </div>
+    <h3>Dans les 6 mois — défaut de fabrication</h3>
+    <ul>
+      <li>Réparation prise en charge par Bona Nodi</li>
+      <li>Frais de retour à la charge du client</li>
+      <li>Frais de renvoi du bijou réparé pris en charge par Bona Nodi</li>
+      <li>Délai de réparation estimé : 7 à 15 jours ouvrables selon la complexité</li>
+    </ul>
+    <h3>Au-delà de 6 mois</h3>
+    <p>Les réparations sont possibles mais feront l'objet d'un devis selon la nature de l'intervention. Contactez-nous à <strong>contact@bonanodi.fr</strong> avec des photos du bijou et une description du problème.</p>
+    <h3>Ce qui n'est pas couvert par le SAV</h3>
+    <ul>
+      <li>Dommages dus à une utilisation anormale ou à un accident</li>
+      <li>Usure normale du bijou</li>
+      <li>Modifications apportées par le client ou un tiers</li>
+    </ul>
+    <p>Pour toute demande SAV : <strong>contact@bonanodi.fr</strong> avec votre numéro de commande et des photos.</p>
+  </div>
+
+  <!-- ART 9 -->
+  <div class="cgv-section" id="art9">
+    <h2>Article 9 — Garanties légales</h2>
+    <p>Indépendamment de notre politique SAV, tous les produits bénéficient des garanties légales prévues par le Code de la consommation :</p>
+    <ul>
+      <li><strong>Garantie de conformité</strong> (art. L217-4 à L217-13) : 2 ans à compter de la livraison</li>
+      <li><strong>Garantie contre les vices cachés</strong> (art. 1641 à 1648 du Code civil)</li>
+    </ul>
+  </div>
+
+  <!-- ART 10 -->
+  <div class="cgv-section" id="art10">
+    <h2>Article 10 — Données personnelles</h2>
+    <p>Les données collectées lors de votre commande (nom, adresse, email, téléphone) sont utilisées exclusivement pour le traitement et la livraison de votre commande.</p>
+    <p>Ces données ne sont jamais revendues à des tiers. Elles sont conservées dans la limite nécessaire au traitement de votre commande et de vos éventuelles demandes SAV.</p>
+    <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour l'exercer : <strong>contact@bonanodi.fr</strong>.</p>
+  </div>
+
+  <!-- ART 11 -->
+  <div class="cgv-section" id="art11">
+    <h2>Article 11 — Propriété intellectuelle</h2>
+    <p>L'ensemble des créations Bona Nodi (bijoux, photos, designs, textes, logo) sont la propriété exclusive de Bona Nodi et sont protégés par le droit d'auteur.</p>
+    <p>Toute reproduction, même partielle, sans autorisation écrite préalable est strictement interdite.</p>
+  </div>
+
+  <!-- ART 12 -->
+  <div class="cgv-section" id="art12">
+    <h2>Article 12 — Droit applicable & litiges</h2>
+    <p>Les présentes CGV sont soumises au droit français. En cas de litige, une solution amiable sera recherchée en priorité via <strong>contact@bonanodi.fr</strong>.</p>
+    <p>En cas d'échec, le client peut recourir à la médiation de la consommation. <span class="placeholder">[Coordonnées du médiateur à compléter lors de l'immatriculation — obligatoire pour les professionnels]</span></p>
+    <p>À défaut de résolution amiable, les tribunaux français seront compétents.</p>
+  </div>
+
+  <p class="update-date">Version 1.0 — Mai 2025 — Ces CGV seront mises à jour lors de l'immatriculation officielle de Bona Nodi.</p>
+</div>
+
+<footer>
+  <span class="foot-logo">BONA NODI</span>
+  <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
+</footer>
+
+</body>
+</html>
