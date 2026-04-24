@@ -12,8 +12,7 @@
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
       --sand:#e8c97a; --fuchsia:#c4286e; --fuchsia-lt:#e0558a;
-      --ink:#1a1510; --ink-lt:#2c2318; --ink-md:#221c13;
-      --cream:#faf5e8; --silver:#9a9070;
+      --ink:#1a1510; --cream:#faf5e8; --silver:#9a9070;
       --glass:rgba(232,201,122,0.04); --border:rgba(232,201,122,0.14);
       --font-display:'Bebas Neue',sans-serif;
       --font-body:'Cormorant Garamond',serif;
@@ -25,7 +24,6 @@
     ::-webkit-scrollbar { width:3px; }
     ::-webkit-scrollbar-thumb { background:var(--fuchsia); }
 
-    /* NAVBAR */
     .navbar { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center; justify-content:space-between; padding:0.6rem 2.5rem; background:rgba(26,21,16,0); transition:background 0.4s; }
     .navbar.scrolled { background:rgba(26,21,16,0.93); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
     .nav-logo { text-decoration:none; display:flex; align-items:center; gap:0.65rem; }
@@ -33,28 +31,12 @@
     .nav-logo-text { display:flex; flex-direction:column; line-height:1; }
     .nav-logo-text .l1 { font-family:var(--font-display); font-size:1.25rem; letter-spacing:0.2em; color:var(--sand); }
     .nav-logo-text .l2 { font-family:var(--font-body); font-style:italic; font-weight:300; font-size:0.58rem; letter-spacing:0.3em; color:var(--fuchsia-lt); text-transform:uppercase; }
-
-    /* PANIER ICON */
-    .cart-btn {
-      position:relative; background:transparent; border:1px solid var(--border);
-      color:var(--cream); cursor:pointer; padding:0.4rem 0.8rem;
-      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.15em;
-      display:flex; align-items:center; gap:0.5rem;
-      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
-      transition:all 0.2s;
-    }
+    .cart-btn { position:relative; background:transparent; border:1px solid var(--border); color:var(--cream); cursor:pointer; padding:0.4rem 0.8rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.15em; display:flex; align-items:center; gap:0.5rem; clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px)); transition:all 0.2s; }
     .cart-btn:hover { border-color:var(--fuchsia); color:var(--sand); }
-    .cart-count {
-      background:var(--fuchsia); color:var(--cream);
-      font-family:var(--font-mono); font-size:0.5rem;
-      width:18px; height:18px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-weight:bold;
-    }
+    .cart-count { background:var(--fuchsia); color:var(--cream); font-family:var(--font-mono); font-size:0.5rem; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
     .cart-count.hidden { display:none; }
 
-    /* HERO */
-    .hero-carousel { position:relative; height:var(--hero-h,55vh); min-height:300px; overflow:hidden; }
+    .hero-carousel { position:relative; min-height:300px; overflow:hidden; }
     .slide { position:absolute; inset:0; opacity:0; transition:opacity 0.8s ease; pointer-events:none; }
     .slide.active { opacity:1; pointer-events:auto; }
     .slide-bg { position:absolute; inset:0; background-size:cover; background-position:center; transform:scale(1.04); transition:transform 6s ease; }
@@ -73,7 +55,6 @@
     .slide-btn { display:inline-flex; align-items:center; gap:0.55rem; background:var(--fuchsia); color:var(--cream); font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; padding:0.7rem 1.4rem; border:none; cursor:pointer; clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px)); transition:background 0.2s,transform 0.15s; }
     .slide-btn:hover { background:var(--fuchsia-lt); transform:translateY(-2px); }
     .slide-btn.secondary { background:transparent; border:1px solid rgba(232,201,122,0.5); color:var(--sand); }
-    .slide-btn.secondary:hover { background:rgba(232,201,122,0.1); }
     .carousel-arrow { position:absolute; bottom:3rem; z-index:10; background:rgba(26,21,16,0.5); border:1px solid var(--border); color:var(--sand); width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; transition:background 0.2s; backdrop-filter:blur(4px); }
     .carousel-arrow:hover { background:rgba(196,40,110,0.35); }
     .carousel-arrow.prev { right:3.2rem; }
@@ -82,14 +63,12 @@
     .dot { width:5px; height:5px; border-radius:50%; background:rgba(232,201,122,0.3); cursor:pointer; transition:background 0.3s,transform 0.3s; }
     .dot.active { background:var(--fuchsia); transform:scale(1.5); }
 
-    /* MARQUEE */
     .marquee-wrap { overflow:hidden; padding:0.4rem 0; background:rgba(196,40,110,0.07); border-bottom:1px solid var(--border); }
     .marquee { display:flex; gap:2.5rem; animation:marquee 24s linear infinite; white-space:nowrap; }
     .marquee span { font-family:var(--font-display); font-size:0.9rem; letter-spacing:0.28em; color:var(--fuchsia); flex-shrink:0; }
     .marquee .sep { color:var(--border); }
     @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-    /* FILTERS */
     .filters-bar { padding:0.85rem 2.5rem; display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:200; background:rgba(26,21,16,0.97); backdrop-filter:blur(12px); }
     .filters-label { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--silver); flex-shrink:0; }
     .filter-chips { display:flex; gap:0.35rem; flex-wrap:wrap; }
@@ -104,8 +83,7 @@
     .grid-wrap { padding:0.4rem 2.5rem 3rem; }
     .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1px; }
 
-    /* CARD */
-    .product-card { position:relative; background:var(--glass); border:1px solid var(--border); overflow:hidden; transition:border-color 0.3s; aspect-ratio:3/4; display:flex; flex-direction:column; animation:fadeUp 0.35s ease both; }
+    .product-card { position:relative; background:var(--glass); border:1px solid var(--border); overflow:hidden; transition:border-color 0.3s; aspect-ratio:3/4; display:flex; flex-direction:column; animation:fadeUp 0.35s ease both; cursor:pointer; }
     .product-card:hover { border-color:rgba(196,40,110,0.5); z-index:2; }
     .product-card:hover .card-actions { opacity:1; transform:translateY(0); }
     .product-card:hover .card-img { transform:scale(1.04); }
@@ -115,29 +93,12 @@
     .card-img-placeholder { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.4rem; }
     .card-img-placeholder svg { width:30px; height:30px; opacity:0.15; color:var(--sand); }
     .card-img-placeholder span { font-family:var(--font-mono); font-size:0.46rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--silver); }
-
-    /* actions au hover — remplace l'overlay simple */
-    .card-actions {
-      position:absolute; bottom:0; left:0; right:0; z-index:5;
-      display:flex; gap:1px;
-      opacity:0; transform:translateY(8px);
-      transition:opacity 0.25s, transform 0.25s;
-    }
-    .card-action-btn {
-      flex:1; padding:0.65rem 0.5rem;
-      font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.12em; text-transform:uppercase;
-      border:none; cursor:pointer; transition:background 0.2s;
-    }
-    .card-action-btn.quick-view {
-      background:rgba(26,21,16,0.88); color:var(--sand);
-      border-top:1px solid var(--border);
-    }
+    .card-actions { position:absolute; bottom:0; left:0; right:0; z-index:5; display:flex; gap:1px; opacity:0; transform:translateY(8px); transition:opacity 0.25s,transform 0.25s; }
+    .card-action-btn { flex:1; padding:0.65rem 0.5rem; font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.12em; text-transform:uppercase; border:none; cursor:pointer; transition:background 0.2s; }
+    .card-action-btn.quick-view { background:rgba(26,21,16,0.88); color:var(--sand); border-top:1px solid var(--border); }
     .card-action-btn.quick-view:hover { background:rgba(26,21,16,0.98); }
-    .card-action-btn.add-cart {
-      background:var(--fuchsia); color:var(--cream);
-    }
+    .card-action-btn.add-cart { background:var(--fuchsia); color:var(--cream); }
     .card-action-btn.add-cart:hover { background:var(--fuchsia-lt); }
-
     .card-badge { position:absolute; top:0.6rem; left:0.6rem; font-family:var(--font-mono); font-size:0.46rem; letter-spacing:0.14em; text-transform:uppercase; padding:0.16rem 0.42rem; background:rgba(26,21,16,0.88); border:1px solid var(--border); z-index:2; }
     .card-badge.chainmail { border-color:var(--silver); color:var(--silver); }
     .card-badge.poisson   { border-color:var(--sand);   color:var(--sand); }
@@ -164,99 +125,39 @@
     .error-state { padding:6rem 2.5rem; text-align:center; }
     .error-state p { font-family:var(--font-mono); font-size:0.66rem; color:var(--fuchsia); letter-spacing:0.1em; }
 
-    footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-    .foot-logo { font-family:var(--font-display); font-size:1.2rem; letter-spacing:0.2em; color:var(--sand); opacity:0.35; }
-    .foot-copy { font-family:var(--font-mono); font-size:0.5rem; letter-spacing:0.1em; color:var(--silver); }
-
-    /* ══ SLIDE-OVER FICHE RAPIDE ══ */
-    /* L'overlay ne bloque jamais la page — panels navigables sans bloquer le scroll */
-    .overlay {
-      position:fixed; inset:0; z-index:400;
-      opacity:0; pointer-events:none; transition:opacity 0.3s;
-      /* pas de backdrop-filter pour ne pas bloquer la lecture de la page */
-    }
-    /* Aucun pointer-events même ouvert — seul le panneau lui-même est cliquable */
-    .overlay.open { opacity:0; }
-
-    .slideover {
-      position:fixed; top:0; right:0; bottom:0; width:min(520px,100vw);
-      background:var(--ink-md,#221c13); border-left:1px solid var(--border);
-      z-index:401; transform:translateX(100%);
-      transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
-      display:flex; flex-direction:column; overflow:hidden;
-      box-shadow:-8px 0 40px rgba(0,0,0,0.5);
-    }
+    /* SLIDE-OVER */
+    .overlay { position:fixed; inset:0; z-index:400; opacity:0; pointer-events:none; }
+    .slideover { position:fixed; top:0; right:0; bottom:0; width:min(520px,100vw); background:#221c13; border-left:1px solid var(--border); z-index:401; transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); display:flex; flex-direction:column; overflow:hidden; box-shadow:-8px 0 40px rgba(0,0,0,0.5); }
     .slideover.open { transform:translateX(0); }
-
-    .so-header {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:1rem 1.4rem; border-bottom:1px solid var(--border); flex-shrink:0;
-    }
-    .so-close {
-      background:transparent; border:1px solid var(--border); color:var(--silver);
-      width:32px; height:32px; cursor:pointer; font-size:1.1rem;
-      display:flex; align-items:center; justify-content:center;
-      transition:all 0.2s;
-    }
+    .so-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.4rem; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .so-close { background:transparent; border:1px solid var(--border); color:var(--silver); width:32px; height:32px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
     .so-close:hover { border-color:var(--fuchsia); color:var(--fuchsia-lt); }
     .so-ref { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.15em; color:var(--silver); text-transform:uppercase; }
-
     .so-body { flex:1; overflow-y:auto; padding:1.2rem 1.4rem; display:flex; flex-direction:column; gap:1.2rem; }
-
-    /* galerie mini */
     .so-gallery { display:flex; gap:0.5rem; }
     .so-main-img { flex:1; aspect-ratio:1/1; object-fit:cover; background:#221a11; min-height:0; }
-    .so-main-img.placeholder { display:flex; align-items:center; justify-content:center; color:var(--border); font-size:2rem; }
     .so-thumbs { display:flex; flex-direction:column; gap:0.4rem; width:56px; flex-shrink:0; }
     .so-thumb { width:56px; height:56px; object-fit:cover; cursor:pointer; border:1px solid var(--border); opacity:0.65; transition:opacity 0.2s,border-color 0.2s; }
     .so-thumb.active { opacity:1; border-color:var(--fuchsia); }
-
     .so-name { font-family:var(--font-display); font-size:1.8rem; letter-spacing:0.08em; color:var(--sand); line-height:1; }
     .so-price { font-family:var(--font-display); font-size:1.4rem; color:var(--fuchsia-lt); }
     .so-variante { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--silver); }
     .so-desc { font-size:0.95rem; font-weight:300; color:rgba(250,245,232,0.8); line-height:1.7; }
-
-    /* sélecteur variantes */
     .so-variants-label { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--silver); margin-bottom:0.5rem; }
     .so-variants { display:flex; gap:0.4rem; flex-wrap:wrap; }
-    .so-variant-btn {
-      font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.1em; text-transform:uppercase;
-      padding:0.3rem 0.8rem; border:1px solid var(--border); background:transparent; color:var(--silver);
-      cursor:pointer; transition:all 0.2s;
-      clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));
-    }
+    .so-variant-btn { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.8rem; border:1px solid var(--border); background:transparent; color:var(--silver); cursor:pointer; transition:all 0.2s; clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px)); }
     .so-variant-btn:hover { border-color:var(--sand); color:var(--cream); }
     .so-variant-btn.active { background:rgba(232,201,122,0.15); border-color:var(--sand); color:var(--sand); }
-
     .so-matieres { display:flex; gap:0.3rem; flex-wrap:wrap; }
     .so-matiere { font-family:var(--font-mono); font-size:0.44rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.12rem 0.4rem; border:1px solid var(--border); color:var(--silver); }
-
     .so-footer { padding:1rem 1.4rem; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:0.6rem; flex-shrink:0; }
-    .so-btn-add {
-      width:100%; padding:0.85rem;
-      background:var(--fuchsia); color:var(--cream); border:none; cursor:pointer;
-      font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase;
-      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-      transition:background 0.2s;
-    }
+    .so-btn-add { width:100%; padding:0.85rem; background:var(--fuchsia); color:var(--cream); border:none; cursor:pointer; font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); transition:background 0.2s; }
     .so-btn-add:hover { background:var(--fuchsia-lt); }
-    .so-btn-more {
-      width:100%; padding:0.65rem;
-      background:transparent; color:var(--sand); border:1px solid rgba(232,201,122,0.3); cursor:pointer;
-      font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase;
-      transition:all 0.2s; text-decoration:none; display:block; text-align:center;
-    }
+    .so-btn-more { width:100%; padding:0.65rem; background:transparent; color:var(--sand); border:1px solid rgba(232,201,122,0.3); cursor:pointer; font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase; transition:all 0.2s; text-decoration:none; display:block; text-align:center; }
     .so-btn-more:hover { background:rgba(232,201,122,0.06); border-color:var(--sand); }
 
-    /* ══ PANIER SLIDE-OVER ══ */
-    .cart-panel {
-      position:fixed; top:0; right:0; bottom:0; width:min(400px,100vw);
-      background:var(--ink-md,#221c13); border-left:1px solid var(--border);
-      z-index:402; transform:translateX(100%);
-      transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
-      display:flex; flex-direction:column;
-      box-shadow:-8px 0 40px rgba(0,0,0,0.5);
-    }
+    /* PANIER */
+    .cart-panel { position:fixed; top:0; right:0; bottom:0; width:min(400px,100vw); background:#221c13; border-left:1px solid var(--border); z-index:402; transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); display:flex; flex-direction:column; box-shadow:-8px 0 40px rgba(0,0,0,0.5); }
     .cart-panel.open { transform:translateX(0); }
     .cart-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.4rem; border-bottom:1px solid var(--border); flex-shrink:0; }
     .cart-title { font-family:var(--font-display); font-size:1.4rem; letter-spacing:0.2em; color:var(--sand); }
@@ -264,7 +165,7 @@
     .cart-empty { padding:3rem 0; text-align:center; }
     .cart-empty p { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--silver); }
     .cart-item { display:flex; gap:0.8rem; align-items:center; padding:0.8rem 0; border-bottom:1px solid var(--border); }
-    .cart-item-img { width:52px; height:52px; object-fit:cover; border:1px solid var(--border); flex-shrink:0; background:var(--ink-lt); }
+    .cart-item-img { width:52px; height:52px; object-fit:cover; border:1px solid var(--border); flex-shrink:0; background:#221a11; }
     .cart-item-info { flex:1; min-width:0; }
     .cart-item-name { font-family:var(--font-body); font-style:italic; font-size:0.95rem; color:var(--cream); }
     .cart-item-meta { font-family:var(--font-mono); font-size:0.48rem; letter-spacing:0.1em; color:var(--silver); margin-top:0.15rem; }
@@ -279,45 +180,37 @@
     .cart-total { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.8rem; }
     .cart-total-label { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--silver); }
     .cart-total-val { font-family:var(--font-display); font-size:1.6rem; color:var(--sand); }
-    .cart-checkout-btn {
-      width:100%; padding:0.9rem; background:var(--fuchsia); color:var(--cream);
-      border:none; cursor:pointer; font-family:var(--font-mono); font-size:0.65rem;
-      letter-spacing:0.2em; text-transform:uppercase;
-      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-      transition:background 0.2s;
-    }
+    .cart-checkout-btn { width:100%; padding:0.9rem; background:var(--fuchsia); color:var(--cream); border:none; cursor:pointer; font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); transition:background 0.2s; }
     .cart-checkout-btn:hover { background:var(--fuchsia-lt); }
 
-    /* TOAST */
     #toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); padding:0.65rem 1.4rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--cream); background:var(--fuchsia); clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px)); opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:500; white-space:nowrap; }
     #toast.show { opacity:1; }
+
+    footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+    .foot-logo { font-family:var(--font-display); font-size:1.2rem; letter-spacing:0.2em; color:var(--sand); opacity:0.35; }
+    .foot-copy { font-family:var(--font-mono); font-size:0.5rem; letter-spacing:0.1em; color:var(--silver); }
 
     @media (max-width:700px) {
       .navbar { padding:0.5rem 1rem; }
       .slide-content { left:1.2rem; right:5rem; }
       .filters-bar,.grid-wrap,.coll-header { padding-left:1rem; padding-right:1rem; }
       .product-grid { grid-template-columns:1fr 1fr; }
-      .so-gallery { flex-direction:column; }
-      .so-thumbs { flex-direction:row; width:auto; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <a href="#" class="nav-logo" id="home-link">
     <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'" />
     <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
   </a>
   <button class="cart-btn" id="cart-btn">
-    <span>🛒</span>
-    <span>Panier</span>
+    <span>🛒</span><span>Panier</span>
     <span class="cart-count hidden" id="cart-count">0</span>
   </button>
 </nav>
 
-<!-- HERO -->
 <section class="hero-carousel" id="hero">
   <div id="slides-container"></div>
   <button class="carousel-arrow prev" id="arrow-prev">‹</button>
@@ -325,7 +218,6 @@
   <div class="carousel-dots" id="dots"></div>
 </section>
 
-<!-- MARQUEE -->
 <div class="marquee-wrap">
   <div class="marquee">
     <span>CHAINMAIL</span><span class="sep"> ✦ </span><span>POISSON PERLES</span><span class="sep"> ✦ </span>
@@ -337,7 +229,6 @@
   </div>
 </div>
 
-<!-- BOUTIQUE -->
 <section id="boutique">
   <div class="filters-bar">
     <span class="filters-label">Filtrer —</span>
@@ -359,10 +250,8 @@
   <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
 </footer>
 
-<!-- OVERLAY -->
 <div class="overlay" id="overlay"></div>
 
-<!-- SLIDE-OVER FICHE RAPIDE -->
 <div class="slideover" id="slideover">
   <div class="so-header">
     <span class="so-ref" id="so-ref"></span>
@@ -388,7 +277,6 @@
   </div>
 </div>
 
-<!-- PANIER -->
 <div class="cart-panel" id="cart-panel">
   <div class="cart-header">
     <span class="cart-title">PANIER</span>
@@ -413,87 +301,104 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE'
   );
 
-  function getLC() { try { return JSON.parse(localStorage.getItem('bn_content')||'{}'); } catch { return {}; } }
+  /* ── DONNÉES ADMIN depuis Supabase ── */
+  let contentMap = {};   /* ref → boutique_content row */
+  let settings   = {};   /* boutique_settings key→value */
+
+  async function loadAdminData() {
+    const [{ data: content }, { data: sets }] = await Promise.all([
+      sb.from('boutique_content').select('*'),
+      sb.from('boutique_settings').select('*')
+    ]);
+    if (content) content.forEach(r => { contentMap[r.ref] = r; });
+    if (sets)    sets.forEach(r => { settings[r.key] = r.value; });
+  }
+
+  function getContent(ref) { return contentMap[ref] || {}; }
 
   /* NAVBAR */
-  window.addEventListener('scroll',()=>{ document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40); });
-  document.getElementById('home-link').addEventListener('click',e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
+  window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40); });
+  document.getElementById('home-link').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-  /* HAUTEUR HERO */
-  const H_MAP={full:'100vh',half:'50vh',third:'35vh',default:'55vh'};
-  (()=>{ const lc=getLC(); document.getElementById('hero').style.height=H_MAP[lc.__hero_height]||'55vh'; })();
-
-  /* CAROUSEL */
-  const BUILTIN_SLIDES=[
-    {id:'__builtin_0',eyebrow:'✦ Collection artisanale · fait main',title:'BONA',title_em:'&',title2:'NODI',sub:'Entre la brutalité du métal et la douceur des perles.',btn_label:'→ Découvrir la boutique',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'},
-    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie en temps réel.',btn_label:'→ Personnaliser',btn_href:'product.html#configurateur',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
+  /* ── CAROUSEL ── */
+  const BUILTIN_SLIDES = [
+    { id: '__builtin_0', eyebrow: '✦ Collection artisanale · fait main', title: 'BONA', title_em: '&', title2: 'NODI', sub: 'Entre la brutalité du métal et la douceur des perles — chaque pièce tissée à la main.', btn_label: '→ Découvrir la boutique', btn_href: '#boutique', btn_style: 'primary', photo: '', logo_url: '', pos: 'left' },
+    { id: '__builtin_1', eyebrow: '✦ Personnalisation', title: 'TON', title_em: '', title2: 'POISSON', sub: 'Choisis les couleurs de chaque partie en temps réel.', btn_label: '→ Personnaliser', btn_href: 'product.html', btn_style: 'secondary', photo: '', logo_url: '', pos: 'left' }
   ];
-  function getSlides(){
-    const lc=getLC(); const edited=lc.__slides_edited||{}; const custom=lc.__hero_slides||[];
-    return [...BUILTIN_SLIDES.map(s=>({...s,...(edited[s.id]||{})})),...custom];
+
+  function getSlides() {
+    const edited  = settings['slides_edited'] || {};
+    const custom  = settings['hero_slides']   || [];
+    const heroH   = settings['hero_height']   || 'default';
+    const H_MAP   = { full: '100vh', half: '50vh', third: '35vh', default: '55vh' };
+    document.getElementById('hero').style.height = H_MAP[heroH] || '55vh';
+    return [...BUILTIN_SLIDES.map(s => ({ ...s, ...(edited[s.id] || {}) })), ...custom];
   }
-  let slides=[],cur=0,autoT=null;
-  function buildCarousel(){
-    slides=getSlides();
-    const cont=document.getElementById('slides-container'), dotsEl=document.getElementById('dots');
-    cont.innerHTML=slides.map((s,i)=>`
-      <div class="slide ${i===0?'active':''}" id="slide-${i}">
-        <div class="slide-bg ${s.photo?'':'no-photo'}" ${s.photo?`style="background-image:url('${s.photo}')"`:''} ></div>
-        <div class="slide-content ${s.pos==='right'?'pos-right':''}">
-          ${s.eyebrow?`<p class="slide-eyebrow">${s.eyebrow}</p>`:''}
-          ${s.logo_url?`<img src="${s.logo_url}" alt="logo" class="slide-logo">`:`<h1 class="slide-title">${s.title||''}${s.title_em?` <em>${s.title_em}</em>`:''}${s.title2?' '+s.title2:''}</h1>`}
-          ${s.sub?`<p class="slide-sub">${s.sub}</p>`:''}
-          ${s.btn_label?`<a href="${s.btn_href||'#boutique'}" class="slide-btn ${s.btn_style==='secondary'?'secondary':''}">${s.btn_label}</a>`:''}
+
+  let slides = [], cur = 0, autoT = null;
+
+  function buildCarousel() {
+    slides = getSlides();
+    const cont = document.getElementById('slides-container');
+    const dotsEl = document.getElementById('dots');
+    cont.innerHTML = slides.map((s, i) => `
+      <div class="slide ${i === 0 ? 'active' : ''}" id="slide-${i}">
+        <div class="slide-bg ${s.photo ? '' : 'no-photo'}" ${s.photo ? `style="background-image:url('${s.photo}')"` : ''}></div>
+        <div class="slide-content ${s.pos === 'right' ? 'pos-right' : ''}">
+          ${s.eyebrow ? `<p class="slide-eyebrow">${s.eyebrow}</p>` : ''}
+          ${s.logo_url ? `<img src="${s.logo_url}" alt="logo" class="slide-logo">` : `<h1 class="slide-title">${s.title || ''}${s.title_em ? ` <em>${s.title_em}</em>` : ''}${s.title2 ? ' ' + s.title2 : ''}</h1>`}
+          ${s.sub ? `<p class="slide-sub">${s.sub}</p>` : ''}
+          ${s.btn_label ? `<a href="${s.btn_href || '#boutique'}" class="slide-btn ${s.btn_style === 'secondary' ? 'secondary' : ''}">${s.btn_label}</a>` : ''}
         </div>
       </div>`).join('');
-    dotsEl.innerHTML=slides.map((_,i)=>`<div class="dot ${i===0?'active':''}" data-idx="${i}"></div>`).join('');
-    dotsEl.addEventListener('click',e=>{ const d=e.target.closest('.dot'); if(d) goTo(parseInt(d.dataset.idx)); });
+    dotsEl.innerHTML = slides.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}" data-idx="${i}"></div>`).join('');
+    dotsEl.addEventListener('click', e => { const d = e.target.closest('.dot'); if (d) goTo(parseInt(d.dataset.idx)); });
   }
-  function goTo(idx){
-    document.getElementById('slide-'+cur)?.classList.remove('active');
+
+  function goTo(idx) {
+    document.getElementById('slide-' + cur)?.classList.remove('active');
     document.querySelector('.dot.active')?.classList.remove('active');
-    cur=(idx+slides.length)%slides.length;
-    document.getElementById('slide-'+cur)?.classList.add('active');
+    cur = (idx + slides.length) % slides.length;
+    document.getElementById('slide-' + cur)?.classList.add('active');
     document.querySelector(`.dot[data-idx="${cur}"]`)?.classList.add('active');
     resetT();
   }
-  function resetT(){ clearInterval(autoT); autoT=setInterval(()=>goTo(cur+1),6000); }
-  document.getElementById('arrow-prev').addEventListener('click',()=>goTo(cur-1));
-  document.getElementById('arrow-next').addEventListener('click',()=>goTo(cur+1));
-  buildCarousel(); resetT();
+  function resetT() { clearInterval(autoT); autoT = setInterval(() => goTo(cur + 1), 6000); }
+  document.getElementById('arrow-prev').addEventListener('click', () => goTo(cur - 1));
+  document.getElementById('arrow-next').addEventListener('click', () => goTo(cur + 1));
 
   /* UTILS */
-  const getPrix=b=>b.pv!=null?parseFloat(b.pv):null;
-  const fmtP=p=>p!=null?new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p):null;
-  function stockHtml(b,ld){
-    if(ld?.sur_commande)return '<span class="card-stock stock-cmd">Sur commande</span>';
-    const qty=b.stock??null;
-    if(qty==null)return ''; if(qty<=0)return '<span class="card-stock stock-out">Épuisé</span>';
-    if(qty<=3)return `<span class="card-stock stock-low">Derniers (${qty})</span>`;
+  const getPrix = b => b.pv != null ? parseFloat(b.pv) : null;
+  const fmtP = p => p != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p) : null;
+  function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+
+  function stockHtml(b, c) {
+    if (c?.sur_commande) return '<span class="card-stock stock-cmd">Sur commande</span>';
+    const qty = b.stock ?? null;
+    if (qty == null) return '';
+    if (qty <= 0) return '<span class="card-stock stock-out">Épuisé</span>';
+    if (qty <= 3) return `<span class="card-stock stock-low">Derniers (${qty})</span>`;
     return '<span class="card-stock stock-ok">En stock</span>';
   }
-  function badgeCls(col){ const c=(col||'').toLowerCase(); if(c.includes('chainmail'))return 'chainmail'; if(c.includes('poisson'))return 'poisson'; if(c.includes('sac'))return 'sac'; if(c.includes('porte'))return 'porteclef'; return ''; }
+  function badgeCls(col) { const c = (col || '').toLowerCase(); if (c.includes('chainmail')) return 'chainmail'; if (c.includes('poisson')) return 'poisson'; if (c.includes('sac')) return 'sac'; if (c.includes('porte')) return 'porteclef'; return ''; }
 
-  /* BIJOUX DATA */
-  let allBijoux=[], lcData={};
+  /* BIJOUX */
+  let allBijoux = [];
+  const getBaseRef = ref => ref ? ref.replace(/[A-Z]$/, '') : ref;
 
-  /* Grouper les variantes par référence de base (ex: BIJ-001A → base BIJ-001) */
-  function getBaseRef(ref){ return ref ? ref.replace(/[A-Z]$/,'') : ref; }
-  function getVariantsOf(baseRef){ return allBijoux.filter(b=>getBaseRef(b.ref)===baseRef); }
-
-  /* CARD HTML */
-  function cardHTML(b,idx){
-    const ld=lcData[b.ref]||{};
-    const name=ld.nom_public||b.nom||b.ref||'—';
-    const photo=ld.photo_principale||null;
-    const prix=getPrix(b); const col=b.collection||'';
-    const delay=Math.min(idx*32,480);
-    const matieres=ld.matieres||[];
-    return `<div class="product-card" style="animation-delay:${delay}ms;cursor:pointer" onclick="goToProduct('${b.ref}')">
+  function cardHTML(b, idx) {
+    const c = getContent(b.ref);
+    const name  = c.nom_public || b.nom || b.ref || '—';
+    const photo = c.photo_principale || (c.photos && c.photos[0]) || null;
+    const prix  = getPrix(b);
+    const col   = b.collection || '';
+    const delay = Math.min(idx * 32, 480);
+    const matieres = c.matieres || [];
+    return `<div class="product-card" style="animation-delay:${delay}ms" onclick="goToProduct('${b.ref}')">
       <div class="card-img-wrap">
-        ${photo?`<img class="card-img" src="${photo}" alt="${name}" loading="lazy">`:`<div class="card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo à venir</span></div>`}
-        ${col?`<span class="card-badge ${badgeCls(col)}">${col}</span>`:''}
-        ${ld.sur_commande?`<span class="card-badge-commande">Sur commande</span>`:''}
+        ${photo ? `<img class="card-img" src="${photo}" alt="${name}" loading="lazy">` : `<div class="card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo à venir</span></div>`}
+        ${col ? `<span class="card-badge ${badgeCls(col)}">${col}</span>` : ''}
+        ${c.sur_commande ? `<span class="card-badge-commande">Sur commande</span>` : ''}
         <div class="card-actions">
           <button class="card-action-btn quick-view" onclick="openSlideover('${b.ref}',event)">Aperçu</button>
           <button class="card-action-btn add-cart" onclick="addToCart('${b.ref}',event)">+ Panier</button>
@@ -501,224 +406,171 @@
       </div>
       <div class="card-info">
         <p class="card-name">${name}</p>
-        ${b.variante?`<p class="card-variante">${b.variante}</p>`:''}
-        ${matieres.length?`<div class="card-matieres">${matieres.map(m=>`<span class="matiere-tag">${m}</span>`).join('')}</div>`:''}
+        ${b.variante ? `<p class="card-variante">${b.variante}</p>` : ''}
+        ${matieres.length ? `<div class="card-matieres">${matieres.map(m => `<span class="matiere-tag">${m}</span>`).join('')}</div>` : ''}
         <div class="card-footer">
-          ${prix!=null?`<span class="card-price">${fmtP(prix)}</span>`:''}
-          ${stockHtml(b,ld)}
+          ${prix != null ? `<span class="card-price">${fmtP(prix)}</span>` : ''}
+          ${stockHtml(b, c)}
         </div>
       </div>
     </div>`;
   }
 
-  function renderCollections(bijoux){
-    const wrap=document.getElementById('collections-wrap');
-    const groups={};
-    bijoux.forEach(b=>{ const k=b.collection||'Autres'; if(!groups[k])groups[k]=[]; groups[k].push(b); });
-    let html='',gi=0;
-    Object.entries(groups).forEach(([col,items])=>{
-      html+=`<div class="coll-group" data-collection="${col}">
-        <div class="coll-header"><span class="coll-title">${col.toUpperCase()}</span><div class="coll-line"></div><span class="coll-count">${items.length} pièce${items.length>1?'s':''}</span></div>
-        <div class="grid-wrap"><div class="product-grid">${items.map(b=>cardHTML(b,gi++)).join('')}</div></div>
+  function renderCollections(bijoux) {
+    const wrap = document.getElementById('collections-wrap');
+    const groups = {};
+    bijoux.forEach(b => { const k = b.collection || 'Autres'; if (!groups[k]) groups[k] = []; groups[k].push(b); });
+    let html = '', gi = 0;
+    Object.entries(groups).forEach(([col, items]) => {
+      html += `<div class="coll-group" data-collection="${col}">
+        <div class="coll-header"><span class="coll-title">${col.toUpperCase()}</span><div class="coll-line"></div><span class="coll-count">${items.length} pièce${items.length > 1 ? 's' : ''}</span></div>
+        <div class="grid-wrap"><div class="product-grid">${items.map(b => cardHTML(b, gi++)).join('')}</div></div>
       </div>`;
     });
-    wrap.innerHTML=html||'<div class="boutique-empty"><p>Aucun produit publié pour le moment</p></div>';
-    wrap.style.display='block';
+    wrap.innerHTML = html || '<div class="boutique-empty"><p>Aucun produit publié pour le moment</p></div>';
+    wrap.style.display = 'block';
   }
 
-  function applyFilter(f){ document.querySelectorAll('.coll-group').forEach(g=>{ const c=g.dataset.collection||''; g.style.display=(f==='all'||c.toLowerCase().includes(f.toLowerCase()))?'':'none'; }); }
-  document.getElementById('filter-chips').addEventListener('click',e=>{ const chip=e.target.closest('.chip'); if(!chip)return; document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); chip.classList.add('active'); applyFilter(chip.dataset.filter); });
+  function applyFilter(f) { document.querySelectorAll('.coll-group').forEach(g => { const c = g.dataset.collection || ''; g.style.display = (f === 'all' || c.toLowerCase().includes(f.toLowerCase())) ? '' : 'none'; }); }
+  document.getElementById('filter-chips').addEventListener('click', e => { const chip = e.target.closest('.chip'); if (!chip) return; document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); applyFilter(chip.dataset.filter); });
 
-  /* Navigation directe vers la fiche produit */
-  function goToProduct(ref){
-    window.location.href=`product.html?ref=${encodeURIComponent(ref)}`;
-  }
+  function goToProduct(ref) { window.location.href = `product.html?ref=${encodeURIComponent(ref)}`; }
 
-  /* ══ SLIDE-OVER ══ */
-  let currentSoRef=null, currentSoVariantRef=null;
+  /* ── SLIDE-OVER ── */
+  let currentSoRef = null;
 
-  function openSlideover(ref,e){
-    if(e) e.stopPropagation();
-    const b=allBijoux.find(x=>x.ref===ref); if(!b) return;
-    const ld=lcData[ref]||{};
-    const name=ld.nom_public||b.nom||b.ref||'—';
-    const prix=getPrix(b);
-    const matieres=ld.matieres||[];
-    const photos=ld.photos||[];
+  function openSlideover(ref, e) {
+    if (e) e.stopPropagation();
+    const b = allBijoux.find(x => x.ref === ref); if (!b) return;
+    const c = getContent(ref);
+    const name   = c.nom_public || b.nom || b.ref || '—';
+    const prix   = getPrix(b);
+    const photos = c.photos || [];
+    const matieres = c.matieres || [];
+    currentSoRef = ref;
 
-    currentSoRef=ref;
-    currentSoVariantRef=ref;
+    document.getElementById('so-ref').textContent = b.ref;
+    document.getElementById('so-name').textContent = name;
+    document.getElementById('so-price').textContent = prix != null ? fmtP(prix) : 'Prix sur demande';
+    document.getElementById('so-desc').textContent = c.description || '';
 
-    document.getElementById('so-ref').textContent=b.ref;
-    document.getElementById('so-name').textContent=name;
-    document.getElementById('so-price').textContent=prix!=null?fmtP(prix):'Prix sur demande';
-    document.getElementById('so-desc').textContent=ld.description||'';
+    const varEl = document.getElementById('so-variante');
+    if (b.variante) { varEl.textContent = b.variante; varEl.style.display = 'block'; } else varEl.style.display = 'none';
 
-    /* variante courante */
-    const varEl=document.getElementById('so-variante');
-    if(b.variante){ varEl.textContent=b.variante; varEl.style.display='block'; }
-    else varEl.style.display='none';
+    const gal = document.getElementById('so-gallery');
+    if (photos.length) {
+      gal.innerHTML = `<img class="so-main-img" id="so-main-img" src="${photos[0]}" alt="" style="flex:1"><div class="so-thumbs">${photos.map((url, i) => `<img class="so-thumb ${i === 0 ? 'active' : ''}" src="${url}" onclick="switchSoImg(${i},'${url}')" alt="">`).join('')}</div>`;
+    } else {
+      gal.innerHTML = `<div style="flex:1;aspect-ratio:1/1;background:#221a11;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:2rem">📷</div>`;
+    }
 
-    /* galerie */
-    buildSoGallery(photos);
+    document.getElementById('so-matieres').innerHTML = matieres.map(m => `<span class="so-matiere">${m}</span>`).join('');
 
-    /* matières */
-    const matEl=document.getElementById('so-matieres');
-    matEl.innerHTML=matieres.map(m=>`<span class="so-matiere">${m}</span>`).join('');
-
-    /* variantes du même produit (même base ref) */
-    const baseRef=getBaseRef(ref);
-    const variants=getVariantsOf(baseRef);
-    const vWrap=document.getElementById('so-variants-wrap');
-    const vList=document.getElementById('so-variants');
-    if(variants.length>1){
-      vWrap.style.display='block';
-      vList.innerHTML=variants.map(v=>{
-        const vld=lcData[v.ref]||{};
-        const label=v.variante||(vld.nom_public||v.nom||v.ref);
-        return `<button class="so-variant-btn ${v.ref===ref?'active':''}" onclick="switchVariant('${v.ref}')">${label}</button>`;
+    const baseRef = getBaseRef(ref);
+    const variants = allBijoux.filter(x => getBaseRef(x.ref) === baseRef);
+    const vWrap = document.getElementById('so-variants-wrap');
+    if (variants.length > 1) {
+      vWrap.style.display = 'block';
+      document.getElementById('so-variants').innerHTML = variants.map(v => {
+        const vc = getContent(v.ref);
+        const lbl = v.variante || vc.nom_public || v.nom || v.ref;
+        return `<button class="so-variant-btn ${v.ref === ref ? 'active' : ''}" onclick="openSlideover('${v.ref}',event)">${lbl}</button>`;
       }).join('');
-    } else { vWrap.style.display='none'; }
+    } else vWrap.style.display = 'none';
 
-    /* lien fiche complète */
-    document.getElementById('so-btn-more').href=`product.html?ref=${encodeURIComponent(ref)}`;
-
-    document.getElementById('overlay').classList.add('open');
+    document.getElementById('so-btn-more').href = `product.html?ref=${encodeURIComponent(ref)}`;
     document.getElementById('slideover').classList.add('open');
-    /* pas de overflow:hidden — la page reste scrollable */
   }
 
-  function buildSoGallery(photos){
-    const gal=document.getElementById('so-gallery');
-    if(!photos.length){
-      gal.innerHTML=`<div class="so-main-img placeholder" style="background:#221a11;flex:1;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;color:var(--border)">📷</div>`;
-      return;
-    }
-    gal.innerHTML=`
-      <img class="so-main-img" id="so-main-img" src="${photos[0]}" alt="" style="flex:1">
-      <div class="so-thumbs">
-        ${photos.map((url,i)=>`<img class="so-thumb ${i===0?'active':''}" src="${url}" onclick="switchSoImg(${i},'${url}')" alt="">`).join('')}
-      </div>`;
+  function switchSoImg(idx, url) {
+    const m = document.getElementById('so-main-img'); if (m) m.src = url;
+    document.querySelectorAll('.so-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
   }
+  function closeSlideover() { document.getElementById('slideover').classList.remove('open'); }
+  document.getElementById('so-btn-add').addEventListener('click', () => { if (currentSoRef) addToCart(currentSoRef); });
 
-  function switchSoImg(idx,url){
-    document.getElementById('so-main-img').src=url;
-    document.querySelectorAll('.so-thumb').forEach((t,i)=>t.classList.toggle('active',i===idx));
-  }
+  /* ── PANIER ── */
+  let cart = [];
+  function loadCart() { try { cart = JSON.parse(localStorage.getItem('bn_cart') || '[]'); } catch { cart = []; } }
+  function saveCart() { localStorage.setItem('bn_cart', JSON.stringify(cart)); }
 
-  function switchVariant(ref){
-    openSlideover(ref);
-  }
-
-  function closeSlideover(){
-    document.getElementById('slideover').classList.remove('open');
-    document.getElementById('overlay').classList.remove('open');
-  }
-
-  /* ══ PANIER ══ */
-  let cart=[]; // [{ref, name, price, photo, variante, qty}]
-
-  function getCartItem(ref){ return cart.find(i=>i.ref===ref); }
-
-  function addToCart(ref,e){
-    if(e) e.stopPropagation();
-    const b=allBijoux.find(x=>x.ref===ref); if(!b) return;
-    const ld=lcData[ref]||{};
-    const name=ld.nom_public||b.nom||b.ref||'—';
-    const prix=getPrix(b)||0;
-    const photo=ld.photo_principale||null;
-    const existing=getCartItem(ref);
-    if(existing) existing.qty++;
-    else cart.push({ref,name,prix,photo,variante:b.variante||null,qty:1});
-    updateCartUI();
+  function addToCart(ref, e) {
+    if (e) e.stopPropagation();
+    const b = allBijoux.find(x => x.ref === ref); if (!b) return;
+    const c = getContent(ref);
+    const name  = c.nom_public || b.nom || b.ref || '—';
+    const prix  = getPrix(b) || 0;
+    const photo = c.photo_principale || (c.photos && c.photos[0]) || null;
+    const existing = cart.find(i => i.ref === ref);
+    if (existing) existing.qty++;
+    else cart.push({ ref, name, prix, photo, variante: b.variante || null, qty: 1 });
+    saveCart(); updateCartUI();
     showToast(`${name} ajouté au panier ✦`);
-    /* le slideover reste ouvert, la page reste scrollable */
   }
+  function removeFromCart(ref) { cart = cart.filter(i => i.ref !== ref); saveCart(); updateCartUI(); }
+  function changeQty(ref, delta) { const item = cart.find(i => i.ref === ref); if (!item) return; item.qty += delta; if (item.qty <= 0) removeFromCart(ref); else { saveCart(); updateCartUI(); } }
 
-  function removeFromCart(ref){
-    cart=cart.filter(i=>i.ref!==ref);
-    updateCartUI();
-  }
-
-  function changeQty(ref,delta){
-    const item=getCartItem(ref);
-    if(!item)return;
-    item.qty+=delta;
-    if(item.qty<=0) removeFromCart(ref);
-    else updateCartUI();
-  }
-
-  function updateCartUI(){
-    const total=cart.reduce((s,i)=>s+i.prix*i.qty,0);
-    const count=cart.reduce((s,i)=>s+i.qty,0);
-    const countEl=document.getElementById('cart-count');
-    countEl.textContent=count;
-    countEl.classList.toggle('hidden',count===0);
-    document.getElementById('cart-total').textContent=fmtP(total)||'0,00 €';
-    const body=document.getElementById('cart-body');
-    if(!cart.length){
-      body.innerHTML=`<div class="cart-empty"><p>Votre panier est vide</p></div>`;
-      return;
-    }
-    body.innerHTML=cart.map(item=>`
+  function updateCartUI() {
+    const total = cart.reduce((s, i) => s + i.prix * i.qty, 0);
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const countEl = document.getElementById('cart-count');
+    countEl.textContent = count; countEl.classList.toggle('hidden', count === 0);
+    document.getElementById('cart-total').textContent = fmtP(total) || '0,00 €';
+    const body = document.getElementById('cart-body');
+    if (!cart.length) { body.innerHTML = '<div class="cart-empty"><p>Votre panier est vide</p></div>'; return; }
+    body.innerHTML = cart.map(item => `
       <div class="cart-item">
-        ${item.photo?`<img class="cart-item-img" src="${item.photo}" alt="">`:`<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;color:var(--border)">✦</div>`}
+        ${item.photo ? `<img class="cart-item-img" src="${item.photo}" alt="">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;color:var(--border)">✦</div>`}
         <div class="cart-item-info">
           <p class="cart-item-name">${item.name}</p>
-          <p class="cart-item-meta">${item.variante||item.ref}</p>
+          <p class="cart-item-meta">${item.variante || item.ref}</p>
           <div class="cart-qty">
             <button class="cart-qty-btn" onclick="changeQty('${item.ref}',-1)">−</button>
             <span class="cart-qty-val">${item.qty}</span>
             <button class="cart-qty-btn" onclick="changeQty('${item.ref}',1)">+</button>
           </div>
         </div>
-        <span class="cart-item-price">${fmtP(item.prix*item.qty)}</span>
+        <span class="cart-item-price">${fmtP(item.prix * item.qty)}</span>
         <button class="cart-item-del" onclick="removeFromCart('${item.ref}')">✕</button>
       </div>`).join('');
   }
 
-  function openCart(){
-    document.getElementById('cart-panel').classList.add('open');
-    document.getElementById('overlay').classList.add('open');
-    /* page reste scrollable */
-  }
-  function closeCart(){
-    document.getElementById('cart-panel').classList.remove('open');
-    document.getElementById('overlay').classList.remove('open');
-  }
+  function openCart() { document.getElementById('cart-panel').classList.add('open'); }
+  function closeCart() { document.getElementById('cart-panel').classList.remove('open'); }
+  document.getElementById('cart-btn').addEventListener('click', openCart);
+  function goCheckout() { localStorage.setItem('bn_cart', JSON.stringify(cart)); window.location.href = 'checkout.html'; }
 
-  document.getElementById('cart-btn').addEventListener('click',openCart);
+  /* ── INIT ── */
+  async function init() {
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40); });
 
-  function goCheckout(){
-    /* Phase B — formulaire de commande */
-    localStorage.setItem('bn_cart',JSON.stringify(cart));
-    window.location.href='checkout.html';
-  }
+    await loadAdminData();
+    buildCarousel();
+    resetT();
+    loadCart();
+    updateCartUI();
 
-  /* TOAST */
-  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+    try {
+      const { data, error } = await sb.from('bijoux').select('*').order('collection');
+      if (error) throw error;
+      document.getElementById('loading').style.display = 'none';
+      if (!data?.length) { document.getElementById('error-state').style.display = 'block'; document.getElementById('error-msg').textContent = 'Aucun bijou trouvé.'; return; }
 
-  /* SO bouton ajouter */
-  document.getElementById('so-btn-add').addEventListener('click',()=>{ addToCart(currentSoVariantRef||currentSoRef); });
-
-  /* LOAD */
-  async function loadBijoux(){
-    try{
-      const{data,error}=await sb.from('bijoux').select('*').order('collection');
-      if(error)throw error;
-      document.getElementById('loading').style.display='none';
-      if(!data?.length){ document.getElementById('error-state').style.display='block'; document.getElementById('error-msg').textContent='Aucun bijou trouvé.'; return; }
-      lcData=getLC();
-      allBijoux=(data||[]).filter(b=>{ if(!b.ref||b.ref.toUpperCase().startsWith('COMP'))return false; if(b.no_sell||b.draft)return false; return (lcData[b.ref]||{}).visible===true; });
+      /* Filtrer : exclure COMP, no_sell, et non visibles dans boutique_content */
+      allBijoux = data.filter(b => {
+        if (!b.ref || b.ref.toUpperCase().startsWith('COMP')) return false;
+        if (b.no_sell || b.draft) return false;
+        return contentMap[b.ref]?.visible === true;
+      });
       renderCollections(allBijoux);
-      updateCartUI();
-    }catch(err){
-      document.getElementById('loading').style.display='none';
-      document.getElementById('error-state').style.display='block';
-      document.getElementById('error-msg').textContent=`Erreur : ${err.message}`;
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-state').style.display = 'block';
+      document.getElementById('error-msg').textContent = `Erreur : ${err.message}`;
     }
   }
-  loadBijoux();
+
+  init();
 </script>
 </body>
 </html>

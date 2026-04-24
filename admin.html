@@ -40,15 +40,12 @@
     .adm-actions{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap}
     #save-status{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.26rem 0.6rem;border:1px solid transparent}
     #save-status.saved{color:var(--ok);border-color:rgba(126,207,138,0.3)}
-    #save-status.unsaved{color:var(--sand);border-color:rgba(232,201,122,0.3)}
+    #save-status.saving{color:var(--sand);border-color:rgba(232,201,122,0.3)}
+    #save-status.error{color:var(--fuchsia);border-color:rgba(196,40,110,0.3)}
     .btn-adm{padding:0.36rem 0.85rem;font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--silver);clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem}
     .btn-adm:hover{border-color:var(--fuchsia);color:var(--cream)}
     .btn-adm.primary{background:var(--fuchsia);border-color:var(--fuchsia);color:var(--cream)}
     .btn-adm.primary:hover{background:var(--fuchsia-lt)}
-    .btn-adm.ok{border-color:rgba(126,207,138,0.4);color:var(--ok)}
-    .btn-adm.ok:hover{background:rgba(126,207,138,0.1)}
-    .btn-adm.warn{border-color:rgba(232,201,122,0.4);color:var(--sand)}
-    .btn-adm.warn:hover{background:rgba(232,201,122,0.08)}
 
     .stats-bar{padding:0.7rem 1.8rem;border-bottom:1px solid var(--border);display:flex;gap:2rem;flex-wrap:wrap;background:rgba(232,201,122,0.02)}
     .stat{display:flex;flex-direction:column}
@@ -121,8 +118,8 @@
     .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
     .field{display:flex;flex-direction:column;gap:0.3rem}
     .field label{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
-    .field input,.field textarea,.field select{padding:0.48rem 0.72rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-body);font-size:0.95rem;outline:none;resize:vertical;transition:border-color 0.2s;width:100%}
-    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--fuchsia)}
+    .field input,.field textarea{padding:0.48rem 0.72rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-body);font-size:0.95rem;outline:none;resize:vertical;transition:border-color 0.2s;width:100%}
+    .field input:focus,.field textarea:focus{border-color:var(--fuchsia)}
     .field textarea{min-height:72px}
     .field input[readonly]{opacity:0.35;cursor:not-allowed;font-family:var(--font-mono);font-size:0.7rem}
     .matieres-section{display:flex;flex-direction:column;gap:0.5rem}
@@ -243,13 +240,7 @@
   <header class="adm-header">
     <span class="adm-title">BONA NODI <span>Admin</span></span>
     <div class="adm-actions">
-      <span id="save-status" class="saved">✓ Sauvegardé</span>
-      <button class="btn-adm primary" id="save-btn">Sauvegarder</button>
-      <button class="btn-adm ok" id="export-btn">⬇ Exporter</button>
-      <label class="btn-adm warn" style="cursor:pointer">
-        ⬆ Importer
-        <input type="file" accept=".json" id="import-input" style="display:none">
-      </label>
+      <span id="save-status" class="saved">✓ Synchronisé</span>
       <a href="index.html" class="btn-adm">← Site</a>
     </div>
   </header>
@@ -328,43 +319,34 @@
     </div>
     <div style="display:flex;flex-direction:column;gap:0.8rem">
       <div class="field"><label>Code *</label><input type="text" id="pm-code" placeholder="BONA10" style="text-transform:uppercase"/></div>
-      <div class="field">
-        <label>Type de réduction</label>
+      <div class="field"><label>Type</label>
         <select id="pm-type" onchange="updatePromoType()">
           <option value="pct">Pourcentage (ex: -10%)</option>
           <option value="fixe">Montant fixe (ex: -5€)</option>
           <option value="livraison">Livraison offerte</option>
         </select>
       </div>
-      <div class="field" id="pm-valeur-wrap">
-        <label id="pm-valeur-label">Valeur (%)</label>
-        <input type="number" id="pm-valeur" min="0" placeholder="10"/>
-      </div>
-      <div class="field">
-        <label>Applicable sur</label>
+      <div class="field" id="pm-valeur-wrap"><label id="pm-valeur-label">Valeur (%)</label><input type="number" id="pm-valeur" min="0" placeholder="10"/></div>
+      <div class="field"><label>Applicable sur</label>
         <select id="pm-scope" onchange="updatePromoScope()">
           <option value="all">Tous les produits</option>
-          <option value="collection">Une collection spécifique</option>
+          <option value="collection">Une collection</option>
           <option value="refs">Références spécifiques</option>
         </select>
       </div>
-      <div class="field" id="pm-scope-detail" style="display:none">
-        <label id="pm-scope-label">Préciser</label>
-        <input type="text" id="pm-scope-val" placeholder="ex: Chainmail  ou  BIJ-001,BIJ-002"/>
-      </div>
+      <div class="field" id="pm-scope-detail" style="display:none"><label id="pm-scope-label">Préciser</label><input type="text" id="pm-scope-val" placeholder="ex: Chainmail  ou  BIJ-001,BIJ-002"/></div>
       <div class="field"><label>Expiration (optionnel)</label><input type="date" id="pm-expiration"/></div>
-      <div class="field">
-        <label>Usage</label>
+      <div class="field"><label>Usage</label>
         <select id="pm-usage">
           <option value="illimite">Illimité</option>
           <option value="unique">Usage unique</option>
         </select>
       </div>
       <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.8rem;background:var(--ink-lt);border:1px solid var(--border);cursor:pointer;user-select:none" onclick="togglePmActif()" id="pm-actif-row">
-        <div style="width:28px;height:16px;border-radius:8px;position:relative;transition:background 0.2s" id="pm-actif-track" style="background:var(--ok)">
-          <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cream);top:3px;transition:transform 0.2s" id="pm-actif-dot"></div>
+        <div style="width:28px;height:16px;border-radius:8px;position:relative;transition:background 0.2s;background:var(--ok)" id="pm-actif-track">
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cream);top:3px;left:3px;transition:transform 0.2s;transform:translateX(12px)" id="pm-actif-dot"></div>
         </div>
-        <span style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase" id="pm-actif-lbl">Actif</span>
+        <span style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ok)" id="pm-actif-lbl">Actif</span>
       </div>
     </div>
     <div style="display:flex;gap:0.6rem;margin-top:1.2rem">
@@ -387,6 +369,9 @@
     {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie en temps réel.',btn_label:'→ Personnaliser',btn_href:'product.html',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
   ];
 
+  const { createClient } = supabase;
+  const sb = createClient(SB_URL, SB_KEY);
+
   /* ── LOGIN ── */
   document.getElementById('login-btn').addEventListener('click', tryLogin);
   document.getElementById('pwd-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
@@ -402,84 +387,67 @@
     }
   }
 
-  /* ── INIT après login ── */
-  function initAdmin() {
-    lc = getLC();
-    loadBijoux();
+  /* ── ÉTAT ── */
+  let allB = [], contentMap = {}, settingsMap = {}, curTab = 'all', curQ = '';
+  const selected = new Set();
+
+  function toast(msg, err = false) { const t = document.getElementById('toast'); t.textContent = msg; t.className = err ? 'show err' : 'show'; setTimeout(() => t.className = '', 2500); }
+  function setSaveStatus(state, msg) { const el = document.getElementById('save-status'); el.textContent = msg; el.className = state; }
+
+  /* ── SUPABASE HELPERS ── */
+
+  /* Lire le contenu d'un bijou */
+  function getC(ref) { return contentMap[ref] || {}; }
+
+  /* Sauvegarder le contenu d'un bijou dans Supabase immédiatement */
+  async function saveContent(ref) {
+    const data = contentMap[ref] || {};
+    setSaveStatus('saving', '● Sauvegarde…');
+    const { error } = await sb.from('boutique_content').upsert({ ref, ...data, updated_at: new Date().toISOString() });
+    if (error) { setSaveStatus('error', '✕ Erreur'); toast('Erreur : ' + error.message, true); console.error(error); }
+    else { setSaveStatus('saved', '✓ Synchronisé'); }
+  }
+
+  /* Modifier un champ et sauvegarder */
+  async function updateContent(ref, key, value) {
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    contentMap[ref][key] = value;
+    await saveContent(ref);
+  }
+
+  /* Lire un setting */
+  function getSetting(key, def = null) { return settingsMap[key] !== undefined ? settingsMap[key] : def; }
+
+  /* Sauvegarder un setting */
+  async function saveSetting(key, value) {
+    settingsMap[key] = value;
+    setSaveStatus('saving', '● Sauvegarde…');
+    const { error } = await sb.from('boutique_settings').upsert({ key, value, updated_at: new Date().toISOString() });
+    if (error) { setSaveStatus('error', '✕ Erreur'); toast('Erreur setting : ' + error.message, true); }
+    else { setSaveStatus('saved', '✓ Synchronisé'); }
+  }
+
+  /* ── INIT ── */
+  async function initAdmin() {
+    setSaveStatus('saving', '● Chargement…');
+    /* Charger boutique_content */
+    const { data: content } = await sb.from('boutique_content').select('*');
+    if (content) content.forEach(r => { contentMap[r.ref] = r; });
+    /* Charger boutique_settings */
+    const { data: sets } = await sb.from('boutique_settings').select('*');
+    if (sets) sets.forEach(r => { settingsMap[r.key] = r.value; });
+    setSaveStatus('saved', '✓ Synchronisé');
+
+    await loadBijoux();
     renderHeroEditor();
     initHeightPicker();
     populateBulkMat();
   }
 
-  const { createClient } = supabase;
-  const sb = createClient(SB_URL, SB_KEY);
-
-  let lc = {}, allB = [], dirty = false, curTab = 'all', curQ = '';
-  const selected = new Set();
-
-  function getLC() { try { return JSON.parse(localStorage.getItem('bn_content') || '{}'); } catch { return {}; } }
-  function saveLC() { localStorage.setItem('bn_content', JSON.stringify(lc)); dirty = false; setSaved(true); toast('Sauvegardé ✦'); updateStats(); }
-  function markDirty() { dirty = true; setSaved(false); }
-  function setSaved(ok) { const el = document.getElementById('save-status'); el.textContent = ok ? '✓ Sauvegardé' : '● Non sauvegardé'; el.className = ok ? 'saved' : 'unsaved'; }
-
-  document.getElementById('save-btn').addEventListener('click', saveLC);
-  window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
-
-  function toast(msg, err = false) { const t = document.getElementById('toast'); t.textContent = msg; t.className = err ? 'show err' : 'show'; setTimeout(() => t.className = '', 2500); }
-
-  /* ── EXPORT / IMPORT ── */
-  document.getElementById('export-btn').addEventListener('click', () => {
-    const data = localStorage.getItem('bn_content') || '{}';
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'bona-nodi-admin-' + new Date().toISOString().slice(0, 10) + '.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('Données exportées ✦');
-  });
-
-  document.getElementById('import-input').addEventListener('change', function () {
-    const file = this.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const parsed = JSON.parse(e.target.result);
-        localStorage.setItem('bn_content', JSON.stringify(parsed));
-        lc = parsed;
-        toast('Importé ✦ — rechargement…');
-        setTimeout(() => location.reload(), 1200);
-      } catch { toast('Fichier JSON invalide', true); }
-    };
-    reader.readAsText(file);
-    this.value = '';
-  });
-
-  /* ── PAGE TABS ── */
-  document.querySelectorAll('.page-tab').forEach(t => {
-    t.addEventListener('click', () => {
-      document.querySelectorAll('.page-tab').forEach(x => x.classList.remove('active'));
-      t.classList.add('active');
-      const p = t.dataset.page;
-      document.getElementById('page-produits').classList.toggle('hidden', p !== 'produits');
-      document.getElementById('page-hero').classList.toggle('active', p === 'hero');
-      document.getElementById('page-promos').style.display = p === 'promos' ? 'block' : 'none';
-      document.getElementById('stats-bar').style.display = p === 'produits' ? 'flex' : 'none';
-      if (p === 'promos') renderPromos();
-    });
-  });
-
-  const safeId = ref => (ref || '').replace(/[^a-zA-Z0-9]/g, '_');
-  const isNew  = ref => lc[ref]?.visible === undefined;
-  const isVis  = ref => lc[ref]?.visible === true;
-  const getPrix = b => b.pv != null ? parseFloat(b.pv) : null;
-  const fmtP   = p => p != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p) : null;
-
   /* ── STATS ── */
   function updateStats() {
-    const pub = allB.filter(b => isVis(b.ref)).length;
-    const nw  = allB.filter(b => isNew(b.ref)).length;
+    const pub = allB.filter(b => getC(b.ref).visible === true).length;
+    const nw  = allB.filter(b => !contentMap[b.ref]).length;
     const hid = allB.length - pub - nw;
     document.getElementById('s-pub').textContent = pub;
     document.getElementById('s-hid').textContent = Math.max(0, hid);
@@ -487,6 +455,12 @@
     document.getElementById('tb-new').textContent = nw;
     document.getElementById('tb-pub').textContent = pub;
   }
+
+  const safeId = ref => (ref || '').replace(/[^a-zA-Z0-9]/g, '_');
+  const isNew  = ref => !contentMap[ref];
+  const isVis  = ref => contentMap[ref]?.visible === true;
+  const getPrix = b => b.pv != null ? parseFloat(b.pv) : null;
+  const fmtP   = p => p != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p) : null;
 
   /* ── SÉLECTION MULTIPLE ── */
   function toggleSelect(ref, e) {
@@ -508,63 +482,89 @@
     });
     selected.clear(); updateBulkBar();
   }
-  function bulkAction(action) {
+  async function bulkAction(action) {
     if (!selected.size) return;
-    if (action === 'publish') { selected.forEach(ref => setVisibility(ref, true)); toast(selected.size + ' publié(s) ✦'); }
-    else if (action === 'hide') { selected.forEach(ref => setVisibility(ref, false)); toast(selected.size + ' masqué(s)'); }
-    else if (action === 'matiere') {
+    const refs = [...selected];
+    if (action === 'publish') {
+      for (const ref of refs) await setVisibility(ref, true);
+      toast(refs.length + ' publié(s) ✦');
+    } else if (action === 'hide') {
+      for (const ref of refs) await setVisibility(ref, false);
+      toast(refs.length + ' masqué(s)');
+    } else if (action === 'matiere') {
       const mat = document.getElementById('bulk-mat-select').value;
       if (!mat) { toast('Choisir une matière', true); return; }
-      selected.forEach(ref => { if (!lc[ref]) lc[ref] = {}; if (!lc[ref].matieres) lc[ref].matieres = []; if (!lc[ref].matieres.includes(mat)) lc[ref].matieres.push(mat); });
-      markDirty(); toast('"' + mat + '" assignée ✦');
+      for (const ref of refs) {
+        if (!contentMap[ref]) contentMap[ref] = { ref };
+        if (!contentMap[ref].matieres) contentMap[ref].matieres = [];
+        if (!contentMap[ref].matieres.includes(mat)) contentMap[ref].matieres.push(mat);
+        await saveContent(ref);
+      }
+      toast('"' + mat + '" assignée ✦');
     }
     clearSelection(); renderList();
   }
   function populateBulkMat() { const sel = document.getElementById('bulk-mat-select'); MATIERES_LIST.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; sel.appendChild(o); }); }
 
   /* ── VISIBILITY ── */
-  function setVisibility(ref, value) {
-    if (!lc[ref]) lc[ref] = {};
-    lc[ref].visible = value; markDirty();
-    const sid = safeId(ref); const on = value;
+  async function setVisibility(ref, value) {
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    contentMap[ref].visible = value;
+    await saveContent(ref);
+    const sid = safeId(ref);
     const pill = document.getElementById('pill-' + sid);
-    if (pill) { pill.className = 'vis-pill ' + (on ? 'on' : ''); pill.innerHTML = '<span class="dot"></span>' + (on ? 'Publié' : 'Masqué'); }
+    if (pill) { pill.className = 'vis-pill ' + (value ? 'on' : ''); pill.innerHTML = '<span class="dot"></span>' + (value ? 'Publié' : 'Masqué'); }
     const pt = document.getElementById('ptog-vis-' + sid);
-    if (pt) { pt.className = 'panel-toggle ' + (on ? 'vis-on' : ''); pt.querySelector('.tog-lbl').textContent = on ? 'Publié sur la boutique' : 'Masqué de la boutique'; }
+    if (pt) { pt.className = 'panel-toggle ' + (value ? 'vis-on' : ''); pt.querySelector('.tog-lbl').textContent = value ? 'Publié sur la boutique' : 'Masqué de la boutique'; }
     const row = document.getElementById('row-' + sid);
-    if (row) { row.classList.remove('is-new', 'is-visible', 'is-hidden'); row.classList.add(on ? 'is-visible' : 'is-hidden'); }
+    if (row) { row.classList.remove('is-new', 'is-visible', 'is-hidden'); row.classList.add(value ? 'is-visible' : 'is-hidden'); }
     updateStats();
   }
   function toggleVisibility(ref, e) { if (e) e.stopPropagation(); setVisibility(ref, !isVis(ref)); }
-  function toggleCommande(ref) {
-    if (!lc[ref]) lc[ref] = {}; lc[ref].sur_commande = !lc[ref].sur_commande; markDirty();
-    const sid = safeId(ref); const on = lc[ref].sur_commande;
+
+  async function toggleCommande(ref) {
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    contentMap[ref].sur_commande = !contentMap[ref].sur_commande;
+    await saveContent(ref);
+    const sid = safeId(ref); const on = contentMap[ref].sur_commande;
     const pt = document.getElementById('ptog-cmd-' + sid);
     if (pt) { pt.className = 'panel-toggle ' + (on ? 'cmd-on' : ''); pt.querySelector('.tog-lbl').textContent = on ? 'Sur commande' : 'Disponible en stock'; }
   }
-  function updateField(ref, key, val) { if (!lc[ref]) lc[ref] = {}; lc[ref][key] = val; markDirty(); }
+
+  /* Debounce pour les champs texte (ne pas sauvegarder à chaque frappe) */
+  const debounceTimers = {};
+  function updateFieldDebounced(ref, key, val) {
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    contentMap[ref][key] = val;
+    setSaveStatus('saving', '● Non sauvegardé');
+    clearTimeout(debounceTimers[ref + key]);
+    debounceTimers[ref + key] = setTimeout(() => saveContent(ref), 1200);
+  }
 
   /* ── MATIÈRES ── */
-  function toggleMatiere(ref, mat) {
-    if (!lc[ref]) lc[ref] = {}; if (!lc[ref].matieres) lc[ref].matieres = [];
-    const idx = lc[ref].matieres.indexOf(mat);
-    if (idx >= 0) lc[ref].matieres.splice(idx, 1); else lc[ref].matieres.push(mat);
-    markDirty();
-    document.getElementById('mat-' + safeId(ref) + '-' + safeId(mat))?.classList.toggle('on', lc[ref].matieres.includes(mat));
+  async function toggleMatiere(ref, mat) {
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    if (!contentMap[ref].matieres) contentMap[ref].matieres = [];
+    const idx = contentMap[ref].matieres.indexOf(mat);
+    if (idx >= 0) contentMap[ref].matieres.splice(idx, 1); else contentMap[ref].matieres.push(mat);
+    await saveContent(ref);
+    document.getElementById('mat-' + safeId(ref) + '-' + safeId(mat))?.classList.toggle('on', contentMap[ref].matieres.includes(mat));
   }
-  function addCustomMatiere(ref) {
+  async function addCustomMatiere(ref) {
     const inp = document.getElementById('custom-mat-' + safeId(ref));
     const val = (inp?.value || '').trim(); if (!val) return;
-    if (!lc[ref]) lc[ref] = {}; if (!lc[ref].matieres) lc[ref].matieres = [];
-    if (!lc[ref].matieres.includes(val)) {
-      lc[ref].matieres.push(val); markDirty();
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    if (!contentMap[ref].matieres) contentMap[ref].matieres = [];
+    if (!contentMap[ref].matieres.includes(val)) {
+      contentMap[ref].matieres.push(val);
+      await saveContent(ref);
       const grid = document.getElementById('mat-grid-' + safeId(ref));
       if (grid) { const btn = document.createElement('button'); btn.className = 'matiere-chip on'; btn.id = 'mat-' + safeId(ref) + '-' + safeId(val); btn.textContent = val; btn.onclick = () => toggleMatiere(ref, val); grid.appendChild(btn); }
     }
     if (inp) inp.value = '';
   }
   function matieresHTML(ref) {
-    const sel = lc[ref]?.matieres || [];
+    const sel = getC(ref).matieres || [];
     const chips = MATIERES_LIST.map(m => '<button class="matiere-chip ' + (sel.includes(m) ? 'on' : '') + '" id="mat-' + safeId(ref) + '-' + safeId(m) + '" onclick="toggleMatiere(\'' + ref + '\',\'' + m + '\')">' + m + '</button>').join('');
     const custom = sel.filter(m => !MATIERES_LIST.includes(m)).map(m => '<button class="matiere-chip on" id="mat-' + safeId(ref) + '-' + safeId(m) + '" onclick="toggleMatiere(\'' + ref + '\',\'' + m + '\')">' + m + '</button>').join('');
     return '<div class="matieres-section"><p class="matieres-label">Matières utilisées</p><div class="matieres-grid" id="mat-grid-' + safeId(ref) + '">' + chips + custom + '</div><div class="matiere-custom"><input type="text" id="custom-mat-' + safeId(ref) + '" placeholder="Autre matière…"/><button onclick="addCustomMatiere(\'' + ref + '\')">+ Ajouter</button></div></div>';
@@ -573,13 +573,21 @@
   /* ── PHOTOS ── */
   function refreshPG(ref) {
     const sid = safeId(ref); const grid = document.getElementById('pg-' + sid); if (!grid) return;
-    const ph = lc[ref]?.photos || [];
+    const ph = getC(ref).photos || [];
     grid.innerHTML = ph.map((url, i) => '<div class="photo-item ' + (i === 0 ? 'is-main' : '') + '"><img src="' + url + '" alt="" onerror="this.style.opacity=\'0.2\'">' + (i === 0 ? '<div class="ph-main-badge">Principale</div>' : '') + (i > 0 ? '<button class="ph-set-main" onclick="setMain(\'' + ref + '\',' + i + ')">★</button>' : '') + '<button class="ph-del" onclick="rmPh(\'' + ref + '\',' + i + ')">×</button></div>').join('');
     const row = document.getElementById('row-' + sid); if (row && ph[0]) { const old = row.querySelector('.row-thumb,.row-thumb-ph'); if (old) old.outerHTML = '<img class="row-thumb" src="' + ph[0] + '" alt="">'; }
   }
-  function rmPh(ref, idx) { const ph = lc[ref]?.photos || []; ph.splice(idx, 1); if (!lc[ref]) lc[ref] = {}; lc[ref].photos = ph; lc[ref].photo_principale = ph[0] || null; markDirty(); refreshPG(ref); }
-  function setMain(ref, idx) { const ph = lc[ref]?.photos || []; const [m] = ph.splice(idx, 1); ph.unshift(m); lc[ref].photos = ph; lc[ref].photo_principale = ph[0]; markDirty(); refreshPG(ref); }
-
+  async function rmPh(ref, idx) {
+    const ph = getC(ref).photos || []; ph.splice(idx, 1);
+    if (!contentMap[ref]) contentMap[ref] = { ref };
+    contentMap[ref].photos = ph; contentMap[ref].photo_principale = ph[0] || null;
+    await saveContent(ref); refreshPG(ref);
+  }
+  async function setMain(ref, idx) {
+    const ph = getC(ref).photos || []; const [m] = ph.splice(idx, 1); ph.unshift(m);
+    contentMap[ref].photos = ph; contentMap[ref].photo_principale = ph[0];
+    await saveContent(ref); refreshPG(ref);
+  }
   async function uploadPhotos(ref, files) {
     const sid = safeId(ref); const pw = document.getElementById('prog-' + sid), pb = document.getElementById('pb-' + sid);
     if (pw) pw.style.display = 'block'; const urls = [];
@@ -593,47 +601,67 @@
       if (ud?.publicUrl) urls.push(ud.publicUrl);
     }
     if (pb) pb.style.width = '100%'; setTimeout(() => { if (pw) pw.style.display = 'none'; }, 600);
-    if (urls.length) { if (!lc[ref]) lc[ref] = {}; if (!lc[ref].photos) lc[ref].photos = []; lc[ref].photos.push(...urls); if (!lc[ref].photo_principale) lc[ref].photo_principale = lc[ref].photos[0]; markDirty(); refreshPG(ref); toast(urls.length + ' photo(s) ajoutée(s) ✦'); }
+    if (urls.length) {
+      if (!contentMap[ref]) contentMap[ref] = { ref };
+      if (!contentMap[ref].photos) contentMap[ref].photos = [];
+      contentMap[ref].photos.push(...urls);
+      if (!contentMap[ref].photo_principale) contentMap[ref].photo_principale = contentMap[ref].photos[0];
+      await saveContent(ref); refreshPG(ref);
+      toast(urls.length + ' photo(s) ajoutée(s) ✦');
+    }
   }
   function handleDrop(e, ref) { e.preventDefault(); e.currentTarget.classList.remove('drag'); if (e.dataTransfer.files.length) uploadPhotos(ref, e.dataTransfer.files); }
+
+  /* ── PAGE TABS ── */
+  document.querySelectorAll('.page-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.page-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const p = t.dataset.page;
+      document.getElementById('page-produits').classList.toggle('hidden', p !== 'produits');
+      document.getElementById('page-hero').classList.toggle('active', p === 'hero');
+      document.getElementById('page-promos').style.display = p === 'promos' ? 'block' : 'none';
+      document.getElementById('stats-bar').style.display = p === 'produits' ? 'flex' : 'none';
+      if (p === 'promos') renderPromos();
+    });
+  });
 
   /* ── HAUTEUR HERO ── */
   const H_LABELS = { third: 'Compact (35vh)', half: 'Moitié (50vh)', default: 'Standard (55vh)', full: 'Pleine page (100vh)' };
   function initHeightPicker() {
-    const cur = lc.__hero_height || 'default';
+    const cur = getSetting('hero_height', 'default');
     document.querySelectorAll('.height-opt').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.h === cur);
-      btn.addEventListener('click', () => {
-        lc.__hero_height = btn.dataset.h; markDirty();
+      btn.addEventListener('click', async () => {
         document.querySelectorAll('.height-opt').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('height-preview').textContent = 'Hauteur actuelle : ' + H_LABELS[btn.dataset.h];
+        await saveSetting('hero_height', btn.dataset.h);
       });
     });
     document.getElementById('height-preview').textContent = 'Hauteur actuelle : ' + H_LABELS[cur];
   }
 
   /* ── SLIDES ── */
-  function getBuiltinEdits() { return lc.__slides_edited || {}; }
-  function getCustomSlides() { return lc.__hero_slides || []; }
   function getAllSlidesForEditor() {
-    const edits = getBuiltinEdits();
-    const builtins = BUILTIN_SLIDES.map(s => ({ ...s, ...(edits[s.id] || {}), __is_builtin: true }));
-    const custom = getCustomSlides().map((s, i) => ({ ...s, __is_builtin: false, __custom_idx: i }));
-    return [...builtins, ...custom];
+    const edited  = getSetting('slides_edited', {});
+    const custom  = getSetting('hero_slides', []);
+    const builtins = BUILTIN_SLIDES.map(s => ({ ...s, ...(edited[s.id] || {}), __is_builtin: true }));
+    return [...builtins, ...custom.map((s, i) => ({ ...s, __is_builtin: false, __custom_idx: i }))];
   }
-  function saveSlideEdit(slideObj) {
+
+  async function saveSlideEdit(slideObj) {
     if (slideObj.__is_builtin) {
-      if (!lc.__slides_edited) lc.__slides_edited = {};
+      const edited = getSetting('slides_edited', {});
       const { __is_builtin, ...data } = slideObj;
-      lc.__slides_edited[slideObj.id] = data;
+      edited[slideObj.id] = data;
+      await saveSetting('slides_edited', edited);
     } else {
-      const customs = getCustomSlides();
+      const customs = getSetting('hero_slides', []);
       const { __is_builtin, __custom_idx, ...data } = slideObj;
       customs[slideObj.__custom_idx] = data;
-      lc.__hero_slides = customs;
+      await saveSetting('hero_slides', customs);
     }
-    markDirty();
   }
 
   async function uploadSlideBg(editorIdx, files) {
@@ -644,9 +672,8 @@
     const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
     if (error) { toast('Upload: ' + error.message, true); return; }
     const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
-    if (ud?.publicUrl) { s.photo = ud.publicUrl; saveSlideEdit(s); renderHeroEditor(); toast('Photo de fond mise à jour ✦'); }
+    if (ud?.publicUrl) { s.photo = ud.publicUrl; await saveSlideEdit(s); renderHeroEditor(); toast('Photo de fond mise à jour ✦'); }
   }
-
   async function uploadSlideLogo(editorIdx, files) {
     if (!files.length) return;
     const all = getAllSlidesForEditor(); const s = all[editorIdx]; if (!s) return;
@@ -655,12 +682,11 @@
     const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
     if (error) { toast('Upload: ' + error.message, true); return; }
     const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
-    if (ud?.publicUrl) { s.logo_url = ud.publicUrl; saveSlideEdit(s); renderHeroEditor(); toast('Logo mis à jour ✦'); }
+    if (ud?.publicUrl) { s.logo_url = ud.publicUrl; await saveSlideEdit(s); renderHeroEditor(); toast('Logo mis à jour ✦'); }
   }
-
-  function removeSlideLogo(editorIdx) {
+  async function removeSlideLogo(editorIdx) {
     const all = getAllSlidesForEditor(); const s = all[editorIdx]; if (!s) return;
-    s.logo_url = ''; saveSlideEdit(s); renderHeroEditor();
+    s.logo_url = ''; await saveSlideEdit(s); renderHeroEditor();
   }
   function handleSlideDrop(e, i) { e.preventDefault(); e.currentTarget.classList.remove('drag'); if (e.dataTransfer.files.length) uploadSlideBg(i, e.dataTransfer.files); }
 
@@ -683,40 +709,37 @@
           </div>
         </div>
         <div class="slide-panel">
-          <div class="field">
-            <label>Photo de fond</label>
+          <div class="field"><label>Photo de fond</label>
             ${s.photo ? '<img class="slide-bg-preview" src="' + s.photo + '" alt="">' : '<div class="slide-bg-ph"><span>📷</span><span>Aucune photo</span></div>'}
             <div class="upload-zone" style="margin-top:0.5rem" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleSlideDrop(event,${i})">
               <input type="file" accept="image/*" onchange="uploadSlideBg(${i},this.files)">
               <div class="upload-icon">📷</div>
-              <p class="upload-text">Photo de fond · Glisser ou cliquer<br><span style="opacity:0.6">Optimal : 1920×800px · JPG/WEBP · max 2Mo</span></p>
+              <p class="upload-text">Photo de fond · Glisser ou cliquer<br><span style="opacity:0.6">1920×800px · JPG/WEBP · max 2Mo</span></p>
             </div>
           </div>
-          <div class="field">
-            <label>Logo PNG (optionnel — remplace le titre texte)</label>
+          <div class="field"><label>Logo PNG (optionnel — remplace le titre)</label>
             ${s.logo_url ? '<img src="' + s.logo_url + '" alt="logo" class="slide-logo-preview"><button class="logo-remove" onclick="removeSlideLogo(' + i + ')">✕ Supprimer le logo</button>' : '<div class="slide-logo-ph"><span>Aucun logo</span></div>'}
             <div class="upload-zone" style="margin-top:0.5rem">
               <input type="file" accept="image/png,image/svg+xml,image/webp" onchange="uploadSlideLogo(${i},this.files)">
               <div class="upload-icon">🖼</div>
-              <p class="upload-text">Logo PNG/SVG · fond transparent<br><span style="opacity:0.6">Optimal : 640×240px · Si défini, remplace le titre</span></p>
+              <p class="upload-text">Logo PNG/SVG · fond transparent<br><span style="opacity:0.6">640×240px min · Remplace le titre si défini</span></p>
             </div>
-            <p class="logo-note">Conseil : exporte en PNG @2x (640×240px) pour un rendu net sur Retina.</p>
           </div>
           <div class="panel-grid">
-            <div class="field"><label>Accroche</label><input type="text" value="${s.eyebrow || ''}" placeholder="✦ Collection…" oninput="updateSF(${i},'eyebrow',this.value)"></div>
-            <div class="field"><label>Titre</label><input type="text" value="${s.title || ''}" placeholder="BONA NODI" oninput="updateSF(${i},'title',this.value)"></div>
-            <div class="field" style="grid-column:1/-1"><label>Description</label><textarea oninput="updateSF(${i},'sub',this.value)" placeholder="Texte…">${s.sub || ''}</textarea></div>
-            <div class="field"><label>Texte du bouton</label><input type="text" value="${s.btn_label || ''}" placeholder="→ Découvrir" oninput="updateSF(${i},'btn_label',this.value)"></div>
-            <div class="field"><label>Lien du bouton</label><input type="text" value="${s.btn_href || ''}" placeholder="#boutique" oninput="updateSF(${i},'btn_href',this.value)"></div>
+            <div class="field"><label>Accroche</label><input type="text" value="${s.eyebrow || ''}" oninput="updateSF(${i},'eyebrow',this.value)"></div>
+            <div class="field"><label>Titre</label><input type="text" value="${s.title || ''}" oninput="updateSF(${i},'title',this.value)"></div>
+            <div class="field" style="grid-column:1/-1"><label>Description</label><textarea oninput="updateSF(${i},'sub',this.value)">${s.sub || ''}</textarea></div>
+            <div class="field"><label>Texte du bouton</label><input type="text" value="${s.btn_label || ''}" oninput="updateSF(${i},'btn_label',this.value)"></div>
+            <div class="field"><label>Lien du bouton</label><input type="text" value="${s.btn_href || ''}" oninput="updateSF(${i},'btn_href',this.value)"></div>
           </div>
           <div class="panel-grid">
-            <div class="field"><label>Position du bloc texte</label>
+            <div class="field"><label>Position</label>
               <div class="pos-picker">
                 <button class="pos-opt ${(s.pos || 'left') === 'left' ? 'active' : ''}" onclick="setSlideProp(${i},'pos','left',this.closest('.pos-picker'))">Gauche</button>
                 <button class="pos-opt ${s.pos === 'right' ? 'active' : ''}" onclick="setSlideProp(${i},'pos','right',this.closest('.pos-picker'))">Droite</button>
               </div>
             </div>
-            <div class="field"><label>Style du bouton</label>
+            <div class="field"><label>Style bouton</label>
               <div class="btn-style-picker">
                 <button class="btn-style-opt ${(s.btn_style || 'primary') === 'primary' ? 'active' : ''}" onclick="setSlideProp(${i},'btn_style','primary',this.closest('.btn-style-picker'))">Principal</button>
                 <button class="btn-style-opt ${s.btn_style === 'secondary' ? 'active' : ''}" onclick="setSlideProp(${i},'btn_style','secondary',this.closest('.btn-style-picker'))">Secondaire</button>
@@ -728,60 +751,61 @@
   }
 
   function toggleSC(i) { document.getElementById('sc-' + i)?.classList.toggle('expanded'); }
+
+  const slideDebounce = {};
   function updateSF(i, key, val) {
     const all = getAllSlidesForEditor(); const s = all[i]; if (!s) return;
-    s[key] = val; saveSlideEdit(s);
+    s[key] = val;
     if (key === 'title') { const el = document.querySelector('#sc-' + i + ' .slide-card-title'); if (el) el.textContent = s.logo_url ? '[Logo] ' + val : val || 'Slide ' + (i + 1); }
-    if (key === 'sub') { const el = document.querySelector('#sc-' + i + ' .slide-card-sub'); if (el) el.textContent = val ? val.substring(0, 55) + '…' : 'Pas de description'; }
+    if (key === 'sub')   { const el = document.querySelector('#sc-' + i + ' .slide-card-sub');   if (el) el.textContent = val ? val.substring(0, 55) + '…' : 'Pas de description'; }
+    clearTimeout(slideDebounce[i + key]);
+    slideDebounce[i + key] = setTimeout(() => saveSlideEdit(s), 1000);
   }
+
   function setSlideProp(i, key, val, container) {
     const all = getAllSlidesForEditor(); const s = all[i]; if (!s) return;
     s[key] = val; saveSlideEdit(s);
     container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
   }
-  function moveSlide(i, dir, e) {
+
+  async function moveSlide(i, dir, e) {
     e.stopPropagation();
-    const customs = getCustomSlides(); const ci = i - BUILTIN_SLIDES.length; const cj = ci + dir;
+    const customs = getSetting('hero_slides', []); const ci = i - BUILTIN_SLIDES.length; const cj = ci + dir;
     if (cj < 0 || cj >= customs.length) return;
     [customs[ci], customs[cj]] = [customs[cj], customs[ci]];
-    lc.__hero_slides = customs; markDirty(); renderHeroEditor();
+    await saveSetting('hero_slides', customs); renderHeroEditor();
   }
-  function deleteSlide(i, e) {
+
+  async function deleteSlide(i, e) {
     e.stopPropagation(); if (!confirm('Supprimer ce slide ?')) return;
-    const customs = getCustomSlides(); const ci = i - BUILTIN_SLIDES.length;
-    customs.splice(ci, 1); lc.__hero_slides = customs; markDirty(); renderHeroEditor();
+    const customs = getSetting('hero_slides', []); const ci = i - BUILTIN_SLIDES.length;
+    customs.splice(ci, 1); await saveSetting('hero_slides', customs); renderHeroEditor();
   }
-  document.getElementById('add-slide-btn').addEventListener('click', () => {
-    const customs = getCustomSlides();
+
+  document.getElementById('add-slide-btn').addEventListener('click', async () => {
+    const customs = getSetting('hero_slides', []);
     customs.push({ eyebrow: '✦', title: 'NOUVEAU SLIDE', sub: '', btn_label: '→ Découvrir', btn_href: '#boutique', btn_style: 'primary', photo: '', logo_url: '', pos: 'left' });
-    lc.__hero_slides = customs; markDirty(); renderHeroEditor();
+    await saveSetting('hero_slides', customs); renderHeroEditor();
     const idx = BUILTIN_SLIDES.length + customs.length - 1;
     setTimeout(() => document.getElementById('sc-' + idx)?.classList.add('expanded'), 50);
   });
 
   /* ── CODES PROMO ── */
-  let editingPromoIdx = null;
-  let pmActif = true;
-
-  function getPromos() { return lc.promos || []; }
-  function savePromos(p) { lc.promos = p; markDirty(); }
+  let editingPromoIdx = null, pmActif = true;
+  function getPromos() { return getSetting('promos', []); }
+  async function savePromos(p) { await saveSetting('promos', p); }
 
   function renderPromos() {
-    const promos = getPromos();
-    const el = document.getElementById('promos-list');
-    if (!promos.length) {
-      el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em;border:1px dashed var(--border)">Aucun code promo — cliquer "+ Nouveau code" pour commencer</p>';
-      return;
-    }
-    const typeLabel = { pct: '%', fixe: '€ fixe', livraison: 'Livraison offerte' };
+    const promos = getPromos(); const el = document.getElementById('promos-list');
+    if (!promos.length) { el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em;border:1px dashed var(--border)">Aucun code promo</p>'; return; }
     el.innerHTML = promos.map((p, i) => `
       <div style="display:flex;align-items:center;gap:0.8rem;padding:0.7rem 1rem;background:var(--ink-md);border:1px solid var(--border);margin-bottom:2px;opacity:${p.actif ? 1 : 0.5}">
         <div style="flex:1;min-width:0">
           <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--sand)">${p.code}</p>
           <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.15rem">
             ${p.type === 'livraison' ? 'Livraison offerte' : p.valeur + (p.type === 'pct' ? '%' : '€')} · 
-            ${p.scope === 'all' ? 'Tous produits' : p.scope === 'collection' ? 'Collection: ' + p.scope_val : 'Réf: ' + p.scope_val} · 
+            ${p.scope === 'all' ? 'Tous produits' : (p.scope === 'collection' ? 'Collection: ' : 'Réf: ') + p.scope_val} · 
             ${p.usage === 'unique' ? 'Usage unique' : 'Illimité'} · 
             ${p.expiration ? 'Exp: ' + p.expiration : 'Sans expiration'}
           </p>
@@ -818,35 +842,17 @@
     }
     updatePromoType(); updatePromoScope(); updatePmActifUI();
   }
-
   function closePromoModal() { document.getElementById('promo-modal').style.display = 'none'; }
-
-  function updatePromoType() {
-    const type = document.getElementById('pm-type').value;
-    const vWrap = document.getElementById('pm-valeur-wrap');
-    if (type === 'livraison') { vWrap.style.display = 'none'; }
-    else { vWrap.style.display = 'flex'; document.getElementById('pm-valeur-label').textContent = type === 'pct' ? 'Valeur (%)' : 'Montant (€)'; }
-  }
-
-  function updatePromoScope() {
-    const v = document.getElementById('pm-scope').value;
-    const wrap = document.getElementById('pm-scope-detail');
-    wrap.style.display = v !== 'all' ? 'flex' : 'none';
-    document.getElementById('pm-scope-label').textContent = v === 'collection' ? 'Nom de la collection' : 'Références (séparées par virgule)';
-  }
-
+  function updatePromoType() { const type = document.getElementById('pm-type').value; const vWrap = document.getElementById('pm-valeur-wrap'); if (type === 'livraison') vWrap.style.display = 'none'; else { vWrap.style.display = 'flex'; document.getElementById('pm-valeur-label').textContent = type === 'pct' ? 'Valeur (%)' : 'Montant (€)'; } }
+  function updatePromoScope() { const v = document.getElementById('pm-scope').value; document.getElementById('pm-scope-detail').style.display = v !== 'all' ? 'flex' : 'none'; document.getElementById('pm-scope-label').textContent = v === 'collection' ? 'Nom de la collection' : 'Références (virgule)'; }
   function togglePmActif() { pmActif = !pmActif; updatePmActifUI(); }
   function updatePmActifUI() {
-    const track = document.getElementById('pm-actif-track');
-    const dot = document.getElementById('pm-actif-dot');
-    const lbl = document.getElementById('pm-actif-lbl');
-    track.style.background = pmActif ? 'var(--ok)' : 'var(--border)';
-    dot.style.transform = pmActif ? 'translateX(12px)' : 'translateX(0)';
-    lbl.textContent = pmActif ? 'Actif' : 'Inactif';
-    lbl.style.color = pmActif ? 'var(--ok)' : 'var(--silver)';
+    document.getElementById('pm-actif-track').style.background = pmActif ? 'var(--ok)' : 'var(--border)';
+    document.getElementById('pm-actif-dot').style.transform = pmActif ? 'translateX(12px)' : 'translateX(0)';
+    document.getElementById('pm-actif-lbl').textContent = pmActif ? 'Actif' : 'Inactif';
+    document.getElementById('pm-actif-lbl').style.color = pmActif ? 'var(--ok)' : 'var(--silver)';
   }
-
-  function savePromo() {
+  async function savePromo() {
     const code = document.getElementById('pm-code').value.trim().toUpperCase();
     if (!code) { toast('Le code est requis', true); return; }
     const type = document.getElementById('pm-type').value;
@@ -860,28 +866,23 @@
     if (editingPromoIdx === null) {
       if (promos.find(p => p.code === code)) { toast('Ce code existe déjà', true); return; }
       promos.push(promo);
-    } else {
-      promos[editingPromoIdx] = promo;
-    }
-    savePromos(promos);
-    closePromoModal();
-    renderPromos();
-    toast('Code promo enregistré ✦');
+    } else { promos[editingPromoIdx] = promo; }
+    await savePromos(promos);
+    closePromoModal(); renderPromos(); toast('Code promo enregistré ✦');
   }
-
-  function deletePromo(idx) {
-    if (!confirm('Supprimer ce code promo ?')) return;
-    const promos = getPromos(); promos.splice(idx, 1); savePromos(promos); renderPromos(); toast('Code supprimé');
+  async function deletePromo(idx) {
+    if (!confirm('Supprimer ?')) return;
+    const promos = getPromos(); promos.splice(idx, 1); await savePromos(promos); renderPromos(); toast('Code supprimé');
   }
 
   /* ── PRODUITS ── */
   function toggleRow(ref) { document.getElementById('row-' + safeId(ref))?.classList.toggle('expanded'); }
 
   function renderRow(b) {
-    const ld = lc[b.ref] || {}; const nm = ld.nom_public || b.nom || b.ref || '—'; const sbN = b.nom || b.ref;
+    const c = getC(b.ref); const nm = c.nom_public || b.nom || b.ref || '—'; const sbN = b.nom || b.ref;
     const prix = getPrix(b); const pFmt = fmtP(prix);
     const col = b.collection || ''; const vari = b.variante || '';
-    const ph = ld.photos || []; const nw = isNew(b.ref); const vis = isVis(b.ref); const surC = ld.sur_commande || false;
+    const ph = c.photos || []; const nw = isNew(b.ref); const vis = isVis(b.ref); const surC = c.sur_commande || false;
     const sid = safeId(b.ref); const rowCls = nw ? 'is-new' : vis ? 'is-visible' : 'is-hidden';
     const isSel = selected.has(b.ref);
     return `<div class="product-row ${rowCls} ${isSel ? 'selected' : ''}" id="row-${sid}">
@@ -897,9 +898,9 @@
       </div>
       <div class="row-panel">
         <div class="panel-grid">
-          <div class="field"><label>Nom public</label><input type="text" value="${ld.nom_public || ''}" placeholder="${sbN}" oninput="updateField('${b.ref}','nom_public',this.value)"></div>
+          <div class="field"><label>Nom public</label><input type="text" value="${c.nom_public || ''}" placeholder="${sbN}" oninput="updateFieldDebounced('${b.ref}','nom_public',this.value)"></div>
           <div class="field"><label>Référence</label><input type="text" value="${b.ref || ''}" readonly></div>
-          <div class="field" style="grid-column:1/-1"><label>Description marketing</label><textarea placeholder="Description clients…" oninput="updateField('${b.ref}','description',this.value)">${ld.description || ''}</textarea></div>
+          <div class="field" style="grid-column:1/-1"><label>Description marketing</label><textarea placeholder="Description clients…" oninput="updateFieldDebounced('${b.ref}','description',this.value)">${c.description || ''}</textarea></div>
           ${pFmt ? '<div class="field"><label>Prix (Supabase · pv)</label><input type="text" value="' + pFmt + '" readonly></div>' : ''}
         </div>
         ${matieresHTML(b.ref)}
@@ -933,11 +934,10 @@
     if (curTab === 'new')     list = list.filter(b => isNew(b.ref));
     if (curTab === 'visible') list = list.filter(b => isVis(b.ref));
     if (curTab === 'hidden')  list = list.filter(b => !isNew(b.ref) && !isVis(b.ref));
-    if (curQ) { const q = curQ.toLowerCase(); list = list.filter(b => { const n = (lc[b.ref]?.nom_public || b.nom || b.ref || '').toLowerCase(); return n.includes(q) || (b.ref || '').toLowerCase().includes(q); }); }
+    if (curQ) { const q = curQ.toLowerCase(); list = list.filter(b => { const n = (getC(b.ref).nom_public || b.nom || b.ref || '').toLowerCase(); return n.includes(q) || (b.ref || '').toLowerCase().includes(q); }); }
     list.sort((a, b) => { const s = x => isNew(x) ? 0 : isVis(x) ? 1 : 2; return s(a.ref) - s(b.ref); });
     return list;
   }
-
   function renderList() {
     const el = document.getElementById('product-list'); const f = getFiltered();
     el.innerHTML = f.length ? f.map(b => renderRow(b)).join('') : '<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em">Aucun produit ici</p>';
@@ -950,7 +950,6 @@
   });
   document.getElementById('search-input').addEventListener('input', function () { curQ = this.value; renderList(); });
 
-  /* ── LOAD BIJOUX ── */
   async function loadBijoux() {
     try {
       const { data, error } = await sb.from('bijoux').select('*').order('collection');
