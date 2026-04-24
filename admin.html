@@ -23,7 +23,6 @@
     body{background:var(--ink);color:var(--cream);font-family:var(--font-body);font-size:16px;min-height:100vh}
     ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--fuchsia)}
 
-    /* LOGIN */
     #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center}
     .login-box{width:320px;padding:2.5rem;border:1px solid var(--border);background:var(--ink-md);display:flex;flex-direction:column;gap:1.1rem}
     .login-box h1{font-family:var(--font-display);font-size:1.8rem;letter-spacing:0.2em;color:var(--sand);text-align:center}
@@ -35,7 +34,6 @@
     .login-err{font-family:var(--font-mono);font-size:0.56rem;color:var(--fuchsia);text-align:center}
     #admin-app{display:none}
 
-    /* HEADER */
     .adm-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1.8rem;background:rgba(26,21,16,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.5rem}
     .adm-title{font-family:var(--font-display);font-size:1.25rem;letter-spacing:0.2em;color:var(--sand)}
     .adm-title span{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.15em;color:var(--fuchsia-lt);margin-left:0.5rem;text-transform:uppercase}
@@ -47,12 +45,11 @@
     .btn-adm:hover{border-color:var(--fuchsia);color:var(--cream)}
     .btn-adm.primary{background:var(--fuchsia);border-color:var(--fuchsia);color:var(--cream)}
     .btn-adm.primary:hover{background:var(--fuchsia-lt)}
-    .btn-adm.export-btn{border-color:rgba(126,207,138,0.4);color:var(--ok)}
-    .btn-adm.export-btn:hover{background:rgba(126,207,138,0.1)}
-    .btn-adm.import-btn{border-color:rgba(232,201,122,0.4);color:var(--sand)}
-    .btn-adm.import-btn:hover{background:rgba(232,201,122,0.08)}
+    .btn-adm.ok{border-color:rgba(126,207,138,0.4);color:var(--ok)}
+    .btn-adm.ok:hover{background:rgba(126,207,138,0.1)}
+    .btn-adm.warn{border-color:rgba(232,201,122,0.4);color:var(--sand)}
+    .btn-adm.warn:hover{background:rgba(232,201,122,0.08)}
 
-    /* STATS */
     .stats-bar{padding:0.7rem 1.8rem;border-bottom:1px solid var(--border);display:flex;gap:2rem;flex-wrap:wrap;background:rgba(232,201,122,0.02)}
     .stat{display:flex;flex-direction:column}
     .stat-val{font-family:var(--font-display);font-size:1.4rem;letter-spacing:0.1em}
@@ -61,13 +58,11 @@
 
     main{padding:1.1rem 1.8rem}
 
-    /* PAGE TABS */
     .page-tabs{display:flex;gap:0;margin-bottom:1.2rem;border-bottom:1px solid var(--border)}
     .page-tab{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.6rem 1.4rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s}
     .page-tab:hover{color:var(--cream)}
     .page-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
 
-    /* SUB TABS */
     .tabs{display:flex;gap:0;margin-bottom:0.8rem;border-bottom:1px solid var(--border)}
     .tab{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.55rem 1.2rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s}
     .tab:hover{color:var(--cream)}
@@ -76,7 +71,6 @@
     .tab-badge.new{background:var(--sand);color:var(--ink)}
     .tab-badge.pub{background:rgba(126,207,138,0.2);color:var(--ok)}
 
-    /* BULK BAR */
     .bulk-bar{display:none;align-items:center;gap:0.7rem;flex-wrap:wrap;padding:0.65rem 1rem;margin-bottom:0.8rem;background:rgba(196,40,110,0.12);border:1px solid rgba(196,40,110,0.35);position:sticky;top:54px;z-index:90;backdrop-filter:blur(8px)}
     .bulk-bar.visible{display:flex}
     .bulk-count{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--fuchsia-lt);flex-shrink:0}
@@ -97,7 +91,6 @@
     .search-bar input:focus{border-color:var(--fuchsia)}
     .search-bar input::placeholder{color:var(--silver)}
 
-    /* LIST */
     .product-list{display:flex;flex-direction:column;gap:2px}
     .product-row{background:var(--ink-md);border:1px solid var(--border);overflow:hidden;transition:border-color 0.2s,opacity 0.2s}
     .product-row.is-new    {border-left:3px solid var(--sand)}
@@ -128,12 +121,10 @@
     .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
     .field{display:flex;flex-direction:column;gap:0.3rem}
     .field label{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
-    .field input,.field textarea{padding:0.48rem 0.72rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-body);font-size:0.95rem;outline:none;resize:vertical;transition:border-color 0.2s;width:100%}
-    .field input:focus,.field textarea:focus{border-color:var(--fuchsia)}
+    .field input,.field textarea,.field select{padding:0.48rem 0.72rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-body);font-size:0.95rem;outline:none;resize:vertical;transition:border-color 0.2s;width:100%}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--fuchsia)}
     .field textarea{min-height:72px}
     .field input[readonly]{opacity:0.35;cursor:not-allowed;font-family:var(--font-mono);font-size:0.7rem}
-
-    /* MATIÈRES */
     .matieres-section{display:flex;flex-direction:column;gap:0.5rem}
     .matieres-label{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
     .matieres-grid{display:flex;flex-wrap:wrap;gap:0.35rem}
@@ -145,7 +136,6 @@
     .matiere-custom input:focus{border-color:var(--fuchsia)}
     .matiere-custom button{padding:0.38rem 0.8rem;background:transparent;border:1px solid var(--border);color:var(--silver);font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
     .matiere-custom button:hover{border-color:var(--sand);color:var(--sand)}
-
     .toggles-row{display:flex;gap:0.6rem;flex-wrap:wrap}
     .panel-toggle{flex:1;min-width:190px;display:flex;align-items:center;gap:0.65rem;padding:0.6rem 0.85rem;background:var(--ink-lt);border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s,background 0.2s;user-select:none}
     .panel-toggle.vis-on{border-color:rgba(126,207,138,0.45);background:rgba(126,207,138,0.06)}
@@ -160,7 +150,6 @@
     .panel-toggle.vis-on .tog-lbl{color:var(--ok)}
     .panel-toggle.cmd-on .tog-lbl{color:var(--fuchsia-lt)}
     .tog-desc{font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em;color:var(--silver);opacity:0.65}
-
     .photos-zone{display:flex;flex-direction:column;gap:0.6rem}
     .photos-label{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
     .photos-grid{display:flex;gap:0.5rem;flex-wrap:wrap;min-height:10px}
@@ -183,6 +172,7 @@
     #page-hero{display:none}
     #page-hero.active{display:block}
     #page-produits.hidden{display:none}
+    #page-promos{display:none}
     .hero-height-picker{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;padding:1rem;background:var(--ink-md);border:1px solid var(--border)}
     .hero-height-picker label{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)}
     .height-options{display:flex;gap:0.5rem;flex-wrap:wrap}
@@ -221,13 +211,10 @@
     .logo-remove{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid rgba(196,40,110,0.3);background:transparent;color:var(--fuchsia-lt);cursor:pointer;transition:all 0.2s;margin-top:0.3rem;display:inline-block}
     .logo-remove:hover{background:rgba(196,40,110,0.15)}
     .logo-note{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;color:var(--silver);line-height:1.5;margin-top:0.3rem}
-    .pos-picker{display:flex;gap:0.4rem}
-    .pos-opt{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.7rem;border:1px solid var(--border);background:transparent;color:var(--silver);cursor:pointer;transition:all 0.2s}
-    .pos-opt:hover{border-color:var(--sand);color:var(--cream)}
+    .pos-picker,.btn-style-picker{display:flex;gap:0.4rem}
+    .pos-opt,.btn-style-opt{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.7rem;border:1px solid var(--border);background:transparent;color:var(--silver);cursor:pointer;transition:all 0.2s}
+    .pos-opt:hover,.btn-style-opt:hover{border-color:var(--sand);color:var(--cream)}
     .pos-opt.active{background:rgba(232,201,122,0.12);border-color:var(--sand);color:var(--sand)}
-    .btn-style-picker{display:flex;gap:0.4rem}
-    .btn-style-opt{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.7rem;border:1px solid var(--border);background:transparent;color:var(--silver);cursor:pointer;transition:all 0.2s}
-    .btn-style-opt:hover{border-color:var(--fuchsia);color:var(--cream)}
     .btn-style-opt.active{background:var(--fuchsia);border-color:var(--fuchsia);color:var(--cream)}
     .add-slide-btn{padding:0.8rem;border:1px dashed var(--border);background:transparent;color:var(--silver);font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;width:100%;margin-top:0.8rem}
     .add-slide-btn:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
@@ -238,7 +225,6 @@
     .loading-text{font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver)}
     #toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:0.65rem 1.2rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream);background:var(--fuchsia);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
     #toast.show{opacity:1}#toast.err{background:#6b1f1f}
-
     @media(max-width:600px){.adm-header,main{padding-left:1rem;padding-right:1rem}.panel-grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -259,8 +245,8 @@
     <div class="adm-actions">
       <span id="save-status" class="saved">✓ Sauvegardé</span>
       <button class="btn-adm primary" id="save-btn">Sauvegarder</button>
-      <button class="btn-adm export-btn" id="export-btn" title="Télécharger toutes vos données admin">⬇ Exporter</button>
-      <label class="btn-adm import-btn" style="cursor:pointer" title="Restaurer depuis un fichier exporté">
+      <button class="btn-adm ok" id="export-btn">⬇ Exporter</button>
+      <label class="btn-adm warn" style="cursor:pointer">
         ⬆ Importer
         <input type="file" accept=".json" id="import-input" style="display:none">
       </label>
@@ -294,7 +280,7 @@
         <button class="bulk-action pub" onclick="bulkAction('publish')">✓ Publier</button>
         <button class="bulk-action hide-btn" onclick="bulkAction('hide')">✕ Masquer</button>
         <div class="bulk-mat-wrap">
-          <span class="bulk-mat-label">Assigner matière :</span>
+          <span class="bulk-mat-label">Matière :</span>
           <select class="bulk-mat-select" id="bulk-mat-select"><option value="">— choisir —</option></select>
           <button class="bulk-action" onclick="bulkAction('matiere')">Appliquer</button>
         </div>
@@ -305,69 +291,7 @@
       <div class="product-list" id="product-list" style="display:none"></div>
     </div>
 
-    <!-- PAGE CODES PROMO -->
-    <div id="page-promos">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem">
-        <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">Gérer les codes promotionnels</p>
-        <button class="btn-adm primary" onclick="openPromoModal()">+ Nouveau code</button>
-      </div>
-      <div id="promos-list"></div>
-    </div>
-
-    <!-- MODAL NOUVEAU CODE PROMO -->
-    <div id="promo-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(26,21,16,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center">
-      <div style="background:var(--ink-md);border:1px solid var(--border);padding:1.5rem;width:min(480px,95vw);max-height:90vh;overflow-y:auto">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
-          <p style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.15em;color:var(--sand)" id="promo-modal-title">NOUVEAU CODE</p>
-          <button onclick="closePromoModal()" style="background:transparent;border:1px solid var(--border);color:var(--silver);width:28px;height:28px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0.8rem">
-          <div class="field"><label>Code (ex: BONA10)</label><input type="text" id="pm-code" placeholder="BONA10" style="text-transform:uppercase"/></div>
-          <div class="field">
-            <label>Type de réduction</label>
-            <select id="pm-type" onchange="updatePromoModalType()">
-              <option value="pct">Pourcentage (ex: -10%)</option>
-              <option value="fixe">Montant fixe (ex: -5€)</option>
-              <option value="livraison">Livraison offerte</option>
-            </select>
-          </div>
-          <div class="field" id="pm-valeur-wrap">
-            <label id="pm-valeur-label">Valeur (%)</label>
-            <input type="number" id="pm-valeur" min="0" placeholder="10"/>
-          </div>
-          <div class="field">
-            <label>Applicable sur</label>
-            <select id="pm-scope">
-              <option value="all">Tous les produits</option>
-              <option value="collection">Une collection spécifique</option>
-              <option value="refs">Références spécifiques</option>
-            </select>
-          </div>
-          <div class="field" id="pm-scope-detail" style="display:none">
-            <label id="pm-scope-label">Préciser (séparés par virgule)</label>
-            <input type="text" id="pm-scope-val" placeholder="ex: Chainmail ou BIJ-001,BIJ-002"/>
-          </div>
-          <div class="field"><label>Date d'expiration (optionnel)</label><input type="date" id="pm-expiration"/></div>
-          <div class="field">
-            <label>Usage</label>
-            <select id="pm-usage">
-              <option value="illimite">Illimité</option>
-              <option value="unique">Usage unique</option>
-            </select>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.8rem;background:var(--ink-lt);border:1px solid var(--border);cursor:pointer;user-select:none" onclick="togglePromoActif()" id="pm-actif-wrap">
-            <div style="width:28px;height:16px;border-radius:8px;background:var(--ok);position:relative;transition:background 0.2s" id="pm-actif-track">
-              <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cream);top:3px;left:3px;transition:transform 0.2s;transform:translateX(12px)" id="pm-actif-dot"></div>
-            </div>
-            <span style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ok)" id="pm-actif-label">Actif</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:0.6rem;margin-top:1.2rem">
-          <button class="btn-adm primary" style="flex:1;justify-content:center" onclick="savePromo()">Enregistrer</button>
-          <button class="btn-adm" onclick="closePromoModal()">Annuler</button>
-        </div>
-      </div>
-    </div>
+    <!-- PAGE D'ACCUEIL -->
     <div id="page-hero">
       <div class="hero-height-picker">
         <label>Hauteur du carrousel</label>
@@ -383,304 +307,385 @@
       <div class="hero-editor" id="hero-editor"></div>
       <button class="add-slide-btn" id="add-slide-btn">+ Ajouter un slide</button>
     </div>
+
+    <!-- CODES PROMO -->
+    <div id="page-promos">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem">
+        <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">Codes promotionnels</p>
+        <button class="btn-adm primary" onclick="openPromoModal(null)">+ Nouveau code</button>
+      </div>
+      <div id="promos-list"></div>
+    </div>
   </main>
+</div>
+
+<!-- MODAL CODE PROMO -->
+<div id="promo-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(26,21,16,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:var(--ink-md);border:1px solid var(--border);padding:1.5rem;width:min(480px,95vw);max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+      <p style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.15em;color:var(--sand)" id="promo-modal-title">NOUVEAU CODE</p>
+      <button onclick="closePromoModal()" style="background:transparent;border:1px solid var(--border);color:var(--silver);width:28px;height:28px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.8rem">
+      <div class="field"><label>Code *</label><input type="text" id="pm-code" placeholder="BONA10" style="text-transform:uppercase"/></div>
+      <div class="field">
+        <label>Type de réduction</label>
+        <select id="pm-type" onchange="updatePromoType()">
+          <option value="pct">Pourcentage (ex: -10%)</option>
+          <option value="fixe">Montant fixe (ex: -5€)</option>
+          <option value="livraison">Livraison offerte</option>
+        </select>
+      </div>
+      <div class="field" id="pm-valeur-wrap">
+        <label id="pm-valeur-label">Valeur (%)</label>
+        <input type="number" id="pm-valeur" min="0" placeholder="10"/>
+      </div>
+      <div class="field">
+        <label>Applicable sur</label>
+        <select id="pm-scope" onchange="updatePromoScope()">
+          <option value="all">Tous les produits</option>
+          <option value="collection">Une collection spécifique</option>
+          <option value="refs">Références spécifiques</option>
+        </select>
+      </div>
+      <div class="field" id="pm-scope-detail" style="display:none">
+        <label id="pm-scope-label">Préciser</label>
+        <input type="text" id="pm-scope-val" placeholder="ex: Chainmail  ou  BIJ-001,BIJ-002"/>
+      </div>
+      <div class="field"><label>Expiration (optionnel)</label><input type="date" id="pm-expiration"/></div>
+      <div class="field">
+        <label>Usage</label>
+        <select id="pm-usage">
+          <option value="illimite">Illimité</option>
+          <option value="unique">Usage unique</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.8rem;background:var(--ink-lt);border:1px solid var(--border);cursor:pointer;user-select:none" onclick="togglePmActif()" id="pm-actif-row">
+        <div style="width:28px;height:16px;border-radius:8px;position:relative;transition:background 0.2s" id="pm-actif-track" style="background:var(--ok)">
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cream);top:3px;transition:transform 0.2s" id="pm-actif-dot"></div>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase" id="pm-actif-lbl">Actif</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.6rem;margin-top:1.2rem">
+      <button class="btn-adm primary" style="flex:1;justify-content:center" onclick="savePromo()">Enregistrer</button>
+      <button class="btn-adm" onclick="closePromoModal()">Annuler</button>
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-  const ADMIN_PASSWORD='bonanodi2025';
-  const SB_URL='https://twtstslwhvrhmjfcfvvu.supabase.co';
-  const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
-  const BUCKET='produits';
-  const MATIERES_LIST=['Acier inoxydable','Laiton','Métal','Cuivre','Argent','Or','Bronze','Verre','Cristal','Perles naturelles','Polystyrène','Acrylique','Coton','Fil nylon','Cordon ciré','Résine','Bois'];
-  const BUILTIN_SLIDES=[
-    {id:'__builtin_0',eyebrow:'✦ Collection artisanale · fait main',title:'BONA',title_em:'&',title2:'NODI',sub:'Entre la brutalité du métal et la douceur des perles — chaque pièce tissée à la main.',btn_label:'→ Découvrir la boutique',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'},
-    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie et visualise ton bijou en temps réel.',btn_label:'→ Personnaliser',btn_href:'product.html#configurateur',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
+  const ADMIN_PASSWORD = 'bonanodi2025';
+  const SB_URL = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
+  const BUCKET = 'produits';
+  const MATIERES_LIST = ['Acier inoxydable','Laiton','Métal','Cuivre','Argent','Or','Bronze','Verre','Cristal','Perles naturelles','Polystyrène','Acrylique','Coton','Fil nylon','Cordon ciré','Résine','Bois'];
+  const BUILTIN_SLIDES = [
+    {id:'__builtin_0',eyebrow:'✦ Collection artisanale · fait main',title:'BONA',title_em:'&',title2:'NODI',sub:'Entre la brutalité du métal et la douceur des perles.',btn_label:'→ Découvrir la boutique',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'},
+    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie en temps réel.',btn_label:'→ Personnaliser',btn_href:'product.html',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
   ];
 
-  /* LOGIN */
-  document.getElementById('login-btn').addEventListener('click',tryLogin);
-  document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
-  function tryLogin(){
-    if(document.getElementById('pwd-input').value===ADMIN_PASSWORD){
-      document.getElementById('login-screen').style.display='none';
-      document.getElementById('admin-app').style.display='block';
-      loadBijoux();renderHeroEditor();initHeightPicker();populateBulkMat();
-    }else{
-      document.getElementById('login-err').style.display='block';
-      document.getElementById('pwd-input').value='';
+  /* ── LOGIN ── */
+  document.getElementById('login-btn').addEventListener('click', tryLogin);
+  document.getElementById('pwd-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+  function tryLogin() {
+    if (document.getElementById('pwd-input').value === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'block';
+      initAdmin();
+    } else {
+      document.getElementById('login-err').style.display = 'block';
+      document.getElementById('pwd-input').value = '';
     }
   }
 
-  const {createClient}=supabase;
-  const sb=createClient(SB_URL,SB_KEY);
-  let lc={},allB=[],dirty=false,curTab='all',curQ='';
-  const selected=new Set();
+  /* ── INIT après login ── */
+  function initAdmin() {
+    lc = getLC();
+    loadBijoux();
+    renderHeroEditor();
+    initHeightPicker();
+    populateBulkMat();
+  }
 
-  function getLC(){try{return JSON.parse(localStorage.getItem('bn_content')||'{}');}catch{return{};}}
-  function saveLC(){localStorage.setItem('bn_content',JSON.stringify(lc));dirty=false;setSaved(true);toast('Sauvegardé ✦');updateStats();}
-  function markDirty(){dirty=true;setSaved(false);}
-  function setSaved(ok){const el=document.getElementById('save-status');el.textContent=ok?'✓ Sauvegardé':'● Non sauvegardé';el.className=ok?'saved':'unsaved';}
-  document.getElementById('save-btn').addEventListener('click',saveLC);
-  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
-  function toast(msg,err=false){const t=document.getElementById('toast');t.textContent=msg;t.className=err?'show err':'show';setTimeout(()=>t.className='',2500);}
+  const { createClient } = supabase;
+  const sb = createClient(SB_URL, SB_KEY);
 
-  /* ══ EXPORT / IMPORT ══ */
-  document.getElementById('export-btn').addEventListener('click',()=>{
-    const data=localStorage.getItem('bn_content')||'{}';
-    const blob=new Blob([data],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=`bona-nodi-admin-${new Date().toISOString().slice(0,10)}.json`;
+  let lc = {}, allB = [], dirty = false, curTab = 'all', curQ = '';
+  const selected = new Set();
+
+  function getLC() { try { return JSON.parse(localStorage.getItem('bn_content') || '{}'); } catch { return {}; } }
+  function saveLC() { localStorage.setItem('bn_content', JSON.stringify(lc)); dirty = false; setSaved(true); toast('Sauvegardé ✦'); updateStats(); }
+  function markDirty() { dirty = true; setSaved(false); }
+  function setSaved(ok) { const el = document.getElementById('save-status'); el.textContent = ok ? '✓ Sauvegardé' : '● Non sauvegardé'; el.className = ok ? 'saved' : 'unsaved'; }
+
+  document.getElementById('save-btn').addEventListener('click', saveLC);
+  window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  function toast(msg, err = false) { const t = document.getElementById('toast'); t.textContent = msg; t.className = err ? 'show err' : 'show'; setTimeout(() => t.className = '', 2500); }
+
+  /* ── EXPORT / IMPORT ── */
+  document.getElementById('export-btn').addEventListener('click', () => {
+    const data = localStorage.getItem('bn_content') || '{}';
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bona-nodi-admin-' + new Date().toISOString().slice(0, 10) + '.json';
     a.click();
     URL.revokeObjectURL(url);
     toast('Données exportées ✦');
   });
 
-  document.getElementById('import-input').addEventListener('change',function(){
-    const file=this.files[0];if(!file)return;
-    const reader=new FileReader();
-    reader.onload=e=>{
-      try{
-        const parsed=JSON.parse(e.target.result);
-        localStorage.setItem('bn_content',JSON.stringify(parsed));
-        lc=parsed;
-        toast('Importé ✦ — rechargement dans 1s…');
-        setTimeout(()=>location.reload(),1200);
-      }catch{
-        toast('Fichier JSON invalide',true);
-      }
+  document.getElementById('import-input').addEventListener('change', function () {
+    const file = this.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        localStorage.setItem('bn_content', JSON.stringify(parsed));
+        lc = parsed;
+        toast('Importé ✦ — rechargement…');
+        setTimeout(() => location.reload(), 1200);
+      } catch { toast('Fichier JSON invalide', true); }
     };
     reader.readAsText(file);
-    this.value='';
+    this.value = '';
   });
 
-  /* PAGE TABS */
-  document.querySelectorAll('.page-tab').forEach(t=>{
-    t.addEventListener('click',()=>{
-      document.querySelectorAll('.page-tab').forEach(x=>x.classList.remove('active'));
+  /* ── PAGE TABS ── */
+  document.querySelectorAll('.page-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.page-tab').forEach(x => x.classList.remove('active'));
       t.classList.add('active');
-      const p=t.dataset.page;
-      document.getElementById('page-produits').classList.toggle('hidden',p!=='produits');
-      document.getElementById('page-hero').classList.toggle('active',p==='hero');
-      document.getElementById('page-promos').style.display=p==='promos'?'block':'none';
-      document.getElementById('stats-bar').style.display=p==='produits'?'flex':'none';
-      if(p==='promos') renderPromos();
+      const p = t.dataset.page;
+      document.getElementById('page-produits').classList.toggle('hidden', p !== 'produits');
+      document.getElementById('page-hero').classList.toggle('active', p === 'hero');
+      document.getElementById('page-promos').style.display = p === 'promos' ? 'block' : 'none';
+      document.getElementById('stats-bar').style.display = p === 'produits' ? 'flex' : 'none';
+      if (p === 'promos') renderPromos();
     });
   });
 
-  const safeId=ref=>(ref||'').replace(/[^a-zA-Z0-9]/g,'_');
-  const isNew =ref=>lc[ref]?.visible===undefined;
-  const isVis =ref=>lc[ref]?.visible===true;
-  const getPrix=b=>b.pv!=null?parseFloat(b.pv):null;
-  const fmtP  =p=>p!=null?new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p):null;
+  const safeId = ref => (ref || '').replace(/[^a-zA-Z0-9]/g, '_');
+  const isNew  = ref => lc[ref]?.visible === undefined;
+  const isVis  = ref => lc[ref]?.visible === true;
+  const getPrix = b => b.pv != null ? parseFloat(b.pv) : null;
+  const fmtP   = p => p != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p) : null;
 
-  function updateStats(){
-    const pub=allB.filter(b=>isVis(b.ref)).length;
-    const nw =allB.filter(b=>isNew(b.ref)).length;
-    const hid=allB.length-pub-nw;
-    document.getElementById('s-pub').textContent=pub;
-    document.getElementById('s-hid').textContent=Math.max(0,hid);
-    document.getElementById('s-new').textContent=nw;
-    document.getElementById('tb-new').textContent=nw;
-    document.getElementById('tb-pub').textContent=pub;
+  /* ── STATS ── */
+  function updateStats() {
+    const pub = allB.filter(b => isVis(b.ref)).length;
+    const nw  = allB.filter(b => isNew(b.ref)).length;
+    const hid = allB.length - pub - nw;
+    document.getElementById('s-pub').textContent = pub;
+    document.getElementById('s-hid').textContent = Math.max(0, hid);
+    document.getElementById('s-new').textContent = nw;
+    document.getElementById('tb-new').textContent = nw;
+    document.getElementById('tb-pub').textContent = pub;
   }
 
-  /* SÉLECTION MULTIPLE */
-  function toggleSelect(ref,e){
+  /* ── SÉLECTION MULTIPLE ── */
+  function toggleSelect(ref, e) {
     e.stopPropagation();
-    if(selected.has(ref))selected.delete(ref);else selected.add(ref);
-    document.getElementById('chk-'+safeId(ref))?.classList.toggle('checked',selected.has(ref));
-    document.getElementById('row-'+safeId(ref))?.classList.toggle('selected',selected.has(ref));
+    if (selected.has(ref)) selected.delete(ref); else selected.add(ref);
+    document.getElementById('chk-' + safeId(ref))?.classList.toggle('checked', selected.has(ref));
+    document.getElementById('row-' + safeId(ref))?.classList.toggle('selected', selected.has(ref));
     updateBulkBar();
   }
-  function updateBulkBar(){
-    const bar=document.getElementById('bulk-bar');
-    bar.classList.toggle('visible',selected.size>0);
-    document.getElementById('bulk-count').textContent=`${selected.size} sélectionné${selected.size>1?'s':''}`;
+  function updateBulkBar() {
+    const bar = document.getElementById('bulk-bar');
+    bar.classList.toggle('visible', selected.size > 0);
+    document.getElementById('bulk-count').textContent = selected.size + ' sélectionné' + (selected.size > 1 ? 's' : '');
   }
-  function clearSelection(){
-    selected.forEach(ref=>{
-      document.getElementById('chk-'+safeId(ref))?.classList.remove('checked');
-      document.getElementById('row-'+safeId(ref))?.classList.remove('selected');
+  function clearSelection() {
+    selected.forEach(ref => {
+      document.getElementById('chk-' + safeId(ref))?.classList.remove('checked');
+      document.getElementById('row-' + safeId(ref))?.classList.remove('selected');
     });
-    selected.clear();updateBulkBar();
+    selected.clear(); updateBulkBar();
   }
-  function bulkAction(action){
-    if(selected.size===0)return;
-    if(action==='publish'){selected.forEach(ref=>setVisibility(ref,true));toast(`${selected.size} produit${selected.size>1?'s':''} publié${selected.size>1?'s':''} ✦`);}
-    else if(action==='hide'){selected.forEach(ref=>setVisibility(ref,false));toast(`${selected.size} produit${selected.size>1?'s':''} masqué${selected.size>1?'s':''}`);}
-    else if(action==='matiere'){
-      const mat=document.getElementById('bulk-mat-select').value;
-      if(!mat){toast('Choisir une matière',true);return;}
-      selected.forEach(ref=>{if(!lc[ref])lc[ref]={};if(!lc[ref].matieres)lc[ref].matieres=[];if(!lc[ref].matieres.includes(mat))lc[ref].matieres.push(mat);});
-      markDirty();toast(`"${mat}" assignée à ${selected.size} produit${selected.size>1?'s':''} ✦`);
+  function bulkAction(action) {
+    if (!selected.size) return;
+    if (action === 'publish') { selected.forEach(ref => setVisibility(ref, true)); toast(selected.size + ' publié(s) ✦'); }
+    else if (action === 'hide') { selected.forEach(ref => setVisibility(ref, false)); toast(selected.size + ' masqué(s)'); }
+    else if (action === 'matiere') {
+      const mat = document.getElementById('bulk-mat-select').value;
+      if (!mat) { toast('Choisir une matière', true); return; }
+      selected.forEach(ref => { if (!lc[ref]) lc[ref] = {}; if (!lc[ref].matieres) lc[ref].matieres = []; if (!lc[ref].matieres.includes(mat)) lc[ref].matieres.push(mat); });
+      markDirty(); toast('"' + mat + '" assignée ✦');
     }
-    clearSelection();renderList();
+    clearSelection(); renderList();
   }
-  function populateBulkMat(){const sel=document.getElementById('bulk-mat-select');MATIERES_LIST.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;sel.appendChild(o);});}
+  function populateBulkMat() { const sel = document.getElementById('bulk-mat-select'); MATIERES_LIST.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; sel.appendChild(o); }); }
 
-  /* VISIBILITY */
-  function setVisibility(ref,value){
-    if(!lc[ref])lc[ref]={};lc[ref].visible=value;markDirty();
-    const sid=safeId(ref);const on=value;
-    const pill=document.getElementById('pill-'+sid);
-    if(pill){pill.className='vis-pill '+(on?'on':'');pill.innerHTML=`<span class="dot"></span>${on?'Publié':'Masqué'}`;}
-    const pt=document.getElementById('ptog-vis-'+sid);
-    if(pt){pt.className='panel-toggle '+(on?'vis-on':'');pt.querySelector('.tog-lbl').textContent=on?'Publié sur la boutique':'Masqué de la boutique';}
-    const row=document.getElementById('row-'+sid);
-    if(row){row.classList.remove('is-new','is-visible','is-hidden');row.classList.add(on?'is-visible':'is-hidden');}
+  /* ── VISIBILITY ── */
+  function setVisibility(ref, value) {
+    if (!lc[ref]) lc[ref] = {};
+    lc[ref].visible = value; markDirty();
+    const sid = safeId(ref); const on = value;
+    const pill = document.getElementById('pill-' + sid);
+    if (pill) { pill.className = 'vis-pill ' + (on ? 'on' : ''); pill.innerHTML = '<span class="dot"></span>' + (on ? 'Publié' : 'Masqué'); }
+    const pt = document.getElementById('ptog-vis-' + sid);
+    if (pt) { pt.className = 'panel-toggle ' + (on ? 'vis-on' : ''); pt.querySelector('.tog-lbl').textContent = on ? 'Publié sur la boutique' : 'Masqué de la boutique'; }
+    const row = document.getElementById('row-' + sid);
+    if (row) { row.classList.remove('is-new', 'is-visible', 'is-hidden'); row.classList.add(on ? 'is-visible' : 'is-hidden'); }
     updateStats();
   }
-  function toggleVisibility(ref,e){if(e)e.stopPropagation();setVisibility(ref,!isVis(ref));}
-  function toggleCommande(ref){
-    if(!lc[ref])lc[ref]={};lc[ref].sur_commande=!lc[ref].sur_commande;markDirty();
-    const sid=safeId(ref);const on=lc[ref].sur_commande;
-    const pt=document.getElementById('ptog-cmd-'+sid);
-    if(pt){pt.className='panel-toggle '+(on?'cmd-on':'');pt.querySelector('.tog-lbl').textContent=on?'Sur commande':'Disponible en stock';}
+  function toggleVisibility(ref, e) { if (e) e.stopPropagation(); setVisibility(ref, !isVis(ref)); }
+  function toggleCommande(ref) {
+    if (!lc[ref]) lc[ref] = {}; lc[ref].sur_commande = !lc[ref].sur_commande; markDirty();
+    const sid = safeId(ref); const on = lc[ref].sur_commande;
+    const pt = document.getElementById('ptog-cmd-' + sid);
+    if (pt) { pt.className = 'panel-toggle ' + (on ? 'cmd-on' : ''); pt.querySelector('.tog-lbl').textContent = on ? 'Sur commande' : 'Disponible en stock'; }
   }
-  function updateField(ref,key,val){if(!lc[ref])lc[ref]={};lc[ref][key]=val;markDirty();}
+  function updateField(ref, key, val) { if (!lc[ref]) lc[ref] = {}; lc[ref][key] = val; markDirty(); }
 
-  /* MATIÈRES */
-  function toggleMatiere(ref,mat){
-    if(!lc[ref])lc[ref]={};if(!lc[ref].matieres)lc[ref].matieres=[];
-    const idx=lc[ref].matieres.indexOf(mat);
-    if(idx>=0)lc[ref].matieres.splice(idx,1);else lc[ref].matieres.push(mat);
+  /* ── MATIÈRES ── */
+  function toggleMatiere(ref, mat) {
+    if (!lc[ref]) lc[ref] = {}; if (!lc[ref].matieres) lc[ref].matieres = [];
+    const idx = lc[ref].matieres.indexOf(mat);
+    if (idx >= 0) lc[ref].matieres.splice(idx, 1); else lc[ref].matieres.push(mat);
     markDirty();
-    document.getElementById(`mat-${safeId(ref)}-${safeId(mat)}`)?.classList.toggle('on',lc[ref].matieres.includes(mat));
+    document.getElementById('mat-' + safeId(ref) + '-' + safeId(mat))?.classList.toggle('on', lc[ref].matieres.includes(mat));
   }
-  function addCustomMatiere(ref){
-    const inp=document.getElementById('custom-mat-'+safeId(ref));
-    const val=(inp?.value||'').trim();if(!val)return;
-    if(!lc[ref])lc[ref]={};if(!lc[ref].matieres)lc[ref].matieres=[];
-    if(!lc[ref].matieres.includes(val)){
-      lc[ref].matieres.push(val);markDirty();
-      const grid=document.getElementById('mat-grid-'+safeId(ref));
-      if(grid){const btn=document.createElement('button');btn.className='matiere-chip on';btn.id=`mat-${safeId(ref)}-${safeId(val)}`;btn.textContent=val;btn.onclick=()=>toggleMatiere(ref,val);grid.appendChild(btn);}
+  function addCustomMatiere(ref) {
+    const inp = document.getElementById('custom-mat-' + safeId(ref));
+    const val = (inp?.value || '').trim(); if (!val) return;
+    if (!lc[ref]) lc[ref] = {}; if (!lc[ref].matieres) lc[ref].matieres = [];
+    if (!lc[ref].matieres.includes(val)) {
+      lc[ref].matieres.push(val); markDirty();
+      const grid = document.getElementById('mat-grid-' + safeId(ref));
+      if (grid) { const btn = document.createElement('button'); btn.className = 'matiere-chip on'; btn.id = 'mat-' + safeId(ref) + '-' + safeId(val); btn.textContent = val; btn.onclick = () => toggleMatiere(ref, val); grid.appendChild(btn); }
     }
-    if(inp)inp.value='';
+    if (inp) inp.value = '';
   }
-  function matieresHTML(ref){
-    const sel=lc[ref]?.matieres||[];
-    const chips=MATIERES_LIST.map(m=>`<button class="matiere-chip ${sel.includes(m)?'on':''}" id="mat-${safeId(ref)}-${safeId(m)}" onclick="toggleMatiere('${ref}','${m}')">${m}</button>`).join('');
-    const custom=sel.filter(m=>!MATIERES_LIST.includes(m)).map(m=>`<button class="matiere-chip on" id="mat-${safeId(ref)}-${safeId(m)}" onclick="toggleMatiere('${ref}','${m}')">${m}</button>`).join('');
-    return `<div class="matieres-section"><p class="matieres-label">Matières utilisées</p><div class="matieres-grid" id="mat-grid-${safeId(ref)}">${chips}${custom}</div><div class="matiere-custom"><input type="text" id="custom-mat-${safeId(ref)}" placeholder="Autre matière…"/><button onclick="addCustomMatiere('${ref}')">+ Ajouter</button></div></div>`;
+  function matieresHTML(ref) {
+    const sel = lc[ref]?.matieres || [];
+    const chips = MATIERES_LIST.map(m => '<button class="matiere-chip ' + (sel.includes(m) ? 'on' : '') + '" id="mat-' + safeId(ref) + '-' + safeId(m) + '" onclick="toggleMatiere(\'' + ref + '\',\'' + m + '\')">' + m + '</button>').join('');
+    const custom = sel.filter(m => !MATIERES_LIST.includes(m)).map(m => '<button class="matiere-chip on" id="mat-' + safeId(ref) + '-' + safeId(m) + '" onclick="toggleMatiere(\'' + ref + '\',\'' + m + '\')">' + m + '</button>').join('');
+    return '<div class="matieres-section"><p class="matieres-label">Matières utilisées</p><div class="matieres-grid" id="mat-grid-' + safeId(ref) + '">' + chips + custom + '</div><div class="matiere-custom"><input type="text" id="custom-mat-' + safeId(ref) + '" placeholder="Autre matière…"/><button onclick="addCustomMatiere(\'' + ref + '\')">+ Ajouter</button></div></div>';
   }
 
-  /* PHOTOS */
-  function refreshPG(ref){
-    const sid=safeId(ref);const grid=document.getElementById('pg-'+sid);if(!grid)return;
-    const ph=lc[ref]?.photos||[];
-    grid.innerHTML=ph.map((url,i)=>`<div class="photo-item ${i===0?'is-main':''}"><img src="${url}" alt="" onerror="this.style.opacity='0.2'">${i===0?'<div class="ph-main-badge">Principale</div>':''}${i>0?`<button class="ph-set-main" onclick="setMain('${ref}',${i})">★</button>`:''}<button class="ph-del" onclick="rmPh('${ref}',${i})">×</button></div>`).join('');
-    const row=document.getElementById('row-'+sid);if(row&&ph[0]){const old=row.querySelector('.row-thumb,.row-thumb-ph');if(old)old.outerHTML=`<img class="row-thumb" src="${ph[0]}" alt="">`;}
+  /* ── PHOTOS ── */
+  function refreshPG(ref) {
+    const sid = safeId(ref); const grid = document.getElementById('pg-' + sid); if (!grid) return;
+    const ph = lc[ref]?.photos || [];
+    grid.innerHTML = ph.map((url, i) => '<div class="photo-item ' + (i === 0 ? 'is-main' : '') + '"><img src="' + url + '" alt="" onerror="this.style.opacity=\'0.2\'">' + (i === 0 ? '<div class="ph-main-badge">Principale</div>' : '') + (i > 0 ? '<button class="ph-set-main" onclick="setMain(\'' + ref + '\',' + i + ')">★</button>' : '') + '<button class="ph-del" onclick="rmPh(\'' + ref + '\',' + i + ')">×</button></div>').join('');
+    const row = document.getElementById('row-' + sid); if (row && ph[0]) { const old = row.querySelector('.row-thumb,.row-thumb-ph'); if (old) old.outerHTML = '<img class="row-thumb" src="' + ph[0] + '" alt="">'; }
   }
-  function rmPh(ref,idx){const ph=lc[ref]?.photos||[];ph.splice(idx,1);if(!lc[ref])lc[ref]={};lc[ref].photos=ph;lc[ref].photo_principale=ph[0]||null;markDirty();refreshPG(ref);}
-  function setMain(ref,idx){const ph=lc[ref]?.photos||[];const[m]=ph.splice(idx,1);ph.unshift(m);lc[ref].photos=ph;lc[ref].photo_principale=ph[0];markDirty();refreshPG(ref);}
-  async function uploadPhotos(ref,files){
-    const sid=safeId(ref);const pw=document.getElementById('prog-'+sid),pb=document.getElementById('pb-'+sid);
-    if(pw)pw.style.display='block';const urls=[];
-    for(let i=0;i<files.length;i++){
-      const f=files[i],ext=f.name.split('.').pop().toLowerCase();
-      const path=`${ref}/${Date.now()}_${i}.${ext}`;
-      if(pb)pb.style.width=Math.round((i/files.length)*80)+'%';
-      const{error}=await sb.storage.from(BUCKET).upload(path,f,{upsert:true,contentType:f.type});
-      if(error){toast(`Upload: ${error.message}`,true);continue;}
-      const{data:ud}=sb.storage.from(BUCKET).getPublicUrl(path);
-      if(ud?.publicUrl)urls.push(ud.publicUrl);
-    }
-    if(pb)pb.style.width='100%';setTimeout(()=>{if(pw)pw.style.display='none';},600);
-    if(urls.length){if(!lc[ref])lc[ref]={};if(!lc[ref].photos)lc[ref].photos=[];lc[ref].photos.push(...urls);if(!lc[ref].photo_principale)lc[ref].photo_principale=lc[ref].photos[0];markDirty();refreshPG(ref);toast(`${urls.length} photo${urls.length>1?'s':''} ajoutée${urls.length>1?'s':''} ✦`);}
-  }
-  function handleDrop(e,ref){e.preventDefault();e.currentTarget.classList.remove('drag');if(e.dataTransfer.files.length)uploadPhotos(ref,e.dataTransfer.files);}
+  function rmPh(ref, idx) { const ph = lc[ref]?.photos || []; ph.splice(idx, 1); if (!lc[ref]) lc[ref] = {}; lc[ref].photos = ph; lc[ref].photo_principale = ph[0] || null; markDirty(); refreshPG(ref); }
+  function setMain(ref, idx) { const ph = lc[ref]?.photos || []; const [m] = ph.splice(idx, 1); ph.unshift(m); lc[ref].photos = ph; lc[ref].photo_principale = ph[0]; markDirty(); refreshPG(ref); }
 
-  /* HAUTEUR HERO */
-  const H_LABELS={third:'Compact (35vh)',half:'Moitié (50vh)',default:'Standard (55vh)',full:'Pleine page (100vh)'};
-  function initHeightPicker(){
-    const cur=lc.__hero_height||'default';
-    document.querySelectorAll('.height-opt').forEach(btn=>{
-      btn.classList.toggle('active',btn.dataset.h===cur);
-      btn.addEventListener('click',()=>{
-        lc.__hero_height=btn.dataset.h;markDirty();
-        document.querySelectorAll('.height-opt').forEach(b=>b.classList.remove('active'));
+  async function uploadPhotos(ref, files) {
+    const sid = safeId(ref); const pw = document.getElementById('prog-' + sid), pb = document.getElementById('pb-' + sid);
+    if (pw) pw.style.display = 'block'; const urls = [];
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i], ext = f.name.split('.').pop().toLowerCase();
+      const path = ref + '/' + Date.now() + '_' + i + '.' + ext;
+      if (pb) pb.style.width = Math.round((i / files.length) * 80) + '%';
+      const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+      if (error) { toast('Upload: ' + error.message, true); continue; }
+      const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+      if (ud?.publicUrl) urls.push(ud.publicUrl);
+    }
+    if (pb) pb.style.width = '100%'; setTimeout(() => { if (pw) pw.style.display = 'none'; }, 600);
+    if (urls.length) { if (!lc[ref]) lc[ref] = {}; if (!lc[ref].photos) lc[ref].photos = []; lc[ref].photos.push(...urls); if (!lc[ref].photo_principale) lc[ref].photo_principale = lc[ref].photos[0]; markDirty(); refreshPG(ref); toast(urls.length + ' photo(s) ajoutée(s) ✦'); }
+  }
+  function handleDrop(e, ref) { e.preventDefault(); e.currentTarget.classList.remove('drag'); if (e.dataTransfer.files.length) uploadPhotos(ref, e.dataTransfer.files); }
+
+  /* ── HAUTEUR HERO ── */
+  const H_LABELS = { third: 'Compact (35vh)', half: 'Moitié (50vh)', default: 'Standard (55vh)', full: 'Pleine page (100vh)' };
+  function initHeightPicker() {
+    const cur = lc.__hero_height || 'default';
+    document.querySelectorAll('.height-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.h === cur);
+      btn.addEventListener('click', () => {
+        lc.__hero_height = btn.dataset.h; markDirty();
+        document.querySelectorAll('.height-opt').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById('height-preview').textContent='Hauteur actuelle : '+H_LABELS[btn.dataset.h];
+        document.getElementById('height-preview').textContent = 'Hauteur actuelle : ' + H_LABELS[btn.dataset.h];
       });
     });
-    document.getElementById('height-preview').textContent='Hauteur actuelle : '+H_LABELS[cur];
+    document.getElementById('height-preview').textContent = 'Hauteur actuelle : ' + H_LABELS[cur];
   }
 
-  /* SLIDES */
-  function getBuiltinEdits(){return lc.__slides_edited||{};}
-  function getCustomSlides(){return lc.__hero_slides||[];}
-  function getAllSlidesForEditor(){
-    const edits=getBuiltinEdits();
-    const builtins=BUILTIN_SLIDES.map(s=>({...s,...(edits[s.id]||{}),__is_builtin:true}));
-    const custom=getCustomSlides().map((s,i)=>({...s,__is_builtin:false,__custom_idx:i}));
-    return [...builtins,...custom];
+  /* ── SLIDES ── */
+  function getBuiltinEdits() { return lc.__slides_edited || {}; }
+  function getCustomSlides() { return lc.__hero_slides || []; }
+  function getAllSlidesForEditor() {
+    const edits = getBuiltinEdits();
+    const builtins = BUILTIN_SLIDES.map(s => ({ ...s, ...(edits[s.id] || {}), __is_builtin: true }));
+    const custom = getCustomSlides().map((s, i) => ({ ...s, __is_builtin: false, __custom_idx: i }));
+    return [...builtins, ...custom];
   }
-  function saveSlideEdit(slideObj){
-    if(slideObj.__is_builtin){
-      if(!lc.__slides_edited)lc.__slides_edited={};
-      const{__is_builtin,...data}=slideObj;
-      lc.__slides_edited[slideObj.id]=data;
-    }else{
-      const customs=getCustomSlides();
-      const{__is_builtin,__custom_idx,...data}=slideObj;
-      customs[slideObj.__custom_idx]=data;
-      lc.__hero_slides=customs;
+  function saveSlideEdit(slideObj) {
+    if (slideObj.__is_builtin) {
+      if (!lc.__slides_edited) lc.__slides_edited = {};
+      const { __is_builtin, ...data } = slideObj;
+      lc.__slides_edited[slideObj.id] = data;
+    } else {
+      const customs = getCustomSlides();
+      const { __is_builtin, __custom_idx, ...data } = slideObj;
+      customs[slideObj.__custom_idx] = data;
+      lc.__hero_slides = customs;
     }
     markDirty();
   }
-  async function uploadSlideBg(editorIdx,files){
-    if(!files.length)return;
-    const all=getAllSlidesForEditor();const s=all[editorIdx];if(!s)return;
-    const f=files[0],ext=f.name.split('.').pop().toLowerCase();
-    const path=`hero/bg_${editorIdx}_${Date.now()}.${ext}`;
-    const{error}=await sb.storage.from(BUCKET).upload(path,f,{upsert:true,contentType:f.type});
-    if(error){toast(`Upload: ${error.message}`,true);return;}
-    const{data:ud}=sb.storage.from(BUCKET).getPublicUrl(path);
-    if(ud?.publicUrl){s.photo=ud.publicUrl;saveSlideEdit(s);renderHeroEditor();toast('Photo de fond mise à jour ✦');}
-  }
-  async function uploadSlideLogo(editorIdx,files){
-    if(!files.length)return;
-    const all=getAllSlidesForEditor();const s=all[editorIdx];if(!s)return;
-    const f=files[0],ext=f.name.split('.').pop().toLowerCase();
-    const path=`hero/logo_${editorIdx}_${Date.now()}.${ext}`;
-    const{error}=await sb.storage.from(BUCKET).upload(path,f,{upsert:true,contentType:f.type});
-    if(error){toast(`Upload: ${error.message}`,true);return;}
-    const{data:ud}=sb.storage.from(BUCKET).getPublicUrl(path);
-    if(ud?.publicUrl){s.logo_url=ud.publicUrl;saveSlideEdit(s);renderHeroEditor();toast('Logo mis à jour ✦');}
-  }
-  function removeSlideLogo(editorIdx){
-    const all=getAllSlidesForEditor();const s=all[editorIdx];if(!s)return;
-    s.logo_url='';saveSlideEdit(s);renderHeroEditor();
-  }
-  function handleSlideDrop(e,i){e.preventDefault();e.currentTarget.classList.remove('drag');if(e.dataTransfer.files.length)uploadSlideBg(i,e.dataTransfer.files);}
 
-  function renderHeroEditor(){
-    const all=getAllSlidesForEditor();
-    const ed=document.getElementById('hero-editor');
-    ed.innerHTML=all.map((s,i)=>`
-      <div class="slide-card ${s.__is_builtin?'is-builtin':''}" id="sc-${i}">
+  async function uploadSlideBg(editorIdx, files) {
+    if (!files.length) return;
+    const all = getAllSlidesForEditor(); const s = all[editorIdx]; if (!s) return;
+    const f = files[0], ext = f.name.split('.').pop().toLowerCase();
+    const path = 'hero/bg_' + editorIdx + '_' + Date.now() + '.' + ext;
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    if (ud?.publicUrl) { s.photo = ud.publicUrl; saveSlideEdit(s); renderHeroEditor(); toast('Photo de fond mise à jour ✦'); }
+  }
+
+  async function uploadSlideLogo(editorIdx, files) {
+    if (!files.length) return;
+    const all = getAllSlidesForEditor(); const s = all[editorIdx]; if (!s) return;
+    const f = files[0], ext = f.name.split('.').pop().toLowerCase();
+    const path = 'hero/logo_' + editorIdx + '_' + Date.now() + '.' + ext;
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    if (ud?.publicUrl) { s.logo_url = ud.publicUrl; saveSlideEdit(s); renderHeroEditor(); toast('Logo mis à jour ✦'); }
+  }
+
+  function removeSlideLogo(editorIdx) {
+    const all = getAllSlidesForEditor(); const s = all[editorIdx]; if (!s) return;
+    s.logo_url = ''; saveSlideEdit(s); renderHeroEditor();
+  }
+  function handleSlideDrop(e, i) { e.preventDefault(); e.currentTarget.classList.remove('drag'); if (e.dataTransfer.files.length) uploadSlideBg(i, e.dataTransfer.files); }
+
+  function renderHeroEditor() {
+    const all = getAllSlidesForEditor();
+    const ed = document.getElementById('hero-editor');
+    ed.innerHTML = all.map((s, i) => `
+      <div class="slide-card ${s.__is_builtin ? 'is-builtin' : ''}" id="sc-${i}">
         <div class="slide-card-header" onclick="toggleSC(${i})">
-          ${s.photo?`<img class="slide-preview-thumb" src="${s.photo}" alt="">`:`<div class="slide-preview-ph">🖼</div>`}
+          ${s.photo ? '<img class="slide-preview-thumb" src="' + s.photo + '" alt="">' : '<div class="slide-preview-ph">🖼</div>'}
           <div class="slide-card-info">
-            <p class="slide-card-title">${s.logo_url?'[Logo] '+(s.title||''):(s.title||'Slide '+(i+1))}</p>
-            <p class="slide-card-sub">${s.sub?s.sub.substring(0,55)+'…':'Pas de description'}</p>
+            <p class="slide-card-title">${s.logo_url ? '[Logo] ' + (s.title || '') : (s.title || 'Slide ' + (i + 1))}</p>
+            <p class="slide-card-sub">${s.sub ? s.sub.substring(0, 55) + '…' : 'Pas de description'}</p>
           </div>
           <div class="slide-card-actions">
-            ${s.__is_builtin?'<span class="builtin-badge">Défaut</span>':''}
-            ${!s.__is_builtin?`<div class="slide-order"><button onclick="moveSlide(${i},-1,event)">▲</button><button onclick="moveSlide(${i},1,event)">▼</button></div>`:''}
-            ${!s.__is_builtin?`<button class="slide-del" onclick="deleteSlide(${i},event)">✕</button>`:''}
+            ${s.__is_builtin ? '<span class="builtin-badge">Défaut</span>' : ''}
+            ${!s.__is_builtin ? '<div class="slide-order"><button onclick="moveSlide(' + i + ',-1,event)">▲</button><button onclick="moveSlide(' + i + ',1,event)">▼</button></div>' : ''}
+            ${!s.__is_builtin ? '<button class="slide-del" onclick="deleteSlide(' + i + ',event)">✕</button>' : ''}
             <span class="slide-toggle">▼</span>
           </div>
         </div>
         <div class="slide-panel">
           <div class="field">
             <label>Photo de fond</label>
-            ${s.photo?`<img class="slide-bg-preview" src="${s.photo}" alt="">`:`<div class="slide-bg-ph"><span>📷</span><span>Aucune photo</span></div>`}
+            ${s.photo ? '<img class="slide-bg-preview" src="' + s.photo + '" alt="">' : '<div class="slide-bg-ph"><span>📷</span><span>Aucune photo</span></div>'}
             <div class="upload-zone" style="margin-top:0.5rem" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleSlideDrop(event,${i})">
               <input type="file" accept="image/*" onchange="uploadSlideBg(${i},this.files)">
               <div class="upload-icon">📷</div>
@@ -689,34 +694,32 @@
           </div>
           <div class="field">
             <label>Logo PNG (optionnel — remplace le titre texte)</label>
-            ${s.logo_url?`<img src="${s.logo_url}" alt="logo" class="slide-logo-preview"><button class="logo-remove" onclick="removeSlideLogo(${i})">✕ Supprimer le logo</button>`:`<div class="slide-logo-ph"><span>Aucun logo</span></div>`}
+            ${s.logo_url ? '<img src="' + s.logo_url + '" alt="logo" class="slide-logo-preview"><button class="logo-remove" onclick="removeSlideLogo(' + i + ')">✕ Supprimer le logo</button>' : '<div class="slide-logo-ph"><span>Aucun logo</span></div>'}
             <div class="upload-zone" style="margin-top:0.5rem">
               <input type="file" accept="image/png,image/svg+xml,image/webp" onchange="uploadSlideLogo(${i},this.files)">
               <div class="upload-icon">🖼</div>
-              <p class="upload-text">Logo PNG/SVG · fond transparent<br><span style="opacity:0.6">Optimal : 640×240px min · Si défini, remplace le titre</span></p>
+              <p class="upload-text">Logo PNG/SVG · fond transparent<br><span style="opacity:0.6">Optimal : 640×240px · Si défini, remplace le titre</span></p>
             </div>
-            <p class="logo-note">Conseil : exporte en PNG @2x (640×240px) pour un rendu net sur écrans Retina.</p>
+            <p class="logo-note">Conseil : exporte en PNG @2x (640×240px) pour un rendu net sur Retina.</p>
           </div>
           <div class="panel-grid">
-            <div class="field"><label>Accroche</label><input type="text" value="${s.eyebrow||''}" placeholder="✦ Collection…" oninput="updateSF(${i},'eyebrow',this.value)"></div>
-            <div class="field"><label>Titre (si pas de logo)</label><input type="text" value="${s.title||''}" placeholder="BONA NODI" oninput="updateSF(${i},'title',this.value)"></div>
-            <div class="field" style="grid-column:1/-1"><label>Description</label><textarea oninput="updateSF(${i},'sub',this.value)" placeholder="Texte…">${s.sub||''}</textarea></div>
-            <div class="field"><label>Texte du bouton</label><input type="text" value="${s.btn_label||''}" placeholder="→ Découvrir" oninput="updateSF(${i},'btn_label',this.value)"></div>
-            <div class="field"><label>Lien du bouton</label><input type="text" value="${s.btn_href||''}" placeholder="#boutique" oninput="updateSF(${i},'btn_href',this.value)"></div>
+            <div class="field"><label>Accroche</label><input type="text" value="${s.eyebrow || ''}" placeholder="✦ Collection…" oninput="updateSF(${i},'eyebrow',this.value)"></div>
+            <div class="field"><label>Titre</label><input type="text" value="${s.title || ''}" placeholder="BONA NODI" oninput="updateSF(${i},'title',this.value)"></div>
+            <div class="field" style="grid-column:1/-1"><label>Description</label><textarea oninput="updateSF(${i},'sub',this.value)" placeholder="Texte…">${s.sub || ''}</textarea></div>
+            <div class="field"><label>Texte du bouton</label><input type="text" value="${s.btn_label || ''}" placeholder="→ Découvrir" oninput="updateSF(${i},'btn_label',this.value)"></div>
+            <div class="field"><label>Lien du bouton</label><input type="text" value="${s.btn_href || ''}" placeholder="#boutique" oninput="updateSF(${i},'btn_href',this.value)"></div>
           </div>
           <div class="panel-grid">
-            <div class="field">
-              <label>Position du bloc texte</label>
+            <div class="field"><label>Position du bloc texte</label>
               <div class="pos-picker">
-                <button class="pos-opt ${(s.pos||'left')==='left'?'active':''}" onclick="setSlideProp(${i},'pos','left',this.closest('.pos-picker'))">Gauche</button>
-                <button class="pos-opt ${s.pos==='right'?'active':''}" onclick="setSlideProp(${i},'pos','right',this.closest('.pos-picker'))">Droite</button>
+                <button class="pos-opt ${(s.pos || 'left') === 'left' ? 'active' : ''}" onclick="setSlideProp(${i},'pos','left',this.closest('.pos-picker'))">Gauche</button>
+                <button class="pos-opt ${s.pos === 'right' ? 'active' : ''}" onclick="setSlideProp(${i},'pos','right',this.closest('.pos-picker'))">Droite</button>
               </div>
             </div>
-            <div class="field">
-              <label>Style du bouton</label>
+            <div class="field"><label>Style du bouton</label>
               <div class="btn-style-picker">
-                <button class="btn-style-opt ${(s.btn_style||'primary')==='primary'?'active':''}" onclick="setSlideProp(${i},'btn_style','primary',this.closest('.btn-style-picker'))">Principal</button>
-                <button class="btn-style-opt ${s.btn_style==='secondary'?'active':''}" onclick="setSlideProp(${i},'btn_style','secondary',this.closest('.btn-style-picker'))">Secondaire</button>
+                <button class="btn-style-opt ${(s.btn_style || 'primary') === 'primary' ? 'active' : ''}" onclick="setSlideProp(${i},'btn_style','primary',this.closest('.btn-style-picker'))">Principal</button>
+                <button class="btn-style-opt ${s.btn_style === 'secondary' ? 'active' : ''}" onclick="setSlideProp(${i},'btn_style','secondary',this.closest('.btn-style-picker'))">Secondaire</button>
               </div>
             </div>
           </div>
@@ -724,81 +727,196 @@
       </div>`).join('');
   }
 
-  function toggleSC(i){document.getElementById('sc-'+i)?.classList.toggle('expanded');}
-  function updateSF(i,key,val){
-    const all=getAllSlidesForEditor();const s=all[i];if(!s)return;
-    s[key]=val;saveSlideEdit(s);
-    if(key==='title'){const el=document.querySelector(`#sc-${i} .slide-card-title`);if(el)el.textContent=s.logo_url?'[Logo] '+val:val||'Slide '+(i+1);}
-    if(key==='sub'){const el=document.querySelector(`#sc-${i} .slide-card-sub`);if(el)el.textContent=val?val.substring(0,55)+'…':'Pas de description';}
+  function toggleSC(i) { document.getElementById('sc-' + i)?.classList.toggle('expanded'); }
+  function updateSF(i, key, val) {
+    const all = getAllSlidesForEditor(); const s = all[i]; if (!s) return;
+    s[key] = val; saveSlideEdit(s);
+    if (key === 'title') { const el = document.querySelector('#sc-' + i + ' .slide-card-title'); if (el) el.textContent = s.logo_url ? '[Logo] ' + val : val || 'Slide ' + (i + 1); }
+    if (key === 'sub') { const el = document.querySelector('#sc-' + i + ' .slide-card-sub'); if (el) el.textContent = val ? val.substring(0, 55) + '…' : 'Pas de description'; }
   }
-  function setSlideProp(i,key,val,container){
-    const all=getAllSlidesForEditor();const s=all[i];if(!s)return;
-    s[key]=val;saveSlideEdit(s);
-    container.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  function setSlideProp(i, key, val, container) {
+    const all = getAllSlidesForEditor(); const s = all[i]; if (!s) return;
+    s[key] = val; saveSlideEdit(s);
+    container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
   }
-  function moveSlide(i,dir,e){
+  function moveSlide(i, dir, e) {
     e.stopPropagation();
-    const customs=getCustomSlides();const ci=i-BUILTIN_SLIDES.length;const cj=ci+dir;
-    if(cj<0||cj>=customs.length)return;
-    [customs[ci],customs[cj]]=[customs[cj],customs[ci]];
-    lc.__hero_slides=customs;markDirty();renderHeroEditor();
+    const customs = getCustomSlides(); const ci = i - BUILTIN_SLIDES.length; const cj = ci + dir;
+    if (cj < 0 || cj >= customs.length) return;
+    [customs[ci], customs[cj]] = [customs[cj], customs[ci]];
+    lc.__hero_slides = customs; markDirty(); renderHeroEditor();
   }
-  function deleteSlide(i,e){
-    e.stopPropagation();if(!confirm('Supprimer ce slide ?'))return;
-    const customs=getCustomSlides();const ci=i-BUILTIN_SLIDES.length;
-    customs.splice(ci,1);lc.__hero_slides=customs;markDirty();renderHeroEditor();
+  function deleteSlide(i, e) {
+    e.stopPropagation(); if (!confirm('Supprimer ce slide ?')) return;
+    const customs = getCustomSlides(); const ci = i - BUILTIN_SLIDES.length;
+    customs.splice(ci, 1); lc.__hero_slides = customs; markDirty(); renderHeroEditor();
   }
-  document.getElementById('add-slide-btn').addEventListener('click',()=>{
-    const customs=getCustomSlides();
-    customs.push({eyebrow:'✦',title:'NOUVEAU SLIDE',sub:'',btn_label:'→ Découvrir',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'});
-    lc.__hero_slides=customs;markDirty();renderHeroEditor();
-    const idx=BUILTIN_SLIDES.length+customs.length-1;
-    setTimeout(()=>document.getElementById('sc-'+idx)?.classList.add('expanded'),50);
+  document.getElementById('add-slide-btn').addEventListener('click', () => {
+    const customs = getCustomSlides();
+    customs.push({ eyebrow: '✦', title: 'NOUVEAU SLIDE', sub: '', btn_label: '→ Découvrir', btn_href: '#boutique', btn_style: 'primary', photo: '', logo_url: '', pos: 'left' });
+    lc.__hero_slides = customs; markDirty(); renderHeroEditor();
+    const idx = BUILTIN_SLIDES.length + customs.length - 1;
+    setTimeout(() => document.getElementById('sc-' + idx)?.classList.add('expanded'), 50);
   });
 
-  /* PRODUITS */
-  function toggleRow(ref){document.getElementById('row-'+safeId(ref))?.classList.toggle('expanded');}
-  function renderRow(b){
-    const ld=lc[b.ref]||{};const nm=ld.nom_public||b.nom||b.ref||'—';const sbN=b.nom||b.ref;
-    const prix=getPrix(b);const pFmt=fmtP(prix);
-    const col=b.collection||'';const vari=b.variante||'';
-    const ph=ld.photos||[];const nw=isNew(b.ref);const vis=isVis(b.ref);const surC=ld.sur_commande||false;
-    const sid=safeId(b.ref);const rowCls=nw?'is-new':vis?'is-visible':'is-hidden';
-    const isSel=selected.has(b.ref);
-    return `<div class="product-row ${rowCls} ${isSel?'selected':''}" id="row-${sid}">
+  /* ── CODES PROMO ── */
+  let editingPromoIdx = null;
+  let pmActif = true;
+
+  function getPromos() { return lc.promos || []; }
+  function savePromos(p) { lc.promos = p; markDirty(); }
+
+  function renderPromos() {
+    const promos = getPromos();
+    const el = document.getElementById('promos-list');
+    if (!promos.length) {
+      el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em;border:1px dashed var(--border)">Aucun code promo — cliquer "+ Nouveau code" pour commencer</p>';
+      return;
+    }
+    const typeLabel = { pct: '%', fixe: '€ fixe', livraison: 'Livraison offerte' };
+    el.innerHTML = promos.map((p, i) => `
+      <div style="display:flex;align-items:center;gap:0.8rem;padding:0.7rem 1rem;background:var(--ink-md);border:1px solid var(--border);margin-bottom:2px;opacity:${p.actif ? 1 : 0.5}">
+        <div style="flex:1;min-width:0">
+          <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--sand)">${p.code}</p>
+          <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.15rem">
+            ${p.type === 'livraison' ? 'Livraison offerte' : p.valeur + (p.type === 'pct' ? '%' : '€')} · 
+            ${p.scope === 'all' ? 'Tous produits' : p.scope === 'collection' ? 'Collection: ' + p.scope_val : 'Réf: ' + p.scope_val} · 
+            ${p.usage === 'unique' ? 'Usage unique' : 'Illimité'} · 
+            ${p.expiration ? 'Exp: ' + p.expiration : 'Sans expiration'}
+          </p>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;padding:0.2rem 0.5rem;border:1px solid ${p.actif ? 'rgba(126,207,138,0.4)' : 'var(--border)'};color:${p.actif ? 'var(--ok)' : 'var(--silver)'}">${p.actif ? 'Actif' : 'Inactif'}</span>
+        <button class="btn-adm" onclick="openPromoModal(${i})">Modifier</button>
+        <button class="btn-adm" onclick="deletePromo(${i})" style="border-color:rgba(196,40,110,0.3);color:var(--fuchsia-lt)">Supprimer</button>
+      </div>`).join('');
+  }
+
+  function openPromoModal(idx) {
+    editingPromoIdx = idx;
+    document.getElementById('promo-modal').style.display = 'flex';
+    document.getElementById('promo-modal-title').textContent = idx !== null ? 'MODIFIER CODE' : 'NOUVEAU CODE';
+    if (idx !== null) {
+      const p = getPromos()[idx];
+      document.getElementById('pm-code').value = p.code;
+      document.getElementById('pm-type').value = p.type;
+      document.getElementById('pm-valeur').value = p.valeur || '';
+      document.getElementById('pm-scope').value = p.scope;
+      document.getElementById('pm-scope-val').value = p.scope_val || '';
+      document.getElementById('pm-expiration').value = p.expiration || '';
+      document.getElementById('pm-usage').value = p.usage;
+      pmActif = p.actif;
+    } else {
+      document.getElementById('pm-code').value = '';
+      document.getElementById('pm-type').value = 'pct';
+      document.getElementById('pm-valeur').value = '';
+      document.getElementById('pm-scope').value = 'all';
+      document.getElementById('pm-scope-val').value = '';
+      document.getElementById('pm-expiration').value = '';
+      document.getElementById('pm-usage').value = 'illimite';
+      pmActif = true;
+    }
+    updatePromoType(); updatePromoScope(); updatePmActifUI();
+  }
+
+  function closePromoModal() { document.getElementById('promo-modal').style.display = 'none'; }
+
+  function updatePromoType() {
+    const type = document.getElementById('pm-type').value;
+    const vWrap = document.getElementById('pm-valeur-wrap');
+    if (type === 'livraison') { vWrap.style.display = 'none'; }
+    else { vWrap.style.display = 'flex'; document.getElementById('pm-valeur-label').textContent = type === 'pct' ? 'Valeur (%)' : 'Montant (€)'; }
+  }
+
+  function updatePromoScope() {
+    const v = document.getElementById('pm-scope').value;
+    const wrap = document.getElementById('pm-scope-detail');
+    wrap.style.display = v !== 'all' ? 'flex' : 'none';
+    document.getElementById('pm-scope-label').textContent = v === 'collection' ? 'Nom de la collection' : 'Références (séparées par virgule)';
+  }
+
+  function togglePmActif() { pmActif = !pmActif; updatePmActifUI(); }
+  function updatePmActifUI() {
+    const track = document.getElementById('pm-actif-track');
+    const dot = document.getElementById('pm-actif-dot');
+    const lbl = document.getElementById('pm-actif-lbl');
+    track.style.background = pmActif ? 'var(--ok)' : 'var(--border)';
+    dot.style.transform = pmActif ? 'translateX(12px)' : 'translateX(0)';
+    lbl.textContent = pmActif ? 'Actif' : 'Inactif';
+    lbl.style.color = pmActif ? 'var(--ok)' : 'var(--silver)';
+  }
+
+  function savePromo() {
+    const code = document.getElementById('pm-code').value.trim().toUpperCase();
+    if (!code) { toast('Le code est requis', true); return; }
+    const type = document.getElementById('pm-type').value;
+    const valeur = type !== 'livraison' ? parseFloat(document.getElementById('pm-valeur').value) || 0 : 0;
+    const scope = document.getElementById('pm-scope').value;
+    const scope_val = document.getElementById('pm-scope-val').value.trim();
+    const expiration = document.getElementById('pm-expiration').value || null;
+    const usage = document.getElementById('pm-usage').value;
+    const promo = { code, type, valeur, scope, scope_val, expiration, usage, actif: pmActif };
+    const promos = getPromos();
+    if (editingPromoIdx === null) {
+      if (promos.find(p => p.code === code)) { toast('Ce code existe déjà', true); return; }
+      promos.push(promo);
+    } else {
+      promos[editingPromoIdx] = promo;
+    }
+    savePromos(promos);
+    closePromoModal();
+    renderPromos();
+    toast('Code promo enregistré ✦');
+  }
+
+  function deletePromo(idx) {
+    if (!confirm('Supprimer ce code promo ?')) return;
+    const promos = getPromos(); promos.splice(idx, 1); savePromos(promos); renderPromos(); toast('Code supprimé');
+  }
+
+  /* ── PRODUITS ── */
+  function toggleRow(ref) { document.getElementById('row-' + safeId(ref))?.classList.toggle('expanded'); }
+
+  function renderRow(b) {
+    const ld = lc[b.ref] || {}; const nm = ld.nom_public || b.nom || b.ref || '—'; const sbN = b.nom || b.ref;
+    const prix = getPrix(b); const pFmt = fmtP(prix);
+    const col = b.collection || ''; const vari = b.variante || '';
+    const ph = ld.photos || []; const nw = isNew(b.ref); const vis = isVis(b.ref); const surC = ld.sur_commande || false;
+    const sid = safeId(b.ref); const rowCls = nw ? 'is-new' : vis ? 'is-visible' : 'is-hidden';
+    const isSel = selected.has(b.ref);
+    return `<div class="product-row ${rowCls} ${isSel ? 'selected' : ''}" id="row-${sid}">
       <div class="row-header" onclick="toggleRow('${b.ref}')">
-        <div class="row-check ${isSel?'checked':''}" id="chk-${sid}" onclick="toggleSelect('${b.ref}',event)"></div>
-        ${ph[0]?`<img class="row-thumb" src="${ph[0]}" alt="">`:`<div class="row-thumb-ph">✦</div>`}
+        <div class="row-check ${isSel ? 'checked' : ''}" id="chk-${sid}" onclick="toggleSelect('${b.ref}',event)"></div>
+        ${ph[0] ? '<img class="row-thumb" src="' + ph[0] + '" alt="">' : '<div class="row-thumb-ph">✦</div>'}
         <div class="row-info">
           <p class="row-name">${nm}</p>
-          <div class="row-meta">${col}${vari?' · '+vari:''} ${nw?'<span class="new-tag">Nouveau</span>':''} ${pFmt?`<span style="color:var(--fuchsia-lt)">${pFmt}</span>`:''}</div>
+          <div class="row-meta">${col}${vari ? ' · ' + vari : ''} ${nw ? '<span class="new-tag">Nouveau</span>' : ''} ${pFmt ? '<span style="color:var(--fuchsia-lt)">' + pFmt + '</span>' : ''}</div>
         </div>
-        <button class="vis-pill ${vis?'on':''}" id="pill-${sid}" onclick="toggleVisibility('${b.ref}',event)"><span class="dot"></span>${vis?'Publié':'Masqué'}</button>
+        <button class="vis-pill ${vis ? 'on' : ''}" id="pill-${sid}" onclick="toggleVisibility('${b.ref}',event)"><span class="dot"></span>${vis ? 'Publié' : 'Masqué'}</button>
         <span class="row-toggle">▼</span>
       </div>
       <div class="row-panel">
         <div class="panel-grid">
-          <div class="field"><label>Nom public</label><input type="text" value="${ld.nom_public||''}" placeholder="${sbN}" oninput="updateField('${b.ref}','nom_public',this.value)"></div>
-          <div class="field"><label>Référence</label><input type="text" value="${b.ref||''}" readonly></div>
-          <div class="field" style="grid-column:1/-1"><label>Description marketing</label><textarea placeholder="Description clients…" oninput="updateField('${b.ref}','description',this.value)">${ld.description||''}</textarea></div>
-          ${pFmt?`<div class="field"><label>Prix (Supabase · pv)</label><input type="text" value="${pFmt}" readonly></div>`:''}
+          <div class="field"><label>Nom public</label><input type="text" value="${ld.nom_public || ''}" placeholder="${sbN}" oninput="updateField('${b.ref}','nom_public',this.value)"></div>
+          <div class="field"><label>Référence</label><input type="text" value="${b.ref || ''}" readonly></div>
+          <div class="field" style="grid-column:1/-1"><label>Description marketing</label><textarea placeholder="Description clients…" oninput="updateField('${b.ref}','description',this.value)">${ld.description || ''}</textarea></div>
+          ${pFmt ? '<div class="field"><label>Prix (Supabase · pv)</label><input type="text" value="' + pFmt + '" readonly></div>' : ''}
         </div>
         ${matieresHTML(b.ref)}
         <div class="toggles-row">
-          <div class="panel-toggle ${vis?'vis-on':''}" id="ptog-vis-${sid}" onclick="toggleVisibility('${b.ref}',event)">
+          <div class="panel-toggle ${vis ? 'vis-on' : ''}" id="ptog-vis-${sid}" onclick="toggleVisibility('${b.ref}',event)">
             <div class="tog-track"></div>
-            <div class="tog-text"><span class="tog-lbl">${vis?'Publié sur la boutique':'Masqué de la boutique'}</span><span class="tog-desc">${nw?'Nouveau — activer pour publier':'Désactiver pour retirer'}</span></div>
+            <div class="tog-text"><span class="tog-lbl">${vis ? 'Publié sur la boutique' : 'Masqué de la boutique'}</span><span class="tog-desc">${nw ? 'Nouveau — activer pour publier' : 'Désactiver pour retirer'}</span></div>
           </div>
-          <div class="panel-toggle ${surC?'cmd-on':''}" id="ptog-cmd-${sid}" onclick="toggleCommande('${b.ref}')">
+          <div class="panel-toggle ${surC ? 'cmd-on' : ''}" id="ptog-cmd-${sid}" onclick="toggleCommande('${b.ref}')">
             <div class="tog-track"></div>
-            <div class="tog-text"><span class="tog-lbl">${surC?'Sur commande':'Disponible en stock'}</span><span class="tog-desc">Affiché sur la fiche produit</span></div>
+            <div class="tog-text"><span class="tog-lbl">${surC ? 'Sur commande' : 'Disponible en stock'}</span><span class="tog-desc">Affiché sur la fiche produit</span></div>
           </div>
         </div>
         <div class="photos-zone">
           <p class="photos-label">Photos — première = principale</p>
           <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em;margin-top:-0.3rem">Optimal : 800×1067px · ratio 3:4 · JPG/WEBP · max 1Mo</p>
-          <div class="photos-grid" id="pg-${sid}">${ph.map((url,i)=>`<div class="photo-item ${i===0?'is-main':''}"><img src="${url}" alt="" onerror="this.style.opacity='0.2'">${i===0?'<div class="ph-main-badge">Principale</div>':''}${i>0?`<button class="ph-set-main" onclick="setMain('${b.ref}',${i})">★</button>`:''}<button class="ph-del" onclick="rmPh('${b.ref}',${i})">×</button></div>`).join('')}</div>
+          <div class="photos-grid" id="pg-${sid}">${ph.map((url, i) => '<div class="photo-item ' + (i === 0 ? 'is-main' : '') + '"><img src="' + url + '" alt="" onerror="this.style.opacity=\'0.2\'">' + (i === 0 ? '<div class="ph-main-badge">Principale</div>' : '') + (i > 0 ? '<button class="ph-set-main" onclick="setMain(\'' + b.ref + '\',' + i + ')">★</button>' : '') + '<button class="ph-del" onclick="rmPh(\'' + b.ref + '\',' + i + ')">×</button></div>').join('')}</div>
           <div class="upload-zone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${b.ref}')">
             <input type="file" accept="image/*" multiple onchange="uploadPhotos('${b.ref}',this.files)">
             <div class="upload-icon">📷</div>
@@ -810,168 +928,40 @@
     </div>`;
   }
 
-  function getFiltered(){
-    let list=[...allB];
-    if(curTab==='new')    list=list.filter(b=>isNew(b.ref));
-    if(curTab==='visible')list=list.filter(b=>isVis(b.ref));
-    if(curTab==='hidden') list=list.filter(b=>!isNew(b.ref)&&!isVis(b.ref));
-    if(curQ){const q=curQ.toLowerCase();list=list.filter(b=>{const n=(lc[b.ref]?.nom_public||b.nom||b.ref||'').toLowerCase();return n.includes(q)||(b.ref||'').toLowerCase().includes(q);});}
-    list.sort((a,b)=>{const s=x=>isNew(x)?0:isVis(x)?1:2;return s(a.ref)-s(b.ref);});
+  function getFiltered() {
+    let list = [...allB];
+    if (curTab === 'new')     list = list.filter(b => isNew(b.ref));
+    if (curTab === 'visible') list = list.filter(b => isVis(b.ref));
+    if (curTab === 'hidden')  list = list.filter(b => !isNew(b.ref) && !isVis(b.ref));
+    if (curQ) { const q = curQ.toLowerCase(); list = list.filter(b => { const n = (lc[b.ref]?.nom_public || b.nom || b.ref || '').toLowerCase(); return n.includes(q) || (b.ref || '').toLowerCase().includes(q); }); }
+    list.sort((a, b) => { const s = x => isNew(x) ? 0 : isVis(x) ? 1 : 2; return s(a.ref) - s(b.ref); });
     return list;
   }
-  function renderList(){
-    const el=document.getElementById('product-list');const f=getFiltered();
-    el.innerHTML=f.length?f.map(b=>renderRow(b)).join(''):`<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em">Aucun produit ici</p>`;
+
+  function renderList() {
+    const el = document.getElementById('product-list'); const f = getFiltered();
+    el.innerHTML = f.length ? f.map(b => renderRow(b)).join('') : '<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em">Aucun produit ici</p>';
   }
 
-  document.getElementById('tabs').addEventListener('click',e=>{
-    const t=e.target.closest('.tab');if(!t)return;
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');curTab=t.dataset.tab;renderList();
+  document.getElementById('tabs').addEventListener('click', e => {
+    const t = e.target.closest('.tab'); if (!t) return;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active'); curTab = t.dataset.tab; renderList();
   });
-  document.getElementById('search-input').addEventListener('input',function(){curQ=this.value;renderList();});
+  document.getElementById('search-input').addEventListener('input', function () { curQ = this.value; renderList(); });
 
-  /* ══ CODES PROMO ══ */
-  let editingPromoIdx=null;
-  let pmActif=true;
-
-  function getPromos(){return lc.promos||[];}
-  function savePromos(p){lc.promos=p;markDirty();}
-
-  function renderPromos(){
-    const promos=getPromos();
-    const el=document.getElementById('promos-list');
-    if(!promos.length){
-      el.innerHTML=`<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;letter-spacing:0.15em;border:1px dashed var(--border)">Aucun code promo — cliquer "+ Nouveau code" pour commencer</p>`;
-      return;
-    }
-    const typeLabel={pct:'%',fixe:'€ fixe',livraison:'Livraison offerte'};
-    el.innerHTML=promos.map((p,i)=>`
-      <div style="display:flex;align-items:center;gap:0.8rem;padding:0.7rem 1rem;background:var(--ink-md);border:1px solid var(--border);margin-bottom:2px;${!p.actif?'opacity:0.5':''}">
-        <div style="flex:1;min-width:0">
-          <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--sand)">${p.code}</p>
-          <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.15rem">
-            ${p.type==='livraison'?'Livraison offerte':p.valeur+(p.type==='pct'?'%':'€')} · 
-            ${p.scope==='all'?'Tous produits':p.scope==='collection'?'Collection: '+p.scope_val:'Réf: '+p.scope_val} · 
-            ${p.usage==='unique'?'Usage unique':'Illimité'} · 
-            ${p.expiration?'Exp: '+p.expiration:'Sans expiration'}
-          </p>
-        </div>
-        <span style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;padding:0.2rem 0.5rem;border:1px solid ${p.actif?'rgba(126,207,138,0.4)':'var(--border)'};color:${p.actif?'var(--ok)':'var(--silver)'}">${p.actif?'Actif':'Inactif'}</span>
-        <button class="btn-adm" onclick="editPromo(${i})">Modifier</button>
-        <button class="btn-adm" onclick="deletePromo(${i})" style="border-color:rgba(196,40,110,0.3);color:var(--fuchsia-lt)">Supprimer</button>
-      </div>`).join('');
-  }
-
-  function openPromoModal(idx=null){
-    editingPromoIdx=idx;
-    const modal=document.getElementById('promo-modal');
-    modal.style.display='flex';
-    document.getElementById('promo-modal-title').textContent=idx!==null?'MODIFIER CODE':'NOUVEAU CODE';
-    if(idx!==null){
-      const p=getPromos()[idx];
-      document.getElementById('pm-code').value=p.code;
-      document.getElementById('pm-type').value=p.type;
-      document.getElementById('pm-valeur').value=p.valeur||'';
-      document.getElementById('pm-scope').value=p.scope;
-      document.getElementById('pm-scope-val').value=p.scope_val||'';
-      document.getElementById('pm-expiration').value=p.expiration||'';
-      document.getElementById('pm-usage').value=p.usage;
-      pmActif=p.actif;
-    }else{
-      document.getElementById('pm-code').value='';
-      document.getElementById('pm-type').value='pct';
-      document.getElementById('pm-valeur').value='';
-      document.getElementById('pm-scope').value='all';
-      document.getElementById('pm-scope-val').value='';
-      document.getElementById('pm-expiration').value='';
-      document.getElementById('pm-usage').value='illimite';
-      pmActif=true;
-    }
-    updatePromoModalType();
-    updatePromoActifUI();
-  }
-
-  function closePromoModal(){document.getElementById('promo-modal').style.display='none';}
-
-  function updatePromoModalType(){
-    const type=document.getElementById('pm-type').value;
-    const vWrap=document.getElementById('pm-valeur-wrap');
-    const lbl=document.getElementById('pm-valeur-label');
-    if(type==='livraison'){vWrap.style.display='none';}
-    else{vWrap.style.display='flex';lbl.textContent=type==='pct'?'Valeur (%)':'Montant (€)';}
-    const sWrap=document.getElementById('pm-scope-detail');
-    const sVal=document.getElementById('pm-scope').value;
-    sWrap.style.display=sVal!=='all'?'flex':'none';
-  }
-
-  document.getElementById('pm-scope').addEventListener('change',()=>{
-    const v=document.getElementById('pm-scope').value;
-    const wrap=document.getElementById('pm-scope-detail');
-    const lbl=document.getElementById('pm-scope-label');
-    wrap.style.display=v!=='all'?'flex':'none';
-    lbl.textContent=v==='collection'?'Nom de la collection':'Références (séparées par virgule)';
-  });
-
-  function togglePromoActif(){pmActif=!pmActif;updatePromoActifUI();}
-  function updatePromoActifUI(){
-    const track=document.getElementById('pm-actif-track');
-    const dot=document.getElementById('pm-actif-dot');
-    const lbl=document.getElementById('pm-actif-label');
-    track.style.background=pmActif?'var(--ok)':'var(--border)';
-    dot.style.transform=pmActif?'translateX(12px)':'translateX(0)';
-    lbl.textContent=pmActif?'Actif':'Inactif';
-    lbl.style.color=pmActif?'var(--ok)':'var(--silver)';
-  }
-
-  function savePromo(){
-    const code=document.getElementById('pm-code').value.trim().toUpperCase();
-    if(!code){toast('Le code est requis',true);return;}
-    const type=document.getElementById('pm-type').value;
-    const valeur=type!=='livraison'?parseFloat(document.getElementById('pm-valeur').value)||0:0;
-    const scope=document.getElementById('pm-scope').value;
-    const scope_val=document.getElementById('pm-scope-val').value.trim();
-    const expiration=document.getElementById('pm-expiration').value||null;
-    const usage=document.getElementById('pm-usage').value;
-    const promo={code,type,valeur,scope,scope_val,expiration,usage,actif:pmActif};
-
-    const promos=getPromos();
-    /* vérifier doublon si nouveau */
-    if(editingPromoIdx===null){
-      if(promos.find(p=>p.code===code)){toast('Ce code existe déjà',true);return;}
-      promos.push(promo);
-    }else{
-      promos[editingPromoIdx]=promo;
-    }
-    savePromos(promos);
-    closePromoModal();
-    renderPromos();
-    toast('Code promo sauvegardé ✦');
-  }
-
-  function editPromo(idx){openPromoModal(idx);}
-
-  function deletePromo(idx){
-    if(!confirm('Supprimer ce code promo ?'))return;
-    const promos=getPromos();
-    promos.splice(idx,1);
-    savePromos(promos);
-    renderPromos();
-    toast('Code supprimé');
-  }
-
-  /* init page promos cachée */
-  document.getElementById('page-promos').style.display='none';
-    try{
-      const{data,error}=await sb.from('bijoux').select('*').order('collection');
-      if(error)throw error;
-      document.getElementById('loading').style.display='none';
-      document.getElementById('product-list').style.display='flex';
-      document.getElementById('stats-bar').style.display='flex';
-      allB=(data||[]).filter(b=>b.ref&&!b.ref.toUpperCase().startsWith('COMP')&&!b.no_sell);
-      lc=getLC();updateStats();renderList();
-    }catch(err){
-      document.getElementById('loading').innerHTML=`<p style="color:var(--fuchsia);font-family:var(--font-mono);font-size:0.7rem;padding:2rem">Erreur : ${err.message}</p>`;
+  /* ── LOAD BIJOUX ── */
+  async function loadBijoux() {
+    try {
+      const { data, error } = await sb.from('bijoux').select('*').order('collection');
+      if (error) throw error;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('product-list').style.display = 'flex';
+      document.getElementById('stats-bar').style.display = 'flex';
+      allB = (data || []).filter(b => b.ref && !b.ref.toUpperCase().startsWith('COMP') && !b.no_sell);
+      updateStats(); renderList();
+    } catch (err) {
+      document.getElementById('loading').innerHTML = '<p style="color:var(--fuchsia);font-family:var(--font-mono);font-size:0.7rem;padding:2rem">Erreur : ' + err.message + '</p>';
     }
   }
 </script>
