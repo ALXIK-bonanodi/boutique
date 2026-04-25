@@ -24,17 +24,95 @@
     ::-webkit-scrollbar { width:3px; }
     ::-webkit-scrollbar-thumb { background:var(--fuchsia); }
 
-    .navbar { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center; justify-content:space-between; padding:0.6rem 2.5rem; background:rgba(26,21,16,0); transition:background 0.4s; }
-    .navbar.scrolled { background:rgba(26,21,16,0.93); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
-    .nav-logo { text-decoration:none; display:flex; align-items:center; gap:0.65rem; }
+    /* ── NAVBAR ── */
+    .navbar {
+      position:fixed; top:0; left:0; right:0; z-index:300;
+      background:rgba(26,21,16,0); transition:background 0.4s;
+    }
+    .navbar.scrolled { background:rgba(26,21,16,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+
+    /* barre principale */
+    .nav-main {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0.6rem 2.5rem; gap:1rem;
+    }
+    .nav-logo { text-decoration:none; display:flex; align-items:center; gap:0.65rem; flex-shrink:0; }
     .nav-logo-img { height:36px; width:36px; border-radius:50%; object-fit:cover; border:1px solid rgba(232,201,122,0.3); }
     .nav-logo-text { display:flex; flex-direction:column; line-height:1; }
     .nav-logo-text .l1 { font-family:var(--font-display); font-size:1.25rem; letter-spacing:0.2em; color:var(--sand); }
     .nav-logo-text .l2 { font-family:var(--font-body); font-style:italic; font-weight:300; font-size:0.58rem; letter-spacing:0.3em; color:var(--fuchsia-lt); text-transform:uppercase; }
-    .cart-btn { position:relative; background:transparent; border:1px solid var(--border); color:var(--cream); cursor:pointer; padding:0.4rem 0.8rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.15em; display:flex; align-items:center; gap:0.5rem; clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px)); transition:all 0.2s; }
+
+    /* liens nav centre */
+    .nav-links { display:flex; align-items:center; gap:0; }
+    .nav-item { position:relative; }
+    .nav-link {
+      font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--silver); text-decoration:none; padding:0.55rem 0.9rem;
+      display:flex; align-items:center; gap:0.3rem;
+      transition:color 0.2s; cursor:pointer; background:none; border:none;
+      white-space:nowrap;
+    }
+    .nav-link:hover, .nav-item:hover > .nav-link { color:var(--cream); }
+    .nav-link .caret { font-size:0.4rem; opacity:0.5; transition:transform 0.2s; }
+    .nav-item:hover > .nav-link .caret { transform:rotate(180deg); }
+
+    /* dropdown */
+    .nav-dropdown {
+      position:absolute; top:100%; left:50%; transform:translateX(-50%);
+      background:rgba(26,21,16,0.98); border:1px solid var(--border);
+      backdrop-filter:blur(16px); min-width:160px; padding:0.5rem 0;
+      opacity:0; pointer-events:none; transition:opacity 0.2s,transform 0.2s;
+      transform:translateX(-50%) translateY(-6px);
+      display:flex; flex-direction:column;
+    }
+    .nav-item:hover .nav-dropdown {
+      opacity:1; pointer-events:auto;
+      transform:translateX(-50%) translateY(0);
+    }
+    .nav-dropdown a {
+      font-family:var(--font-mono); font-size:0.54rem; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--silver); text-decoration:none; padding:0.5rem 1.1rem;
+      transition:color 0.15s,background 0.15s; display:block; white-space:nowrap;
+    }
+    .nav-dropdown a:hover { color:var(--cream); background:rgba(232,201,122,0.05); }
+    .nav-dropdown .sep { height:1px; background:var(--border); margin:0.3rem 0; }
+
+    /* nav droite */
+    .nav-right { display:flex; align-items:center; gap:0.4rem; flex-shrink:0; }
+    .cart-btn {
+      position:relative; background:transparent; border:1px solid var(--border);
+      color:var(--cream); cursor:pointer; padding:0.4rem 0.8rem;
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.15em;
+      display:flex; align-items:center; gap:0.5rem;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+      transition:all 0.2s;
+    }
     .cart-btn:hover { border-color:var(--fuchsia); color:var(--sand); }
     .cart-count { background:var(--fuchsia); color:var(--cream); font-family:var(--font-mono); font-size:0.5rem; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
     .cart-count.hidden { display:none; }
+    .account-btn {
+      background:transparent; border:1px solid var(--border); color:var(--silver);
+      cursor:pointer; padding:0.4rem 0.7rem; font-family:var(--font-mono); font-size:0.6rem;
+      display:flex; align-items:center; gap:0.4rem; transition:all 0.2s;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+      text-decoration:none;
+    }
+    .account-btn:hover { border-color:var(--fuchsia); color:var(--cream); }
+
+    /* hamburger mobile */
+    .nav-hamburger { display:none; background:transparent; border:1px solid var(--border); color:var(--silver); padding:0.4rem 0.7rem; cursor:pointer; font-size:1.1rem; transition:all 0.2s; }
+    .nav-hamburger:hover { border-color:var(--fuchsia); color:var(--cream); }
+    .nav-mobile { display:none; border-top:1px solid var(--border); padding:0.8rem 1.5rem 1.2rem; flex-direction:column; gap:0.3rem; background:rgba(26,21,16,0.98); backdrop-filter:blur(16px); }
+    .nav-mobile.open { display:flex; }
+    .nav-mobile a { font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--silver); text-decoration:none; padding:0.5rem 0; border-bottom:1px solid var(--border); transition:color 0.2s; }
+    .nav-mobile a:hover { color:var(--cream); }
+    .nav-mobile .mob-section { font-family:var(--font-mono); font-size:0.46rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--fuchsia-lt); padding:0.6rem 0 0.2rem; }
+
+    @media(max-width:850px) {
+      .nav-links { display:none; }
+      .nav-hamburger { display:flex; }
+      .nav-main { padding:0.5rem 1rem; }
+    }
 
     .hero-carousel { position:relative; min-height:300px; overflow:hidden; }
     .slide { position:absolute; inset:0; opacity:0; transition:opacity 0.8s ease; pointer-events:none; }
@@ -186,9 +264,23 @@
     #toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); padding:0.65rem 1.4rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--cream); background:var(--fuchsia); clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px)); opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:500; white-space:nowrap; }
     #toast.show { opacity:1; }
 
-    footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-    .foot-logo { font-family:var(--font-display); font-size:1.2rem; letter-spacing:0.2em; color:var(--sand); opacity:0.35; }
+    footer { border-top:1px solid var(--border); background:var(--ink); }
+    .footer-main { max-width:1200px; margin:0 auto; padding:2.5rem 2.5rem 1.5rem; display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:2rem; }
+    .footer-brand .foot-logo { font-family:var(--font-display); font-size:1.5rem; letter-spacing:0.2em; color:var(--sand); display:block; margin-bottom:0.5rem; }
+    .footer-brand p { font-family:var(--font-body); font-style:italic; font-weight:300; font-size:0.9rem; color:var(--silver); line-height:1.6; max-width:24ch; }
+    .footer-socials { display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap; }
+    .social-link { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.3rem 0.7rem; border:1px solid var(--border); color:var(--silver); text-decoration:none; transition:all 0.2s; clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px)); }
+    .social-link:hover { border-color:var(--fuchsia); color:var(--fuchsia-lt); }
+    .footer-col h4 { font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--fuchsia-lt); margin-bottom:0.7rem; }
+    .footer-col a { display:block; font-family:var(--font-mono); font-size:0.52rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--silver); text-decoration:none; padding:0.25rem 0; transition:color 0.2s; border-bottom:1px solid transparent; }
+    .footer-col a:hover { color:var(--cream); }
+    .footer-bottom { border-top:1px solid var(--border); padding:1rem 2.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; }
     .foot-copy { font-family:var(--font-mono); font-size:0.5rem; letter-spacing:0.1em; color:var(--silver); }
+    .foot-legal { display:flex; gap:1rem; flex-wrap:wrap; }
+    .foot-legal a { font-family:var(--font-mono); font-size:0.5rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--silver); text-decoration:none; transition:color 0.2s; }
+    .foot-legal a:hover { color:var(--sand); }
+    @media(max-width:750px) { .footer-main { grid-template-columns:1fr 1fr; } }
+    @media(max-width:480px) { .footer-main { grid-template-columns:1fr; } .footer-bottom { flex-direction:column; align-items:flex-start; } }
 
     @media (max-width:700px) {
       .navbar { padding:0.5rem 1rem; }
@@ -201,14 +293,80 @@
 <body>
 
 <nav class="navbar" id="navbar">
-  <a href="#" class="nav-logo" id="home-link">
-    <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'" />
-    <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
-  </a>
-  <button class="cart-btn" id="cart-btn">
-    <span>🛒</span><span>Panier</span>
-    <span class="cart-count hidden" id="cart-count">0</span>
-  </button>
+  <div class="nav-main">
+    <a href="#" class="nav-logo" id="home-link">
+      <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'" />
+      <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
+    </a>
+
+    <div class="nav-links">
+      <!-- Collections -->
+      <div class="nav-item">
+        <button class="nav-link">Collections <span class="caret">▼</span></button>
+        <div class="nav-dropdown">
+          <a href="index.html?collection=chainmail">Chainmail</a>
+          <a href="index.html?collection=poisson">Poisson Perles</a>
+          <a href="index.html?collection=sac">Sacs</a>
+          <a href="index.html?collection=porteclef">Porte-clefs</a>
+          <div class="sep"></div>
+          <a href="index.html#boutique">Tout voir</a>
+        </div>
+      </div>
+      <!-- Par type -->
+      <div class="nav-item">
+        <button class="nav-link">Par type <span class="caret">▼</span></button>
+        <div class="nav-dropdown">
+          <a href="index.html?type=boucles">Boucles d'oreilles</a>
+          <a href="index.html?type=collier">Colliers</a>
+          <a href="index.html?type=bracelet">Bracelets</a>
+          <a href="index.html?type=bague">Bagues</a>
+          <a href="index.html?type=sac">Sacs</a>
+          <a href="index.html?type=porteclef">Porte-clefs</a>
+        </div>
+      </div>
+      <!-- À propos -->
+      <div class="nav-item">
+        <button class="nav-link">À propos <span class="caret">▼</span></button>
+        <div class="nav-dropdown">
+          <a href="about.html">La créatrice</a>
+          <a href="entretien.html">Entretien des bijoux</a>
+          <a href="cgv.html#art8">SAV & Réparations</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <a href="compte.html" class="account-btn" title="Mon compte">
+        <span>◯</span><span>Compte</span>
+      </a>
+      <button class="cart-btn" id="cart-btn">
+        <span>🛒</span><span>Panier</span>
+        <span class="cart-count hidden" id="cart-count">0</span>
+      </button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+
+  <!-- MENU MOBILE -->
+  <div class="nav-mobile" id="nav-mobile">
+    <span class="mob-section">Collections</span>
+    <a href="index.html?collection=chainmail">Chainmail</a>
+    <a href="index.html?collection=poisson">Poisson Perles</a>
+    <a href="index.html?collection=sac">Sacs</a>
+    <a href="index.html?collection=porteclef">Porte-clefs</a>
+    <span class="mob-section">Par type</span>
+    <a href="index.html?type=boucles">Boucles d'oreilles</a>
+    <a href="index.html?type=collier">Colliers</a>
+    <a href="index.html?type=bracelet">Bracelets</a>
+    <a href="index.html?type=bague">Bagues</a>
+    <span class="mob-section">Infos</span>
+    <a href="about.html">À propos</a>
+    <a href="entretien.html">Entretien</a>
+    <a href="cgv.html">CGV & SAV</a>
+    <a href="contact.html">Contact</a>
+    <a href="compte.html">Mon compte</a>
+  </div>
 </nav>
 
 <section class="hero-carousel" id="hero">
@@ -246,8 +404,46 @@
 </section>
 
 <footer>
-  <span class="foot-logo">BONA NODI</span>
-  <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <span class="foot-logo">BONA NODI</span>
+      <p>Bijoux artisanaux fait main — chainmail, perles, savoir-faire.</p>
+      <div class="footer-socials">
+        <a href="https://instagram.com/bonanodi" target="_blank" class="social-link">Instagram</a>
+        <a href="https://tiktok.com/@bonanodi" target="_blank" class="social-link">TikTok</a>
+        <a href="https://pinterest.com/bonanodi" target="_blank" class="social-link">Pinterest</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Boutique</h4>
+      <a href="index.html?collection=chainmail">Chainmail</a>
+      <a href="index.html?collection=poisson">Poisson Perles</a>
+      <a href="index.html?collection=sac">Sacs</a>
+      <a href="index.html?collection=porteclef">Porte-clefs</a>
+      <a href="index.html#boutique">Tout voir</a>
+    </div>
+    <div class="footer-col">
+      <h4>Informations</h4>
+      <a href="about.html">À propos</a>
+      <a href="entretien.html">Entretien des bijoux</a>
+      <a href="cgv.html#art8">SAV & Réparations</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Mon compte</h4>
+      <a href="compte.html">Mon espace</a>
+      <a href="compte.html#commandes">Mes commandes</a>
+      <a href="compte.html#wishlist">Ma wishlist</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
+    <div class="foot-legal">
+      <a href="cgv.html">CGV</a>
+      <a href="cgv.html#art10">Données personnelles</a>
+      <a href="cgv.html#art6">Droit de rétractation</a>
+    </div>
+  </div>
 </footer>
 
 <div class="overlay" id="overlay"></div>
@@ -319,6 +515,9 @@
   /* NAVBAR */
   window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40); });
   document.getElementById('home-link').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  document.getElementById('nav-hamburger').addEventListener('click', () => {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  });
 
   /* ── CAROUSEL ── */
   const BUILTIN_SLIDES = [

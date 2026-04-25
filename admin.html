@@ -265,6 +265,7 @@
         <button class="tab" data-tab="new">Nouveaux <span class="tab-badge new" id="tb-new">0</span></button>
         <button class="tab" data-tab="visible">Publiés <span class="tab-badge pub" id="tb-pub">0</span></button>
         <button class="tab" data-tab="hidden">Masqués</button>
+        <button class="tab" data-tab="instock">En stock <span class="tab-badge pub" id="tb-stock">0</span></button>
       </div>
       <div class="bulk-bar" id="bulk-bar">
         <span class="bulk-count" id="bulk-count">0 sélectionné(s)</span>
@@ -876,7 +877,10 @@
   }
 
   /* ── PRODUITS ── */
+  let stockMap = {}; /* ref → quantité produite disponible */
   function toggleRow(ref) { document.getElementById('row-' + safeId(ref))?.classList.toggle('expanded'); }
+
+  const TYPES_BIJOU = ['Bague','Bracelet','Collier','Boucles d\'oreilles','Sac','Porte-clefs','Autre'];
 
   function renderRow(b) {
     const c = getC(b.ref); const nm = c.nom_public || b.nom || b.ref || '—'; const sbN = b.nom || b.ref;
@@ -885,6 +889,61 @@
     const ph = c.photos || []; const nw = isNew(b.ref); const vis = isVis(b.ref); const surC = c.sur_commande || false;
     const sid = safeId(b.ref); const rowCls = nw ? 'is-new' : vis ? 'is-visible' : 'is-hidden';
     const isSel = selected.has(b.ref);
+    const stockQty = stockMap[b.ref] || 0;
+    const stockBadge = stockQty > 0
+      ? `<span style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.1em;padding:0.12rem 0.4rem;background:rgba(126,207,138,0.12);border:1px solid rgba(126,207,138,0.4);color:var(--ok)">${stockQty} en stock</span>`
+      : '';
+    const typeVal = c.type_bijou || '';
+    return `<div class="product-row ${rowCls} ${isSel ? 'selected' : ''}" id="row-${sid}">
+      <div class="row-header" onclick="toggleRow('${b.ref}')">
+        <div class="row-check ${isSel ? 'checked' : ''}" id="chk-${sid}" onclick="toggleSelect('${b.ref}',event)"></div>
+        ${ph[0] ? '<img class="row-thumb" src="' + ph[0] + '" alt="">' : '<div class="row-thumb-ph">✦</div>'}
+        <div class="row-info">
+          <p class="row-name">${nm}</p>
+          <div class="row-meta">${col}${vari ? ' · ' + vari : ''} ${nw ? '<span class="new-tag">Nouveau</span>' : ''} ${stockBadge} ${pFmt ? '<span style="color:var(--fuchsia-lt)">' + pFmt + '</span>' : ''}</div>
+        </div>
+        <button class="vis-pill ${vis ? 'on' : ''}" id="pill-${sid}" onclick="toggleVisibility('${b.ref}',event)"><span class="dot"></span>${vis ? 'Publié' : 'Masqué'}</button>
+        <span class="row-toggle">▼</span>
+      </div>
+      <div class="row-panel">
+        <div class="panel-grid">
+          <div class="field"><label>Nom public</label><input type="text" value="${c.nom_public || ''}" placeholder="${sbN}" oninput="updateFieldDebounced('${b.ref}','nom_public',this.value)"></div>
+          <div class="field"><label>Référence</label><input type="text" value="${b.ref || ''}" readonly></div>
+          <div class="field"><label>Type de bijou</label>
+            <select onchange="updateContent('${b.ref}','type_bijou',this.value)" style="padding:0.48rem 0.72rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.7rem;outline:none;width:100%">
+              <option value="">— choisir —</option>
+              ${TYPES_BIJOU.map(t => `<option value="${t}" ${typeVal===t?'selected':''}>${t}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field"><label>Stock (table productions · statut "produit")</label><input type="text" value="${stockQty > 0 ? stockQty + ' pièce' + (stockQty > 1 ? 's' : '') + ' disponible' + (stockQty > 1 ? 's' : '') : 'Aucun en stock'}" readonly style="color:${stockQty > 0 ? 'var(--ok)' : 'var(--silver)'}"></div>
+          <div class="field" style="grid-column:1/-1"><label>Description marketing</label><textarea placeholder="Description clients…" oninput="updateFieldDebounced('${b.ref}','description',this.value)">${c.description || ''}</textarea></div>
+          ${pFmt ? '<div class="field"><label>Prix (Supabase · pv)</label><input type="text" value="' + pFmt + '" readonly></div>' : ''}
+        </div>
+        ${matieresHTML(b.ref)}
+        <div class="toggles-row">
+          <div class="panel-toggle ${vis ? 'vis-on' : ''}" id="ptog-vis-${sid}" onclick="toggleVisibility('${b.ref}',event)">
+            <div class="tog-track"></div>
+            <div class="tog-text"><span class="tog-lbl">${vis ? 'Publié sur la boutique' : 'Masqué de la boutique'}</span><span class="tog-desc">${nw ? 'Nouveau — activer pour publier' : 'Désactiver pour retirer'}</span></div>
+          </div>
+          <div class="panel-toggle ${surC ? 'cmd-on' : ''}" id="ptog-cmd-${sid}" onclick="toggleCommande('${b.ref}')">
+            <div class="tog-track"></div>
+            <div class="tog-text"><span class="tog-lbl">${surC ? 'Sur commande' : 'Disponible en stock'}</span><span class="tog-desc">Affiché sur la fiche produit</span></div>
+          </div>
+        </div>
+        <div class="photos-zone">
+          <p class="photos-label">Photos — première = principale</p>
+          <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em;margin-top:-0.3rem">Optimal : 800×1067px · ratio 3:4 · JPG/WEBP · max 1Mo</p>
+          <div class="photos-grid" id="pg-${sid}">${ph.map((url, i) => '<div class="photo-item ' + (i === 0 ? 'is-main' : '') + '"><img src="' + url + '" alt="" onerror="this.style.opacity=\'0.2\'">' + (i === 0 ? '<div class="ph-main-badge">Principale</div>' : '') + (i > 0 ? '<button class="ph-set-main" onclick="setMain(\'' + b.ref + '\',' + i + ')">★</button>' : '') + '<button class="ph-del" onclick="rmPh(\'' + b.ref + '\',' + i + ')">×</button></div>').join('')}</div>
+          <div class="upload-zone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${b.ref}')">
+            <input type="file" accept="image/*" multiple onchange="uploadPhotos('${b.ref}',this.files)">
+            <div class="upload-icon">📷</div>
+            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP<br><span style="opacity:0.6">800×1067px recommandé · fond neutre</span></p>
+            <div class="upload-progress" id="prog-${sid}"><div class="upload-progress-bar" id="pb-${sid}"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
     return `<div class="product-row ${rowCls} ${isSel ? 'selected' : ''}" id="row-${sid}">
       <div class="row-header" onclick="toggleRow('${b.ref}')">
         <div class="row-check ${isSel ? 'checked' : ''}" id="chk-${sid}" onclick="toggleSelect('${b.ref}',event)"></div>
@@ -934,6 +993,7 @@
     if (curTab === 'new')     list = list.filter(b => isNew(b.ref));
     if (curTab === 'visible') list = list.filter(b => isVis(b.ref));
     if (curTab === 'hidden')  list = list.filter(b => !isNew(b.ref) && !isVis(b.ref));
+    if (curTab === 'instock') list = list.filter(b => (stockMap[b.ref] || 0) > 0);
     if (curQ) { const q = curQ.toLowerCase(); list = list.filter(b => { const n = (getC(b.ref).nom_public || b.nom || b.ref || '').toLowerCase(); return n.includes(q) || (b.ref || '').toLowerCase().includes(q); }); }
     list.sort((a, b) => { const s = x => isNew(x) ? 0 : isVis(x) ? 1 : 2; return s(a.ref) - s(b.ref); });
     return list;
@@ -952,12 +1012,24 @@
 
   async function loadBijoux() {
     try {
-      const { data, error } = await sb.from('bijoux').select('*').order('collection');
+      const [{ data, error }, { data: prods }] = await Promise.all([
+        sb.from('bijoux').select('*').order('collection'),
+        sb.from('productions').select('bijou_ref, quantite, statut').eq('statut', 'produit')
+      ]);
       if (error) throw error;
+      /* Construire le stockMap : somme des quantités produites par ref */
+      stockMap = {};
+      if (prods) prods.forEach(p => {
+        if (!stockMap[p.bijou_ref]) stockMap[p.bijou_ref] = 0;
+        stockMap[p.bijou_ref] += (p.quantite || 1);
+      });
       document.getElementById('loading').style.display = 'none';
       document.getElementById('product-list').style.display = 'flex';
       document.getElementById('stats-bar').style.display = 'flex';
       allB = (data || []).filter(b => b.ref && !b.ref.toUpperCase().startsWith('COMP') && !b.no_sell);
+      /* Mettre à jour le compteur En stock */
+      const stockCount = allB.filter(b => (stockMap[b.ref] || 0) > 0).length;
+      document.getElementById('tb-stock').textContent = stockCount;
       updateStats(); renderList();
     } catch (err) {
       document.getElementById('loading').innerHTML = '<p style="color:var(--fuchsia);font-family:var(--font-mono);font-size:0.7rem;padding:2rem">Erreur : ' + err.message + '</p>';

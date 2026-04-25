@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bona Nodi — Mon compte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --sand:#e8c97a;--fuchsia:#c4286e;--fuchsia-lt:#e0558a;
+      --ink:#1a1510;--ink-lt:#2c2318;--ink-md:#221c13;
+      --cream:#faf5e8;--silver:#9a9070;
+      --border:rgba(232,201,122,0.14);--ok:#7ecf8a;
+      --font-display:'Bebas Neue',sans-serif;
+      --font-body:'Cormorant Garamond',serif;
+      --font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--ink);color:var(--cream);font-family:var(--font-body);font-size:17px;line-height:1.6;min-height:100vh}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.03;pointer-events:none;z-index:9999}
+    ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--fuchsia)}
+
+    .navbar{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(26,21,16,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+    .nav-logo{text-decoration:none;display:flex;align-items:center;gap:0.65rem}
+    .nav-logo-img{height:34px;width:34px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
+    .nav-logo-text{display:flex;flex-direction:column;line-height:1}
+    .nav-logo-text .l1{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.2em;color:var(--sand)}
+    .nav-logo-text .l2{font-family:var(--font-body);font-style:italic;font-weight:300;font-size:0.56rem;letter-spacing:0.3em;color:var(--fuchsia-lt);text-transform:uppercase}
+    .nav-back{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);text-decoration:none;transition:color 0.2s}
+    .nav-back:hover{color:var(--sand)}
+
+    /* HERO */
+    .account-hero{padding:3rem 2.5rem 2rem;border-bottom:1px solid var(--border)}
+    .account-hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.1em;color:var(--sand);margin-bottom:0.3rem}
+    .account-hero p{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver)}
+
+    /* LAYOUT */
+    .account-wrap{max-width:900px;margin:0 auto;padding:2rem 2.5rem 5rem;display:flex;flex-direction:column;gap:2rem}
+
+    /* TABS */
+    .account-tabs{display:flex;gap:0;border-bottom:1px solid var(--border)}
+    .account-tab{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.6rem 1.4rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s}
+    .account-tab:hover{color:var(--cream)}
+    .account-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* NOTICE INFO */
+    .info-box{padding:1rem 1.2rem;border:1px solid var(--border);background:rgba(232,201,122,0.04);margin-bottom:1.2rem}
+    .info-box p{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--silver);line-height:1.7}
+    .info-box strong{color:var(--sand)}
+
+    /* FORMULAIRE RECHERCHE COMMANDE */
+    .order-search{display:flex;flex-direction:column;gap:0.8rem;max-width:480px}
+    .order-search label{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
+    .order-search input{padding:0.6rem 0.9rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;outline:none;transition:border-color 0.2s}
+    .order-search input:focus{border-color:var(--fuchsia)}
+    .order-search input::placeholder{color:var(--silver)}
+    .btn-search{padding:0.7rem 1.4rem;background:var(--fuchsia);color:var(--cream);border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:background 0.2s;width:100%}
+    .btn-search:hover{background:var(--fuchsia-lt)}
+
+    /* RÉSULTAT COMMANDE */
+    .order-result{margin-top:1.5rem}
+    .order-card{background:var(--ink-md);border:1px solid var(--border);padding:1.2rem}
+    .order-num{font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.3rem}
+    .order-meta{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;color:var(--silver);margin-bottom:1rem;display:flex;gap:1rem;flex-wrap:wrap}
+    .order-statut{padding:0.15rem 0.5rem;font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase}
+    .statut-en_attente{background:rgba(232,201,122,0.1);border:1px solid rgba(232,201,122,0.3);color:var(--sand)}
+    .statut-confirme{background:rgba(126,207,138,0.1);border:1px solid rgba(126,207,138,0.3);color:var(--ok)}
+    .statut-expedie{background:rgba(100,180,255,0.1);border:1px solid rgba(100,180,255,0.3);color:#64b4ff}
+    .statut-livre{background:rgba(126,207,138,0.15);border:1px solid rgba(126,207,138,0.5);color:var(--ok)}
+    .statut-annule{background:rgba(196,40,110,0.1);border:1px solid rgba(196,40,110,0.3);color:var(--fuchsia-lt)}
+    .order-items{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem}
+    .order-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border)}
+    .order-item-name{font-family:var(--font-body);font-style:italic;font-size:0.95rem;color:var(--cream)}
+    .order-item-qty{font-family:var(--font-mono);font-size:0.5rem;color:var(--silver)}
+    .order-item-price{font-family:var(--font-display);font-size:0.95rem;color:var(--fuchsia-lt)}
+    .order-total{display:flex;justify-content:space-between;padding-top:0.5rem}
+    .order-total-label{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
+    .order-total-val{font-family:var(--font-display);font-size:1.4rem;color:var(--sand)}
+    .order-suivi{margin-top:0.8rem;padding:0.6rem 0.9rem;border:1px solid rgba(100,180,255,0.3);background:rgba(100,180,255,0.06)}
+    .order-suivi p{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;color:#64b4ff}
+    .order-error{padding:1rem;font-family:var(--font-mono);font-size:0.6rem;color:var(--fuchsia);letter-spacing:0.1em}
+
+    /* WISHLIST */
+    .wishlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px}
+    .wishlist-card{background:rgba(232,201,122,0.04);border:1px solid var(--border);overflow:hidden;aspect-ratio:3/4;display:flex;flex-direction:column;position:relative;cursor:pointer;transition:border-color 0.2s}
+    .wishlist-card:hover{border-color:rgba(196,40,110,0.4)}
+    .wishlist-card-img{flex:1;object-fit:cover;width:100%;opacity:0.85}
+    .wishlist-card-img-ph{flex:1;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:1.5rem;background:#221a11}
+    .wishlist-card-info{padding:0.6rem 0.8rem;border-top:1px solid var(--border);background:rgba(26,21,16,0.7)}
+    .wishlist-card-name{font-family:var(--font-body);font-style:italic;font-size:0.9rem;color:var(--cream)}
+    .wishlist-card-price{font-family:var(--font-display);font-size:1rem;color:var(--fuchsia-lt)}
+    .wishlist-del{position:absolute;top:0.4rem;right:0.4rem;background:rgba(26,21,16,0.85);border:1px solid var(--border);color:var(--silver);width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:0.65rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
+    .wishlist-del:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
+    .wishlist-empty{padding:3rem 0;text-align:center}
+    .wishlist-empty p{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver)}
+    .wishlist-empty a{display:inline-block;margin-top:1rem;font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--fuchsia-lt);text-decoration:none;padding:0.5rem 1rem;border:1px solid rgba(196,40,110,0.3);transition:all 0.2s}
+    .wishlist-empty a:hover{background:rgba(196,40,110,0.1)}
+
+    /* INFOS SAV */
+    .sav-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .sav-card{padding:1.2rem;background:var(--ink-md);border:1px solid var(--border)}
+    .sav-card h3{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.5rem}
+    .sav-card p{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.08em;color:var(--silver);line-height:1.7}
+    .sav-card a{color:var(--fuchsia-lt);text-decoration:none}
+    .sav-card a:hover{text-decoration:underline}
+
+    /* SPINNER */
+    .spinner{width:24px;height:24px;border:1px solid var(--border);border-top-color:var(--fuchsia);border-radius:50%;animation:spin 0.8s linear infinite;margin:2rem auto;display:block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .foot-logo{font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.2em;color:var(--sand);opacity:0.35}
+    .foot-copy{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;color:var(--silver)}
+
+    @media(max-width:700px){.navbar,.account-hero,.account-wrap{padding-left:1.2rem;padding-right:1.2rem}.sav-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'"/>
+    <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
+  </a>
+  <a href="index.html" class="nav-back">← Retour à la boutique</a>
+</nav>
+
+<div class="account-hero">
+  <h1>MON COMPTE</h1>
+  <p>Suivre vos commandes · Wishlist · SAV</p>
+</div>
+
+<div class="account-wrap">
+  <div class="account-tabs">
+    <button class="account-tab active" data-tab="commandes">Mes commandes</button>
+    <button class="account-tab" data-tab="wishlist">Wishlist</button>
+    <button class="account-tab" data-tab="sav">SAV & Contact</button>
+  </div>
+
+  <!-- COMMANDES -->
+  <div class="tab-panel active" id="tab-commandes">
+    <div class="info-box">
+      <p>Entrez votre <strong>numéro de commande</strong> (format BN-AAMM-XXXX) et l'<strong>email</strong> utilisé lors de la commande pour retrouver votre suivi.</p>
+    </div>
+    <div class="order-search">
+      <label>Numéro de commande</label>
+      <input type="text" id="order-num-input" placeholder="BN-2505-1234"/>
+      <label>Email</label>
+      <input type="email" id="order-email-input" placeholder="votre@email.fr"/>
+      <button class="btn-search" onclick="searchOrder()">Rechercher ma commande</button>
+    </div>
+    <div class="order-result" id="order-result"></div>
+  </div>
+
+  <!-- WISHLIST -->
+  <div class="tab-panel" id="tab-wishlist">
+    <div class="info-box" style="margin-bottom:1.2rem">
+      <p>Votre wishlist est sauvegardée sur cet appareil. Cliquez sur le <strong>♡</strong> sur une fiche produit pour ajouter un bijou.</p>
+    </div>
+    <div id="wishlist-wrap"></div>
+  </div>
+
+  <!-- SAV -->
+  <div class="tab-panel" id="tab-sav">
+    <div class="sav-grid">
+      <div class="sav-card">
+        <h3>RETOURS</h3>
+        <p>Vous disposez de <strong style="color:var(--sand)">14 jours</strong> après réception pour retourner un article intact.<br><br>
+        Contactez-nous d'abord par email avec votre numéro de commande :<br>
+        <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a></p>
+      </div>
+      <div class="sav-card">
+        <h3>RÉPARATIONS</h3>
+        <p>Défaut de fabrication dans les <strong style="color:var(--sand)">6 mois</strong> ? Réparation gratuite (retour à vos frais).<br><br>
+        Au-delà, contactez-nous pour un devis :<br>
+        <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a></p>
+      </div>
+      <div class="sav-card">
+        <h3>CONTACT</h3>
+        <p>Pour toute question :<br>
+        <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a><br><br>
+        Réponse sous 48h ouvrées.<br>
+        Précisez votre numéro de commande si disponible.</p>
+      </div>
+      <div class="sav-card">
+        <h3>CGV & INFOS LÉGALES</h3>
+        <p>Consultez nos <a href="cgv.html">Conditions Générales de Vente</a> complètes incluant :<br><br>
+        Délais d'expédition · Droit de rétractation · Garanties légales · Données personnelles</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="foot-logo">BONA NODI</span>
+  <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
+</footer>
+
+<script>
+  const SB_URL = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
+  const { createClient } = supabase;
+  const sb = createClient(SB_URL, SB_KEY);
+  const fmtP = p => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p || 0);
+
+  /* TABS */
+  document.querySelectorAll('.account-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.account-tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+      if (t.dataset.tab === 'wishlist') renderWishlist();
+    });
+  });
+
+  /* Ouvrir depuis URL hash */
+  if (window.location.hash === '#commandes') document.querySelector('[data-tab="commandes"]').click();
+  if (window.location.hash === '#wishlist')  { document.querySelector('[data-tab="wishlist"]').click(); }
+
+  /* ── COMMANDES ── */
+  const STATUT_LABELS = {
+    en_attente: 'En attente',
+    confirme:   'Confirmé',
+    en_cours:   'En préparation',
+    expedie:    'Expédié',
+    livre:      'Livré',
+    annule:     'Annulé'
+  };
+
+  async function searchOrder() {
+    const num   = (document.getElementById('order-num-input').value || '').trim().toUpperCase();
+    const email = (document.getElementById('order-email-input').value || '').trim().toLowerCase();
+    const res   = document.getElementById('order-result');
+
+    if (!num || !email) { res.innerHTML = '<p class="order-error">Merci de renseigner le numéro de commande et l\'email.</p>'; return; }
+
+    res.innerHTML = '<div class="spinner"></div>';
+
+    const { data, error } = await sb
+      .from('commandes')
+      .select('*')
+      .eq('numero_commande', num)
+      .ilike('client_email', email)
+      .limit(1);
+
+    if (error || !data?.length) {
+      res.innerHTML = '<p class="order-error">Commande introuvable. Vérifiez le numéro et l\'email utilisé lors de la commande.</p>';
+      return;
+    }
+
+    const o = data[0];
+    const statut = o.statut || 'en_attente';
+    const produits = o.produits || [];
+    const adresse = o.client_adresse || {};
+
+    res.innerHTML = `
+      <div class="order-card">
+        <p class="order-num">${o.numero_commande || num}</p>
+        <div class="order-meta">
+          <span class="order-statut statut-${statut}">${STATUT_LABELS[statut] || statut}</span>
+          <span>Passée le ${new Date(o.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })}</span>
+          ${adresse.ville ? `<span>→ ${adresse.ville}, ${adresse.pays || ''}</span>` : ''}
+        </div>
+        <div class="order-items">
+          ${produits.map(p => `
+            <div class="order-item">
+              <div><p class="order-item-name">${p.name || p.ref}</p><p class="order-item-qty">× ${p.qty}</p></div>
+              <span class="order-item-price">${fmtP(p.prix * p.qty)}</span>
+            </div>`).join('')}
+        </div>
+        <div class="order-total">
+          <span class="order-total-label">Total payé</span>
+          <span class="order-total-val">${fmtP(o.total)}</span>
+        </div>
+        ${o.numero_suivi ? `<div class="order-suivi"><p>📦 Numéro de suivi : <strong>${o.numero_suivi}</strong></p></div>` : ''}
+        ${o.delai_estime ? `<p style="font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);letter-spacing:0.1em;margin-top:0.8rem">⏱ ${o.delai_estime}</p>` : ''}
+      </div>`;
+  }
+
+  document.getElementById('order-num-input').addEventListener('keydown', e => { if (e.key === 'Enter') searchOrder(); });
+  document.getElementById('order-email-input').addEventListener('keydown', e => { if (e.key === 'Enter') searchOrder(); });
+
+  /* ── WISHLIST ── */
+  function getWishlist() { try { return JSON.parse(localStorage.getItem('bn_wishlist') || '[]'); } catch { return []; } }
+  function saveWishlist(w) { localStorage.setItem('bn_wishlist', JSON.stringify(w)); }
+
+  async function renderWishlist() {
+    const wrap = document.getElementById('wishlist-wrap');
+    const refs = getWishlist();
+
+    if (!refs.length) {
+      wrap.innerHTML = `<div class="wishlist-empty"><p>Votre wishlist est vide</p><a href="index.html#boutique">Découvrir la boutique →</a></div>`;
+      return;
+    }
+
+    wrap.innerHTML = '<div class="spinner"></div>';
+
+    const [{ data: bijoux }, { data: content }] = await Promise.all([
+      sb.from('bijoux').select('*').in('ref', refs),
+      sb.from('boutique_content').select('*').in('ref', refs)
+    ]);
+
+    const contentMap = {};
+    if (content) content.forEach(r => { contentMap[r.ref] = r; });
+
+    if (!bijoux?.length) { wrap.innerHTML = '<div class="wishlist-empty"><p>Produits introuvables</p></div>'; return; }
+
+    wrap.innerHTML = `<div class="wishlist-grid">
+      ${bijoux.map(b => {
+        const c = contentMap[b.ref] || {};
+        const name  = c.nom_public || b.nom || b.ref || '—';
+        const photo = c.photo_principale || (c.photos && c.photos[0]) || null;
+        const prix  = b.pv != null ? parseFloat(b.pv) : null;
+        return `<div class="wishlist-card" onclick="window.location.href='product.html?ref=${encodeURIComponent(b.ref)}'">
+          ${photo ? `<img class="wishlist-card-img" src="${photo}" alt="${name}" loading="lazy">` : '<div class="wishlist-card-img-ph">📷</div>'}
+          <button class="wishlist-del" onclick="removeWish('${b.ref}',event)" title="Retirer de la wishlist">✕</button>
+          <div class="wishlist-card-info">
+            <p class="wishlist-card-name">${name}</p>
+            ${prix != null ? `<p class="wishlist-card-price">${fmtP(prix)}</p>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  function removeWish(ref, e) {
+    e.stopPropagation();
+    const w = getWishlist().filter(r => r !== ref);
+    saveWishlist(w);
+    renderWishlist();
+  }
+
+  /* Init */
+  if (window.location.hash === '#wishlist') renderWishlist();
+</script>
+</body>
+</html>
