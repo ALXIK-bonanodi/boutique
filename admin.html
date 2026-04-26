@@ -255,6 +255,7 @@
     <div class="page-tabs">
       <button class="page-tab active" data-page="produits">Produits</button>
       <button class="page-tab" data-page="hero">Page d'accueil</button>
+      <button class="page-tab" data-page="pages">Pages & Footer</button>
       <button class="page-tab" data-page="promos">Codes promo</button>
     </div>
 
@@ -298,6 +299,54 @@
       <p class="slides-section-title">Slides (défaut éditables + personnalisés)</p>
       <div class="hero-editor" id="hero-editor"></div>
       <button class="add-slide-btn" id="add-slide-btn">+ Ajouter un slide</button>
+    </div>
+
+    <!-- PAGES & FOOTER -->
+    <div id="page-pages" style="display:none">
+      <div class="page-tabs" style="margin-bottom:1rem;border-bottom:1px solid var(--border)">
+        <button class="tab active" data-subtab="about" onclick="switchSubtab('about',this)">À propos</button>
+        <button class="tab" data-subtab="entretien" onclick="switchSubtab('entretien',this)">Entretien</button>
+        <button class="tab" data-subtab="cgv" onclick="switchSubtab('cgv',this)">CGV</button>
+        <button class="tab" data-subtab="footer" onclick="switchSubtab('footer',this)">Footer & Réseaux</button>
+      </div>
+
+      <!-- EDITEUR GÉNÉRIQUE PAGE -->
+      <div id="subtab-about" class="subtab-panel">
+        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Contenu de la page <a href="about.html" target="_blank" style="color:var(--fuchsia-lt)">À propos →</a></p>
+        <div class="field" style="margin-bottom:0.8rem"><label>Éditeur HTML (balises h2, p, ul, li, em acceptées)</label><textarea id="edit-about" style="min-height:300px;font-family:var(--font-mono);font-size:0.62rem" placeholder="<h2>La créatrice</h2>\n<p>Votre texte ici…</p>"></textarea></div>
+        <button class="btn-adm primary" onclick="savePage('page_about','edit-about')">Sauvegarder la page À propos</button>
+      </div>
+
+      <div id="subtab-entretien" class="subtab-panel" style="display:none">
+        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Contenu de la page <a href="entretien.html" target="_blank" style="color:var(--fuchsia-lt)">Entretien →</a></p>
+        <div class="field" style="margin-bottom:0.8rem"><label>Éditeur HTML</label><textarea id="edit-entretien" style="min-height:300px;font-family:var(--font-mono);font-size:0.62rem" placeholder="<h2>Conseils généraux</h2>\n<p>…"></textarea></div>
+        <button class="btn-adm primary" onclick="savePage('page_entretien','edit-entretien')">Sauvegarder la page Entretien</button>
+      </div>
+
+      <div id="subtab-cgv" class="subtab-panel" style="display:none">
+        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Informations CGV modifiables — <a href="cgv.html" target="_blank" style="color:var(--fuchsia-lt)">Voir la page →</a></p>
+        <div style="display:flex;flex-direction:column;gap:0.8rem">
+          <div class="field"><label>Nom / Raison sociale</label><input type="text" id="cgv-nom" placeholder="Bona Nodi"></div>
+          <div class="field"><label>SIRET</label><input type="text" id="cgv-siret" placeholder="À compléter lors de l'immatriculation"></div>
+          <div class="field"><label>Adresse commerciale</label><input type="text" id="cgv-adresse" placeholder="12 rue des Créateurs, 69000 Lyon"></div>
+          <div class="field"><label>Email de contact</label><input type="text" id="cgv-email" placeholder="contact@bonanodi.fr"></div>
+          <div class="field"><label>Médiateur de la consommation</label><input type="text" id="cgv-mediateur" placeholder="Nom + coordonnées (obligatoire à l'immatriculation)"></div>
+          <div class="field" style="grid-column:1/-1"><label>Informations complémentaires (texte libre affiché en bas des CGV)</label><textarea id="cgv-extra" style="min-height:100px" placeholder="Mentions spécifiques, notes légales…"></textarea></div>
+        </div>
+        <button class="btn-adm primary" style="margin-top:0.8rem" onclick="saveCgv()">Sauvegarder les infos CGV</button>
+      </div>
+
+      <div id="subtab-footer" class="subtab-panel" style="display:none">
+        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Réseaux sociaux — apparaissent dans le footer de toutes les pages</p>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:480px">
+          <div class="field"><label>Instagram (URL complète)</label><input type="url" id="footer-instagram" placeholder="https://instagram.com/bonanodi"></div>
+          <div class="field"><label>TikTok (URL complète)</label><input type="url" id="footer-tiktok" placeholder="https://tiktok.com/@bonanodi"></div>
+          <div class="field"><label>Pinterest (URL complète)</label><input type="url" id="footer-pinterest" placeholder="https://pinterest.com/bonanodi"></div>
+          <div class="field"><label>Autre réseau (facultatif)</label><input type="url" id="footer-autre" placeholder="https://…"></div>
+          <div class="field"><label>Label autre réseau</label><input type="text" id="footer-autre-label" placeholder="Facebook, Etsy…"></div>
+        </div>
+        <button class="btn-adm primary" style="margin-top:0.8rem" onclick="saveFooter()">Sauvegarder le footer</button>
+      </div>
     </div>
 
     <!-- CODES PROMO -->
@@ -621,11 +670,80 @@
       const p = t.dataset.page;
       document.getElementById('page-produits').classList.toggle('hidden', p !== 'produits');
       document.getElementById('page-hero').classList.toggle('active', p === 'hero');
+      document.getElementById('page-pages').style.display = p === 'pages' ? 'block' : 'none';
       document.getElementById('page-promos').style.display = p === 'promos' ? 'block' : 'none';
       document.getElementById('stats-bar').style.display = p === 'produits' ? 'flex' : 'none';
       if (p === 'promos') renderPromos();
+      if (p === 'pages')  loadPageEditors();
     });
   });
+
+  /* SOUS-ONGLETS PAGES */
+  function switchSubtab(name, btn) {
+    document.querySelectorAll('.subtab-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('subtab-' + name).style.display = 'block';
+    btn.closest('.page-tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  async function loadPageEditors() {
+    const keys = ['page_about','page_entretien','page_cgv','nav_footer','instagram','tiktok','pinterest'];
+    const { data } = await sb.from('boutique_settings').select('key,value').in('key', keys);
+    if (!data) return;
+    const m = {};
+    data.forEach(r => { m[r.key] = r.value; });
+    document.getElementById('edit-about').value     = m.page_about?.html     || '';
+    document.getElementById('edit-entretien').value = m.page_entretien?.html || '';
+    const cgv = m.page_cgv || {};
+    document.getElementById('cgv-nom').value       = cgv.nom       || '';
+    document.getElementById('cgv-siret').value     = cgv.siret     || '';
+    document.getElementById('cgv-adresse').value   = cgv.adresse   || '';
+    document.getElementById('cgv-email').value     = cgv.email     || 'contact@bonanodi.fr';
+    document.getElementById('cgv-mediateur').value = cgv.mediateur || '';
+    document.getElementById('cgv-extra').value     = cgv.extra     || '';
+    const nf = m.nav_footer || {};
+    document.getElementById('footer-instagram').value   = m.instagram   || nf.instagram   || '';
+    document.getElementById('footer-tiktok').value      = m.tiktok      || nf.tiktok      || '';
+    document.getElementById('footer-pinterest').value   = m.pinterest   || nf.pinterest   || '';
+    document.getElementById('footer-autre').value       = nf.autre       || '';
+    document.getElementById('footer-autre-label').value = nf.autre_label || '';
+  }
+
+  async function savePage(key, textareaId) {
+    const html = document.getElementById(textareaId).value;
+    await saveSetting(key, { html });
+    toast('Page sauvegardée ✦ — visible immédiatement sur le site');
+  }
+
+  async function saveCgv() {
+    const cgv = {
+      nom:       document.getElementById('cgv-nom').value.trim(),
+      siret:     document.getElementById('cgv-siret').value.trim(),
+      adresse:   document.getElementById('cgv-adresse').value.trim(),
+      email:     document.getElementById('cgv-email').value.trim(),
+      mediateur: document.getElementById('cgv-mediateur').value.trim(),
+      extra:     document.getElementById('cgv-extra').value.trim()
+    };
+    await saveSetting('page_cgv', cgv);
+    toast('Infos CGV sauvegardées ✦');
+  }
+
+  async function saveFooter() {
+    const nf = {
+      instagram:   document.getElementById('footer-instagram').value.trim(),
+      tiktok:      document.getElementById('footer-tiktok').value.trim(),
+      pinterest:   document.getElementById('footer-pinterest').value.trim(),
+      autre:       document.getElementById('footer-autre').value.trim(),
+      autre_label: document.getElementById('footer-autre-label').value.trim()
+    };
+    await Promise.all([
+      saveSetting('nav_footer', nf),
+      saveSetting('instagram',  nf.instagram),
+      saveSetting('tiktok',     nf.tiktok),
+      saveSetting('pinterest',  nf.pinterest)
+    ]);
+    toast('Footer sauvegardé ✦ — visible sur toutes les pages immédiatement');
+  }
 
   /* ── HAUTEUR HERO ── */
   const H_LABELS = { third: 'Compact (35vh)', half: 'Moitié (50vh)', default: 'Standard (55vh)', full: 'Pleine page (100vh)' };
@@ -971,14 +1089,14 @@
     try {
       const [{ data, error }, { data: prods }] = await Promise.all([
         sb.from('bijoux').select('*').order('collection'),
-        sb.from('productions').select('bijou_ref, quantite, statut').eq('statut', 'produit')
+        sb.from('productions').select('bij_id, qty, statut').eq('statut', 'produit')
       ]);
       if (error) throw error;
       /* Construire le stockMap : somme des quantités produites par ref */
       stockMap = {};
       if (prods) prods.forEach(p => {
-        if (!stockMap[p.bijou_ref]) stockMap[p.bijou_ref] = 0;
-        stockMap[p.bijou_ref] += (p.quantite || 1);
+        if (!stockMap[p.bij_id]) stockMap[p.bij_id] = 0;
+        stockMap[p.bij_id] += (p.qty || 1);
       });
       document.getElementById('loading').style.display = 'none';
       document.getElementById('product-list').style.display = 'flex';

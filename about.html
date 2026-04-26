@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bona Nodi — À propos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--sand:#e8c97a;--fuchsia:#c4286e;--fuchsia-lt:#e0558a;--ink:#1a1510;--ink-lt:#2c2318;--cream:#faf5e8;--silver:#9a9070;--border:rgba(232,201,122,0.14)}
+    html{scroll-behavior:smooth}
+    body{background:var(--ink);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.7;min-height:100vh}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.03;pointer-events:none;z-index:9999}
+    ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--fuchsia)}
+    .page-hero{padding:4rem 2.5rem 2.5rem;border-bottom:1px solid var(--border);max-width:900px;margin:0 auto}
+    .page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.1em;color:var(--sand);line-height:0.9;margin-bottom:1rem}
+    .page-hero .subtitle{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--fuchsia-lt)}
+    .page-content{max-width:900px;margin:0 auto;padding:3rem 2.5rem 6rem}
+    .page-content h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.12em;color:var(--sand);margin:2rem 0 0.8rem}
+    .page-content p{font-size:1rem;color:rgba(250,245,232,0.85);line-height:1.85;margin-bottom:1rem;max-width:65ch}
+    .page-content em{color:var(--fuchsia-lt)}
+    .page-photo{width:100%;max-width:500px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--border);margin:1.5rem 0;display:block}
+    .page-photo-ph{width:100%;max-width:500px;aspect-ratio:3/4;border:1px dashed var(--border);background:var(--ink-lt);display:flex;align-items:center;justify-content:center;margin:1.5rem 0}
+    .page-photo-ph span{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver)}
+    .loading-dot{width:32px;height:32px;border:1px solid var(--border);border-top-color:var(--fuchsia);border-radius:50%;animation:spin 0.8s linear infinite;margin:4rem auto;display:block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:700px){.page-hero,.page-content{padding-left:1.2rem;padding-right:1.2rem}}
+  </style>
+</head>
+<body>
+<script src="nav-footer.js"></script>
+
+<div class="page-hero">
+  <p class="subtitle">✦ La créatrice</p>
+  <h1>À PROPOS DE BONA NODI</h1>
+</div>
+
+<div class="page-content" id="page-content">
+  <div class="loading-dot"></div>
+</div>
+
+<script>
+  const SB_URL = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
+
+  const DEFAULT_CONTENT = `<h2>La créatrice</h2>
+<p>Bona Nodi est née de ma passion pour les mailles et les perles. <em>À compléter dans l'admin → Pages → À propos.</em></p>
+<p>Chaque bijou est fabriqué à la main, un à un, avec des matériaux soigneusement sélectionnés.</p>
+<h2>La démarche</h2>
+<p>Le nom Bona Nodi — "bons nœuds" — reflète l'attention portée à chaque maillon, chaque perle enfilée.</p>`;
+
+  async function loadContent() {
+    const el = document.getElementById('page-content');
+    try {
+      const { createClient } = window.supabase;
+      const sb = createClient(SB_URL, SB_KEY);
+      const { data } = await sb.from('boutique_settings').select('value').eq('key', 'page_about').single();
+      el.innerHTML = data?.value?.html || DEFAULT_CONTENT;
+    } catch {
+      el.innerHTML = DEFAULT_CONTENT;
+    }
+  }
+  loadContent();
+</script>
+</body>
+</html>

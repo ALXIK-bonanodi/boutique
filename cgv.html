@@ -66,8 +66,42 @@
 
     @media(max-width:700px){.navbar,.cgv-hero,.cgv-content{padding-left:1.2rem;padding-right:1.2rem}}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<script src="nav-footer.js"></script>
+
+<script>
+(async function(){
+  try {
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://twtstslwhvrhmjfcfvvu.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE'
+    );
+    const { data } = await sb.from('boutique_settings').select('value').eq('key','page_cgv').single();
+    if (!data?.value) return;
+    const cgv = data.value;
+    document.querySelectorAll('.placeholder').forEach(el => {
+      const t = el.textContent;
+      if (t.includes('SIRET') && cgv.siret)        el.textContent = `SIRET : ${cgv.siret}`;
+      if (t.includes('domiciliation') && cgv.adresse) el.textContent = cgv.adresse;
+      if (t.includes('médiateur') && cgv.mediateur)   el.textContent = cgv.mediateur;
+    });
+    if (cgv.email) {
+      document.querySelectorAll('strong').forEach(el => {
+        if (el.textContent.includes('bonanodi.fr')) el.textContent = cgv.email;
+      });
+    }
+    if (cgv.extra) {
+      const box = document.createElement('div');
+      box.style.cssText = 'max-width:760px;margin:0 auto;padding:0 2.5rem 3rem;font-family:var(--font-mono);font-size:0.54rem;color:var(--silver);line-height:1.8';
+      box.innerHTML = cgv.extra;
+      document.querySelector('.cgv-content')?.appendChild(box);
+    }
+  } catch(e) {}
+})();
+</script>
 
 <nav class="navbar">
   <a href="index.html" class="nav-logo">
