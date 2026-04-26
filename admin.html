@@ -944,49 +944,6 @@
       </div>
     </div>`;
   }
-    return `<div class="product-row ${rowCls} ${isSel ? 'selected' : ''}" id="row-${sid}">
-      <div class="row-header" onclick="toggleRow('${b.ref}')">
-        <div class="row-check ${isSel ? 'checked' : ''}" id="chk-${sid}" onclick="toggleSelect('${b.ref}',event)"></div>
-        ${ph[0] ? '<img class="row-thumb" src="' + ph[0] + '" alt="">' : '<div class="row-thumb-ph">✦</div>'}
-        <div class="row-info">
-          <p class="row-name">${nm}</p>
-          <div class="row-meta">${col}${vari ? ' · ' + vari : ''} ${nw ? '<span class="new-tag">Nouveau</span>' : ''} ${pFmt ? '<span style="color:var(--fuchsia-lt)">' + pFmt + '</span>' : ''}</div>
-        </div>
-        <button class="vis-pill ${vis ? 'on' : ''}" id="pill-${sid}" onclick="toggleVisibility('${b.ref}',event)"><span class="dot"></span>${vis ? 'Publié' : 'Masqué'}</button>
-        <span class="row-toggle">▼</span>
-      </div>
-      <div class="row-panel">
-        <div class="panel-grid">
-          <div class="field"><label>Nom public</label><input type="text" value="${c.nom_public || ''}" placeholder="${sbN}" oninput="updateFieldDebounced('${b.ref}','nom_public',this.value)"></div>
-          <div class="field"><label>Référence</label><input type="text" value="${b.ref || ''}" readonly></div>
-          <div class="field" style="grid-column:1/-1"><label>Description marketing</label><textarea placeholder="Description clients…" oninput="updateFieldDebounced('${b.ref}','description',this.value)">${c.description || ''}</textarea></div>
-          ${pFmt ? '<div class="field"><label>Prix (Supabase · pv)</label><input type="text" value="' + pFmt + '" readonly></div>' : ''}
-        </div>
-        ${matieresHTML(b.ref)}
-        <div class="toggles-row">
-          <div class="panel-toggle ${vis ? 'vis-on' : ''}" id="ptog-vis-${sid}" onclick="toggleVisibility('${b.ref}',event)">
-            <div class="tog-track"></div>
-            <div class="tog-text"><span class="tog-lbl">${vis ? 'Publié sur la boutique' : 'Masqué de la boutique'}</span><span class="tog-desc">${nw ? 'Nouveau — activer pour publier' : 'Désactiver pour retirer'}</span></div>
-          </div>
-          <div class="panel-toggle ${surC ? 'cmd-on' : ''}" id="ptog-cmd-${sid}" onclick="toggleCommande('${b.ref}')">
-            <div class="tog-track"></div>
-            <div class="tog-text"><span class="tog-lbl">${surC ? 'Sur commande' : 'Disponible en stock'}</span><span class="tog-desc">Affiché sur la fiche produit</span></div>
-          </div>
-        </div>
-        <div class="photos-zone">
-          <p class="photos-label">Photos — première = principale</p>
-          <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em;margin-top:-0.3rem">Optimal : 800×1067px · ratio 3:4 · JPG/WEBP · max 1Mo</p>
-          <div class="photos-grid" id="pg-${sid}">${ph.map((url, i) => '<div class="photo-item ' + (i === 0 ? 'is-main' : '') + '"><img src="' + url + '" alt="" onerror="this.style.opacity=\'0.2\'">' + (i === 0 ? '<div class="ph-main-badge">Principale</div>' : '') + (i > 0 ? '<button class="ph-set-main" onclick="setMain(\'' + b.ref + '\',' + i + ')">★</button>' : '') + '<button class="ph-del" onclick="rmPh(\'' + b.ref + '\',' + i + ')">×</button></div>').join('')}</div>
-          <div class="upload-zone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'${b.ref}')">
-            <input type="file" accept="image/*" multiple onchange="uploadPhotos('${b.ref}',this.files)">
-            <div class="upload-icon">📷</div>
-            <p class="upload-text">Glisser ici ou cliquer · JPG PNG WEBP<br><span style="opacity:0.6">800×1067px recommandé · fond neutre</span></p>
-            <div class="upload-progress" id="prog-${sid}"><div class="upload-progress-bar" id="pb-${sid}"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }
 
   function getFiltered() {
     let list = [...allB];
