@@ -312,15 +312,17 @@
 
       <!-- EDITEUR GÉNÉRIQUE PAGE -->
       <div id="subtab-about" class="subtab-panel">
-        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Contenu de la page <a href="about.html" target="_blank" style="color:var(--fuchsia-lt)">À propos →</a></p>
-        <div class="field" style="margin-bottom:0.8rem"><label>Éditeur HTML (balises h2, p, ul, li, em acceptées)</label><textarea id="edit-about" style="min-height:300px;font-family:var(--font-mono);font-size:0.62rem" placeholder="<h2>La créatrice</h2>\n<p>Votre texte ici…</p>"></textarea></div>
-        <button class="btn-adm primary" onclick="savePage('page_about','edit-about')">Sauvegarder la page À propos</button>
+        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Page <a href="about.html" target="_blank" style="color:var(--fuchsia-lt)">À propos →</a> — ajoutez autant de sections que vous voulez</p>
+        <div id="editor-about" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.8rem"></div>
+        <button class="btn-adm" onclick="addSection('about')" style="width:100%;justify-content:center;margin-bottom:0.8rem">+ Ajouter une section</button>
+        <button class="btn-adm primary" onclick="saveSections('page_about','about')">Sauvegarder la page À propos</button>
       </div>
 
       <div id="subtab-entretien" class="subtab-panel" style="display:none">
-        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Contenu de la page <a href="entretien.html" target="_blank" style="color:var(--fuchsia-lt)">Entretien →</a></p>
-        <div class="field" style="margin-bottom:0.8rem"><label>Éditeur HTML</label><textarea id="edit-entretien" style="min-height:300px;font-family:var(--font-mono);font-size:0.62rem" placeholder="<h2>Conseils généraux</h2>\n<p>…"></textarea></div>
-        <button class="btn-adm primary" onclick="savePage('page_entretien','edit-entretien')">Sauvegarder la page Entretien</button>
+        <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Page <a href="entretien.html" target="_blank" style="color:var(--fuchsia-lt)">Entretien →</a></p>
+        <div id="editor-entretien" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.8rem"></div>
+        <button class="btn-adm" onclick="addSection('entretien')" style="width:100%;justify-content:center;margin-bottom:0.8rem">+ Ajouter une section</button>
+        <button class="btn-adm primary" onclick="saveSections('page_entretien','entretien')">Sauvegarder la page Entretien</button>
       </div>
 
       <div id="subtab-cgv" class="subtab-panel" style="display:none">
@@ -692,8 +694,13 @@
     if (!data) return;
     const m = {};
     data.forEach(r => { m[r.key] = r.value; });
-    document.getElementById('edit-about').value     = m.page_about?.html     || '';
-    document.getElementById('edit-entretien').value = m.page_entretien?.html || '';
+    /* Sections About */
+    const aboutSections = m.page_about?.sections || [{ title: 'La créatrice', text: '' }];
+    renderSectionEditor('about', aboutSections);
+    /* Sections Entretien */
+    const entretienSections = m.page_entretien?.sections || [{ title: 'Conseils généraux', text: '' }];
+    renderSectionEditor('entretien', entretienSections);
+    /* CGV */
     const cgv = m.page_cgv || {};
     document.getElementById('cgv-nom').value       = cgv.nom       || '';
     document.getElementById('cgv-siret').value     = cgv.siret     || '';
@@ -701,6 +708,7 @@
     document.getElementById('cgv-email').value     = cgv.email     || 'contact@bonanodi.fr';
     document.getElementById('cgv-mediateur').value = cgv.mediateur || '';
     document.getElementById('cgv-extra').value     = cgv.extra     || '';
+    /* Footer */
     const nf = m.nav_footer || {};
     document.getElementById('footer-instagram').value   = m.instagram   || nf.instagram   || '';
     document.getElementById('footer-tiktok').value      = m.tiktok      || nf.tiktok      || '';
@@ -709,10 +717,57 @@
     document.getElementById('footer-autre-label').value = nf.autre_label || '';
   }
 
-  async function savePage(key, textareaId) {
-    const html = document.getElementById(textareaId).value;
-    await saveSetting(key, { html });
-    toast('Page sauvegardée ✦ — visible immédiatement sur le site');
+  function renderSectionEditor(page, sections) {
+    const container = document.getElementById('editor-' + page);
+    container.innerHTML = '';
+    sections.forEach((s, i) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'background:var(--ink-md);border:1px solid var(--border);padding:0.8rem;display:flex;flex-direction:column;gap:0.5rem';
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem">
+          <input type="text" value="${(s.title||'').replace(/"/g,'&quot;')}" placeholder="Titre de la section"
+            style="flex:1;padding:0.4rem 0.6rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.62rem;outline:none"
+            oninput="updateSectionTitle('${page}',${i},this.value)">
+          <button onclick="removeSection('${page}',${i})"
+            style="padding:0.3rem 0.6rem;background:transparent;border:1px solid rgba(196,40,110,0.3);color:var(--fuchsia-lt);font-family:var(--font-mono);font-size:0.5rem;cursor:pointer">✕</button>
+        </div>
+        <textarea placeholder="Texte de la section (une ligne = un paragraphe, — pour une liste)"
+          style="min-height:100px;padding:0.5rem 0.7rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-body);font-size:0.9rem;resize:vertical;outline:none"
+          oninput="updateSectionText('${page}',${i},this.value)">${(s.text||'').replace(/</g,'&lt;')}</textarea>`;
+      container.appendChild(div);
+    });
+  }
+
+  /* Stocker les sections en mémoire pendant l'édition */
+  const pageData = { about: [], entretien: [] };
+
+  function updateSectionTitle(page, idx, val) {
+    if (!pageData[page][idx]) pageData[page][idx] = {};
+    pageData[page][idx].title = val;
+  }
+  function updateSectionText(page, idx, val) {
+    if (!pageData[page][idx]) pageData[page][idx] = {};
+    pageData[page][idx].text = val;
+  }
+  function addSection(page) {
+    pageData[page].push({ title: '', text: '' });
+    renderSectionEditor(page, pageData[page]);
+  }
+  function removeSection(page, idx) {
+    pageData[page].splice(idx, 1);
+    renderSectionEditor(page, pageData[page]);
+  }
+
+  async function saveSections(key, page) {
+    /* Lire les valeurs actuelles des inputs avant de sauvegarder */
+    const container = document.getElementById('editor-' + page);
+    const inputs  = container.querySelectorAll('input[type="text"]');
+    const textareas = container.querySelectorAll('textarea');
+    const sections = [];
+    inputs.forEach((inp, i) => { sections.push({ title: inp.value, text: textareas[i]?.value || '' }); });
+    pageData[page] = sections;
+    await saveSetting(key, { sections });
+    toast('Page sauvegardée ✦ — visible immédiatement');
   }
 
   async function saveCgv() {
@@ -1089,14 +1144,18 @@
     try {
       const [{ data, error }, { data: prods }] = await Promise.all([
         sb.from('bijoux').select('*').order('collection'),
-        sb.from('productions').select('bij_id, qty, statut').eq('statut', 'produit')
+        sb.from('productions')
+          .select('bij_id, qty, statut, bijoux(ref)')
+          .eq('statut', 'produit')
       ]);
       if (error) throw error;
-      /* Construire le stockMap : somme des quantités produites par ref */
+      /* Construire le stockMap : somme des quantités par ref */
       stockMap = {};
       if (prods) prods.forEach(p => {
-        if (!stockMap[p.bij_id]) stockMap[p.bij_id] = 0;
-        stockMap[p.bij_id] += (p.qty || 1);
+        const ref = p.bijoux?.ref;
+        if (!ref) return;
+        if (!stockMap[ref]) stockMap[ref] = 0;
+        stockMap[ref] += (p.qty || 1);
       });
       document.getElementById('loading').style.display = 'none';
       document.getElementById('product-list').style.display = 'flex';
