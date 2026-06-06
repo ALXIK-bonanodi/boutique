@@ -162,7 +162,7 @@ function bnBuildNav(cfg) {
   });
 
   /* Padding body pour la navbar fixe */
-  document.body.style.paddingTop = '60px';
+  document.body.style.paddingTop = '80px';
 }
 
 /* ── Construire et injecter le footer ── */
