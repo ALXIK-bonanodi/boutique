@@ -1430,14 +1430,16 @@
       /* Charger le modèle sardine par défaut depuis bijoux */
       const { data: bij } = await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
       configModeles = [{
-        id: 'sardine', nom: 'Sardine',
+        id: 'sardine', nom: 'Petit Poisson — Sardine',
         ref_bijou: bij?.[0]?.ref || '',
         prix_base: parseFloat(bij?.[0]?.pv || 0),
         svg: 'sardine',
         parties: [
-          { id: 'dos',    label: 'Dos',    description: 'Partie dorsale', couleurs: [] },
-          { id: 'ventre', label: 'Ventre', description: 'Partie ventrale', couleurs: [] },
-          { id: 'queue',  label: 'Queue',  description: 'Nageoire caudale', couleurs: [] }
+          { id: 'dos',     label: 'Dos',     description: '48 perles — partie dorsale', couleurs: [] },
+          { id: 'ventre',  label: 'Ventre',  description: '48 perles — partie ventrale', couleurs: [] },
+          { id: 'queue',   label: 'Queue',   description: '31 perles — nageoire caudale', couleurs: [] },
+          { id: 'yeux',    label: 'Yeux',    description: 'Iris de l\'œil + pupilles', couleurs: [] },
+          { id: 'fermoir', label: 'Fermoir', description: '2 perles + anneau de suspension', couleurs: [] }
         ]
       }];
     }
@@ -1474,21 +1476,30 @@
         <!-- GESTION PARTIES & COULEURS (caché par défaut) -->
         <div id="parties-panel-${i}" style="display:none;margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem">
           ${m.parties.map((p, pi) => `
-            <div style="margin-bottom:1.2rem">
-              <p style="font-family:var(--font-display);font-size:1.05rem;letter-spacing:0.12em;color:var(--sand);margin-bottom:0.5rem">${p.label}</p>
-              <!-- Upload image PNG -->
-              <div class="upload-zone" style="margin-bottom:0.6rem;max-width:300px">
-                <input type="file" accept="image/png,image/webp" onchange="uploadPartieImg(${i},${pi},this.files)">
-                <div class="upload-icon">🖼</div>
-                <p class="upload-text">Image PNG fond transparent<br><span style="opacity:0.6">Remplace l'aplat couleur · 800×600px</span></p>
+            <div style="margin-bottom:1.5rem">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem">
+                <p style="font-family:var(--font-display);font-size:1.05rem;letter-spacing:0.12em;color:var(--sand)">${p.label}</p>
+                <button class="btn-adm" onclick="reloadCouleurs(${i},${pi})">↺ Sync depuis Materiaux</button>
               </div>
-              ${p.image_url ? `<p style="font-family:var(--font-mono);font-size:0.48rem;color:var(--ok);margin-bottom:0.5rem">✓ Image actuelle : <a href="${p.image_url}" target="_blank" style="color:var(--fuchsia-lt)">voir</a> <button onclick="removePartieImg(${i},${pi})" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-size:0.48rem;font-family:var(--font-mono)">✕ Supprimer</button></p>` : ''}
-              <!-- Couleurs disponibles -->
-              <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.4rem">Couleurs disponibles (depuis materiaux)</p>
-              <div id="couleurs-${i}-${pi}" style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.5rem">
-                ${(p.couleurs||[]).map(c => `<span style="font-family:var(--font-mono);font-size:0.46rem;padding:0.2rem 0.5rem;background:rgba(232,201,122,0.08);border:1px solid var(--border);color:var(--silver)">${c.nom}</span>`).join('')}
+              <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.6rem">Couleurs disponibles — cliquer sur une couleur pour uploader son image PNG</p>
+              <div id="mats-grid-${i}-${pi}" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem">
+                ${(p.couleurs||[]).length === 0
+                  ? `<p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver);grid-column:1/-1">Aucune couleur — cliquer "Sync depuis Materiaux"</p>`
+                  : (p.couleurs||[]).map((c,ci) => `
+                    <div style="background:var(--ink-lt);border:1px solid ${c.image_url?'rgba(126,207,138,0.4)':'var(--border)'};padding:0.6rem;display:flex;flex-direction:column;align-items:center;gap:0.4rem;position:relative">
+                      ${c.image_url
+                        ? `<img src="${c.image_url}" style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:2px solid var(--ok)">`
+                        : `<div style="width:48px;height:48px;border-radius:50%;background:${getCouleurHexAdmin(c.nom)};border:2px dashed var(--border)"></div>`}
+                      <p style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--silver);text-align:center;line-height:1.4">${c.nom}</p>
+                      <label style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all 0.2s;position:relative"
+                        onmouseover="this.style.borderColor='var(--fuchsia)';this.style.color='var(--cream)'"
+                        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--silver)'">
+                        📷 Upload
+                        <input type="file" accept="image/png,image/webp" style="position:absolute;inset:0;opacity:0;cursor:pointer" onchange="uploadMatImg(${i},${pi},${ci},this.files)">
+                      </label>
+                      ${c.image_url?`<button onclick="removeMatImg(${i},${pi},${ci})" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em">✕ Supprimer</button>`:''}
+                    </div>`).join('')}
               </div>
-              <button class="btn-adm" onclick="reloadCouleurs(${i},${pi})">↺ Recharger depuis Materiaux</button>
             </div>`).join('')}
         </div>
       </div>`).join('');
@@ -1499,7 +1510,60 @@
     if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
   }
 
-  async function reloadCouleurs(mi, pi) {
+  /* Couleur hex pour l'admin (inline, pas de module externe) */
+  function getCouleurHexAdmin(nom) {
+    const map={'bleu 1':'#5b9bd5','bleu 2':'#a8d4f5','bleu 3':'#1a3a6e','rouge':'#c0392b','rose':'#e91e8c','vert':'#27ae60','jaune':'#f1c40f','orange':'#e67e22','blanc':'#f5f5f5','noir':'#1a1a1a','gris':'#808080','violet':'#8e44ad','marron':'#795548','beige':'#e8d5b7','turquoise':'#40e0d0','corail':'#ff6b6b'};
+    const l=(nom||'').toLowerCase().trim();
+    if(map[l])return map[l];
+    for(const[k,v]of Object.entries(map)){if(l.includes(k)||k.includes(l))return v;}
+    let h=0;for(let i=0;i<l.length;i++)h=l.charCodeAt(i)+((h<<5)-h);
+    return `hsl(${Math.abs(h)%360},55%,55%)`;
+  }
+
+  async function uploadMatImg(mi, pi, ci, files) {
+    if (!files.length) return;
+    const f = files[0];
+    const matNom = (configModeles[mi].parties[pi].couleurs[ci].nom||'mat').replace(/\s+/g,'_');
+    const path = 'configurateur/mat_' + configModeles[mi].id + '_' + configModeles[mi].parties[pi].id + '_' + matNom + '_' + Date.now() + '.png';
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    configModeles[mi].parties[pi].couleurs[ci].image_url = ud.publicUrl;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast('Image "' + configModeles[mi].parties[pi].couleurs[ci].nom + '" uploadée ✦');
+  }
+
+  async function removeMatImg(mi, pi, ci) {
+    delete configModeles[mi].parties[pi].couleurs[ci].image_url;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast('Image supprimée');
+  }
+
+  async function uploadPartieImg(mi, pi, files) {
+    if (!files.length) return;
+    const f = files[0];
+    const path = 'configurateur/' + configModeles[mi].id + '_' + configModeles[mi].parties[pi].id + '_' + Date.now() + '.png';
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    configModeles[mi].parties[pi].image_url = ud.publicUrl;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast('Image uploadée ✦');
+  }
+
+  async function removePartieImg(mi, pi) {
+    delete configModeles[mi].parties[pi].image_url;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast('Image supprimée');
+  }
     /* Charger les perles depuis materiaux */
     const { data: mats } = await sb.from('materiaux')
       .select('id, nom, variante, prix, stock')
@@ -1552,9 +1616,11 @@
     editingModeleIdx = idx;
     const m = idx !== null ? configModeles[idx] : null;
     const partiesDefault = [
-      { id: 'dos',    label: 'Dos',    description: '', couleurs: [] },
-      { id: 'ventre', label: 'Ventre', description: '', couleurs: [] },
-      { id: 'queue',  label: 'Queue',  description: '', couleurs: [] }
+      { id: 'dos',     label: 'Dos',     description: '48 perles — partie dorsale', couleurs: [] },
+      { id: 'ventre',  label: 'Ventre',  description: '48 perles — partie ventrale', couleurs: [] },
+      { id: 'queue',   label: 'Queue',   description: '31 perles — nageoire caudale', couleurs: [] },
+      { id: 'yeux',    label: 'Yeux',    description: 'Iris de l\'œil + pupilles', couleurs: [] },
+      { id: 'fermoir', label: 'Fermoir', description: '2 perles + anneau', couleurs: [] }
     ];
 
     /* Modal inline simple */

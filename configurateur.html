@@ -24,87 +24,122 @@
     body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.03;pointer-events:none;z-index:9999}
     ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--fuchsia)}
 
-    .page-hero{padding:3rem 2.5rem 2rem;border-bottom:1px solid var(--border)}
-    .page-hero-inner{max-width:1100px;margin:0 auto}
-    .page-hero .subtitle{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--fuchsia-lt);margin-bottom:0.5rem}
-    .page-hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,4rem);letter-spacing:0.08em;color:var(--sand);line-height:0.9;margin-top:0.5rem}
-    .page-hero p{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.8rem;line-height:1.7}
+    /* HERO */
+    .page-hero{padding:2.5rem 2.5rem 1.5rem;border-bottom:1px solid var(--border)}
+    .page-hero-inner{max-width:1200px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .subtitle{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--fuchsia-lt);display:block;margin-bottom:0.4rem}
+    .page-hero h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);letter-spacing:0.08em;color:var(--sand);line-height:0.92;margin-top:0.4rem}
+    .page-hero-desc{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.08em;color:var(--silver);max-width:38ch;line-height:1.7}
 
-    /* MODÈLES TABS */
-    .modeles-bar{border-bottom:1px solid var(--border);padding:0 2.5rem;background:rgba(26,21,16,0.5)}
-    .modeles-inner{max-width:1100px;margin:0 auto;display:flex;gap:0}
-    .modele-tab{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.7rem 1.4rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s;white-space:nowrap}
+    /* MODÈLES + MODE TABS */
+    .top-bar{border-bottom:1px solid var(--border);background:rgba(26,21,16,0.4)}
+    .top-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .modeles-tabs{display:flex;overflow-x:auto}
+    .modele-tab{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.65rem 1.2rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s;white-space:nowrap;flex-shrink:0}
     .modele-tab:hover{color:var(--cream)}
     .modele-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
+    /* Modes : Couleurs / Bundle */
+    .mode-tabs{display:flex;border-left:1px solid var(--border)}
+    .mode-tab{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.65rem 1.1rem;cursor:pointer;border:none;background:transparent;color:var(--silver);transition:all 0.2s;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+    .mode-tab:hover{color:var(--cream)}
+    .mode-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
 
-    /* LAYOUT CONFIGURATEUR */
-    .config-wrap{max-width:1100px;margin:0 auto;padding:2rem 2.5rem 5rem;display:grid;grid-template-columns:1fr 380px;gap:3rem;align-items:start}
+    /* LAYOUT PRINCIPAL — 3 colonnes : SVG | panneau | récap */
+    .config-layout{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr auto 280px;gap:0;min-height:calc(100vh - 260px)}
 
-    /* PRÉVISUALISATION */
-    .preview-col{}
-    .preview-title{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver);margin-bottom:1rem}
+    /* COL 1 — APERÇU SVG */
+    .preview-col{padding:2rem 1.5rem 2rem 2.5rem;display:flex;flex-direction:column;gap:1.2rem;border-right:1px solid var(--border)}
+    .preview-label{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
+    .fish-canvas{width:100%;max-width:500px;aspect-ratio:3/2;position:relative;background:rgba(232,201,122,0.02);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .fish-canvas svg{width:96%;height:96%}
+    .part-img-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
 
-    /* CANVAS POISSON — aplats SVG */
-    .fish-canvas{width:100%;aspect-ratio:4/3;position:relative;background:rgba(232,201,122,0.04);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center}
-    .fish-canvas svg{width:90%;height:90%}
+    /* Indicateurs parties */
+    .parts-row{display:flex;gap:0.4rem;flex-wrap:wrap}
+    .part-pill{display:flex;align-items:center;gap:0.35rem;padding:0.28rem 0.65rem;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,4px 100%,0 calc(100% - 4px))}
+    .part-pill:hover{border-color:var(--fuchsia)}
+    .part-pill.active-part{border-color:var(--sand);background:rgba(232,201,122,0.07)}
+    .part-pill.done-part{border-color:rgba(126,207,138,0.4)}
+    .part-pill-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+    .part-pill-lbl{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver)}
+    .part-pill-val{font-family:var(--font-mono);font-size:0.46rem;color:var(--cream)}
 
-    /* Zone d'image (quand photos disponibles) */
-    .fish-canvas .part-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity 0.3s}
+    /* COL 2 — PANNEAU INLINE (à côté du SVG) */
+    .side-panel{width:260px;border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(26,21,16,0.3);transition:width 0.3s}
+    .side-panel.hidden{width:0;overflow:hidden;border:none}
+    .side-panel-header{padding:0.8rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+    .side-panel-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.12em;color:var(--sand)}
+    .side-panel-sub{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver);margin-top:0.2rem}
+    /* Nav parties dans le panneau */
+    .panel-nav{display:flex;gap:0;flex-wrap:wrap;border-bottom:1px solid var(--border);flex-shrink:0}
+    .panel-nav-btn{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 0.7rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s;white-space:nowrap}
+    .panel-nav-btn:hover{color:var(--cream)}
+    .panel-nav-btn.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
+    .panel-nav-btn.done{color:var(--ok)}
+    /* Grille vignettes */
+    .panel-body{flex:1;overflow-y:auto;padding:0.8rem}
+    .vignettes-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.45rem}
+    .vignette{display:flex;flex-direction:column;align-items:center;gap:0.35rem;padding:0.6rem 0.4rem;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));background:rgba(232,201,122,0.02);position:relative}
+    .vignette:hover{border-color:var(--fuchsia-lt);background:rgba(196,40,110,0.05)}
+    .vignette.selected{border-color:var(--sand);background:rgba(232,201,122,0.08)}
+    .vignette.out{opacity:0.3;cursor:not-allowed;pointer-events:none}
+    .vignette-img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.1);flex-shrink:0}
+    .vignette-swatch{width:52px;height:52px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.1)}
+    .vignette-check{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:var(--ok);border:1.5px solid var(--ink-md);display:flex;align-items:center;justify-content:center;font-size:0.42rem;color:var(--ink)}
+    .vignette-name{font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--silver);text-align:center;line-height:1.3;transition:color 0.2s}
+    .vignette.selected .vignette-name{color:var(--cream)}
+    .vignette-out-lbl{font-family:var(--font-mono);font-size:0.38rem;letter-spacing:0.06em;color:var(--fuchsia-lt)}
+    /* Bouton suivant dans panneau */
+    .panel-next-btn{margin:0.6rem 0.8rem;padding:0.55rem;background:transparent;border:1px solid var(--border);color:var(--silver);font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-align:center}
+    .panel-next-btn:hover{border-color:var(--sand);color:var(--sand)}
 
-    .preview-note{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.6rem;line-height:1.6}
+    /* PANNEAU BUNDLE */
+    .bundle-body{flex:1;overflow-y:auto;padding:0.8rem;display:flex;flex-direction:column;gap:0.8rem}
+    .bundle-section-title{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver);padding-bottom:0.4rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem}
+    .bundle-card{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 0.8rem;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;background:rgba(232,201,122,0.02)}
+    .bundle-card:hover{border-color:var(--fuchsia-lt)}
+    .bundle-card.selected{border-color:var(--sand);background:rgba(232,201,122,0.07)}
+    .bundle-card-img{width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;background:var(--ink-lt)}
+    .bundle-card-info{flex:1;min-width:0}
+    .bundle-card-name{font-family:var(--font-body);font-style:italic;font-size:0.88rem;color:var(--cream)}
+    .bundle-card-ref{font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.08em;color:var(--silver);margin-top:0.1rem}
+    .bundle-card-price{font-family:var(--font-display);font-size:0.95rem;color:var(--fuchsia-lt);flex-shrink:0}
+    .bundle-card-check{width:14px;height:14px;border-radius:50%;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.42rem;transition:all 0.2s}
+    .bundle-card.selected .bundle-card-check{background:var(--ok);border-color:var(--ok);color:var(--ink)}
 
-    /* PARTIES */
-    .parts-col{display:flex;flex-direction:column;gap:1.5rem}
-    .part-section{}
-    .part-title{font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.12em;color:var(--sand);margin-bottom:0.2rem}
-    .part-subtitle{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver);margin-bottom:0.7rem}
-    .colors-grid{display:flex;flex-wrap:wrap;gap:0.5rem}
-    .color-btn{
-      display:flex;align-items:center;gap:0.5rem;
-      padding:0.4rem 0.7rem;
-      border:1px solid var(--border);background:transparent;
-      cursor:pointer;transition:all 0.2s;
-      clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));
-    }
-    .color-btn:hover{border-color:var(--fuchsia-lt)}
-    .color-btn.selected{border-color:var(--sand);background:rgba(232,201,122,0.08)}
-    .color-btn.out-of-stock{opacity:0.35;cursor:not-allowed}
-    .color-swatch{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.2)}
-    .color-label{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver);transition:color 0.2s}
-    .color-btn.selected .color-label{color:var(--cream)}
-    .color-stock-badge{font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em;color:var(--fuchsia-lt)}
-
-    /* RÉCAP & PRIX */
-    .recap-box{background:var(--ink-md);border:1px solid var(--border);padding:1.2rem;margin-top:1.5rem}
-    .recap-title{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
-    .recap-line{display:flex;justify-content:space-between;align-items:baseline;padding:0.3rem 0;border-bottom:1px solid var(--border)}
-    .recap-line:last-of-type{border-bottom:none}
-    .recap-part{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver)}
-    .recap-color{font-family:var(--font-mono);font-size:0.56rem;color:var(--cream)}
-    .price-total{display:flex;justify-content:space-between;align-items:baseline;padding:0.8rem 0 0;margin-top:0.5rem;border-top:1px solid var(--border)}
-    .price-label{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver)}
-    .price-val{font-family:var(--font-display);font-size:2rem;color:var(--sand)}
-    .price-note{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;color:var(--silver);margin-top:0.3rem;line-height:1.5}
-
-    /* BOUTON COMMANDER */
-    .btn-commander{width:100%;padding:1rem;background:var(--fuchsia);color:var(--cream);border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background 0.2s;margin-top:1rem}
-    .btn-commander:hover{background:var(--fuchsia-lt)}
-    .btn-commander:disabled{opacity:0.4;cursor:not-allowed}
-    .btn-reset{width:100%;padding:0.65rem;background:transparent;color:var(--silver);border:1px solid var(--border);cursor:pointer;font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;transition:all 0.2s;margin-top:0.5rem}
+    /* COL 3 — RÉCAP */
+    .recap-col{padding:1.5rem 1.5rem 1.5rem 1.2rem;display:flex;flex-direction:column;gap:1rem}
+    .recap-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.2rem}
+    .recap-list{display:flex;flex-direction:column;gap:0.3rem}
+    .recap-item{display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid var(--border)}
+    .recap-item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .recap-item-label{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver);flex:1}
+    .recap-item-val{font-family:var(--font-mono);font-size:0.5rem;color:var(--cream);text-align:right}
+    .recap-sep{height:1px;background:var(--border);margin:0.3rem 0}
+    .recap-price-block{padding:0.5rem 0}
+    .recap-price-label{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver)}
+    .recap-price-val{font-family:var(--font-display);font-size:2rem;color:var(--sand);line-height:1}
+    .recap-delai{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;color:var(--silver);line-height:1.6}
+    .btn-add{width:100%;padding:0.85rem;background:var(--fuchsia);color:var(--cream);border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:background 0.2s;margin-top:0.5rem}
+    .btn-add:hover{background:var(--fuchsia-lt)}
+    .btn-add:disabled{opacity:0.35;cursor:not-allowed}
+    .btn-reset{width:100%;padding:0.6rem;background:transparent;border:1px solid var(--border);color:var(--silver);font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:0.3rem}
     .btn-reset:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
 
     /* LOADING */
-    .spinner{width:32px;height:32px;border:1px solid var(--border);border-top-color:var(--fuchsia);border-radius:50%;animation:spin 0.8s linear infinite;margin:4rem auto;display:block}
+    .spinner{width:28px;height:28px;border:1px solid var(--border);border-top-color:var(--fuchsia);border-radius:50%;animation:spin 0.8s linear infinite;margin:3rem auto;display:block}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .loading-text{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--silver);text-align:center;margin-top:1rem}
 
     #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);padding:0.65rem 1.4rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream);background:var(--fuchsia);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:500;white-space:nowrap}
     #toast.show{opacity:1}
 
-    @media(max-width:800px){
-      .config-wrap{grid-template-columns:1fr;gap:2rem;padding:1.2rem 1.2rem 4rem}
-      .page-hero,.modeles-bar{padding-left:1.2rem;padding-right:1.2rem}
-      .modeles-inner{overflow-x:auto}
+    @media(max-width:900px){
+      .config-layout{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+      .side-panel{width:100%;border-right:none;border-top:1px solid var(--border)}
+      .side-panel.hidden{width:100%;height:0;overflow:hidden;border:none}
+      .recap-col{border-top:1px solid var(--border);padding:1.2rem}
+      .page-hero,.top-bar-inner{padding-left:1.2rem;padding-right:1.2rem}
+      .preview-col{padding:1.2rem}
     }
   </style>
 </head>
@@ -113,400 +148,396 @@
 
 <div class="page-hero">
   <div class="page-hero-inner">
-    <p class="subtitle">✦ Personnalisation</p>
-    <h1>CONFIGURATEUR POISSON</h1>
-    <p>Choisissez les couleurs de chaque partie de votre bijou et visualisez le résultat en temps réel.<br>
-    Chaque poisson est fabriqué à la main sur commande — délai estimé 15 jours ouvrables.</p>
+    <div>
+      <span class="subtitle">✦ Personnalisation</span>
+      <h1>CRÉER MON POISSON</h1>
+    </div>
+    <p class="page-hero-desc">Choisissez les couleurs de chaque partie. Fabriqué à la main sur commande.</p>
   </div>
 </div>
 
-<div class="modeles-bar">
-  <div class="modeles-inner" id="modeles-tabs"></div>
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="modeles-tabs" id="modeles-tabs">
+      <div class="spinner" style="width:18px;height:18px;margin:0.7rem 0"></div>
+    </div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="couleurs" onclick="switchMode('couleurs',this)">🎨 Couleurs</button>
+      <button class="mode-tab" data-mode="bundle" onclick="switchMode('bundle',this)">📦 Bundle</button>
+    </div>
+  </div>
 </div>
 
-<div id="config-loading" style="padding:4rem 2.5rem;text-align:center">
-  <div class="spinner"></div>
-  <p class="loading-text">Chargement du configurateur…</p>
-</div>
+<div id="config-loading" style="padding:4rem;text-align:center"><div class="spinner"></div></div>
 
-<div class="config-wrap" id="config-wrap" style="display:none">
-  <!-- PRÉVISUALISATION -->
+<div id="config-layout" class="config-layout" style="display:none">
+
+  <!-- COL 1 : APERÇU -->
   <div class="preview-col">
-    <p class="preview-title">Aperçu en temps réel</p>
-    <div class="fish-canvas" id="fish-canvas">
-      <!-- SVG ou images injectées ici -->
-    </div>
-    <p class="preview-note" id="preview-note">
-      ✦ Aperçu en aplats de couleur — les photos de perles seront ajoutées prochainement.
-    </p>
+    <p class="preview-label">Aperçu — cliquez une partie pour la modifier</p>
+    <div class="fish-canvas" id="fish-canvas"></div>
+    <div class="parts-row" id="parts-row"></div>
   </div>
 
-  <!-- SÉLECTEURS PARTIES + RÉCAP -->
-  <div class="parts-col">
-    <div id="parts-container"></div>
-
-    <div class="recap-box">
-      <p class="recap-title">Votre sélection</p>
-      <div id="recap-lines"></div>
-      <div class="price-total">
-        <span class="price-label">Total estimé</span>
-        <span class="price-val" id="price-display">—</span>
-      </div>
-      <p class="price-note" id="price-note">Sélectionnez toutes les parties pour voir le prix.</p>
-      <button class="btn-commander" id="btn-commander" disabled onclick="addToCart()">
-        + Ajouter au panier
-      </button>
-      <button class="btn-reset" onclick="resetSelection()">↺ Recommencer</button>
+  <!-- COL 2 : PANNEAU INLINE -->
+  <div class="side-panel" id="side-panel">
+    <div class="side-panel-header">
+      <p class="side-panel-title" id="panel-title">COULEURS</p>
+      <p class="side-panel-sub" id="panel-sub">Sélectionnez une partie</p>
     </div>
+    <!-- Panneau Couleurs -->
+    <div id="panel-couleurs" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="panel-nav" id="panel-nav"></div>
+      <div class="panel-body" id="panel-body">
+        <div class="vignettes-grid" id="vignettes-grid"></div>
+      </div>
+      <button class="panel-next-btn" id="panel-next-btn" onclick="goNextPart()">Partie suivante →</button>
+    </div>
+    <!-- Panneau Bundle -->
+    <div id="panel-bundle" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="bundle-body" id="bundle-body"></div>
+    </div>
+  </div>
+
+  <!-- COL 3 : RÉCAP -->
+  <div class="recap-col">
+    <div>
+      <p class="recap-title">MA SÉLECTION</p>
+    </div>
+    <div class="recap-list" id="recap-list"></div>
+    <div class="recap-sep"></div>
+    <div class="recap-price-block">
+      <p class="recap-price-label">Total estimé</p>
+      <p class="recap-price-val" id="recap-price">—</p>
+    </div>
+    <p class="recap-delai">⏱ Fabrication sur commande<br>Délai estimé : 15 jours ouvrables</p>
+    <button class="btn-add" id="btn-add" disabled onclick="addToCart()">+ Ajouter au panier</button>
+    <button class="btn-reset" onclick="resetAll()">↺ Tout recommencer</button>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-  const SB_URL = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
-  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
-  const { createClient } = supabase;
-  const sb = createClient(SB_URL, SB_KEY);
-  const fmtP = p => new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p||0);
+  const SB_URL='https://twtstslwhvrhmjfcfvvu.supabase.co';
+  const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
+  const {createClient}=supabase;
+  const sb=createClient(SB_URL,SB_KEY);
+  const fmtP=p=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p||0);
   function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-  /* ── ÉTAT ── */
-  let modeles = [];        /* liste des modèles depuis boutique_settings */
-  let currentModele = null;
-  let selection = {};      /* { partieId: { mat_id, nom, couleur_hex, prix } } */
-  let bijouBase = null;    /* ligne bijoux (pv = prix de base) */
+  let modeles=[],currentModele=null,selection={},bijouBase=null;
+  let activePartie=null,currentMode='couleurs';
+  let bundles=[],selectedBundle=null,selectedFermoir=null;
 
-  /* ── COULEURS PERLES connues ── */
-  /* Mapping nom variante → couleur hex pour l'aperçu */
-  const COULEUR_MAP = {
-    /* Bleus */
-    'bleu 1': '#5b9bd5', 'bleu 2': '#a8d4f5', 'bleu 3': '#1a3a6e',
-    'bleu clair': '#a8d4f5', 'bleu foncé': '#1a3a6e', 'bleu marine': '#0d2340',
-    'bleu roi': '#2255aa', 'bleu ciel': '#87ceeb', 'bleu turquoise': '#40e0d0',
-    /* Rouges/Roses */
-    'rouge': '#c0392b', 'rouge foncé': '#8b0000', 'rose': '#e91e8c',
-    'rose clair': '#f4a7c3', 'rose fuchsia': '#c4286e', 'rose poudré': '#f5c6d0',
-    /* Verts */
-    'vert': '#27ae60', 'vert clair': '#7dce9a', 'vert foncé': '#1a5c35',
-    'vert menthe': '#98d4b5', 'vert olive': '#6b7c2d',
-    /* Jaunes/Oranges */
-    'jaune': '#f1c40f', 'jaune citron': '#f9e94e', 'orange': '#e67e22',
-    'orange foncé': '#c45e00', 'doré': '#d4a017', 'or': '#d4a017',
-    /* Blancs/Noirs/Neutres */
-    'blanc': '#f5f5f5', 'blanc cassé': '#faf5e8', 'noir': '#1a1a1a',
-    'gris': '#808080', 'gris clair': '#c0c0c0', 'argent': '#c0c0c0', 'silver': '#c0c0c0',
-    /* Violets */
-    'violet': '#8e44ad', 'violet clair': '#c39bd3', 'lilas': '#d7b2e8',
-    'mauve': '#b784a7',
-    /* Marrons/Beiges */
-    'marron': '#795548', 'beige': '#e8d5b7', 'caramel': '#c68b3a', 'crème': '#f5e6c8',
-    /* Multicolore */
-    'multicolore': 'linear-gradient(135deg,#e74c3c,#f1c40f,#2ecc71,#3498db,#9b59b6)',
-    'arc-en-ciel': 'linear-gradient(135deg,#e74c3c,#f39c12,#f1c40f,#2ecc71,#3498db,#9b59b6)',
+  /* ── COULEURS MAP ── */
+  const CMAP={'bleu 1':'#5b9bd5','bleu 2':'#a8d4f5','bleu 3':'#1a3a6e','rouge':'#c0392b','rose':'#e91e8c','rose clair':'#f4a7c3','vert':'#27ae60','vert clair':'#7dce9a','jaune':'#f1c40f','orange':'#e67e22','blanc':'#f5f5f5','noir':'#1a1a1a','gris':'#808080','violet':'#8e44ad','marron':'#795548','beige':'#e8d5b7','turquoise':'#40e0d0','corail':'#ff6b6b','lilas':'#d7b2e8','mauve':'#b784a7','doré':'#d4a017','argent':'#c0c0c0','multicolore':'linear-gradient(135deg,#e74c3c,#f1c40f,#2ecc71,#3498db)'};
+  function hex(nom){if(!nom)return'#9a9070';const l=nom.toLowerCase().trim();if(CMAP[l])return CMAP[l];for(const[k,v]of Object.entries(CMAP)){if(l.includes(k)||k.includes(l))return v;}let h=0;for(let i=0;i<l.length;i++)h=l.charCodeAt(i)+((h<<5)-h);return`hsl(${Math.abs(h)%360},55%,55%)`;}
+
+  /* ── SVG ── */
+  const SVG={
+    vb:'0 0 420 280',
+    paths:{
+      ventre:'M 80 155 Q 140 165 220 168 Q 290 170 360 155 Q 350 175 310 188 Q 260 200 200 202 Q 140 202 100 185 Z',
+      dos:'M 80 155 Q 100 125 150 110 Q 210 95 280 100 Q 330 105 360 125 Q 370 140 360 155 Q 290 140 220 138 Q 140 136 80 155 Z',
+      queue:'M 80 155 Q 60 160 30 175 Q 15 183 10 195 Q 20 198 35 192 Q 55 183 75 178 Q 60 190 50 205 Q 45 215 55 215 Q 70 210 85 198 Q 88 175 80 155 Z'
+    },
+    fixed:[
+      {cx:340,cy:132,r:11,fill:'rgba(255,255,255,0.9)',stroke:'rgba(26,21,16,0.5)',sw:1},
+      {cx:340,cy:132,r:8,fill:'__yeux__'},
+      {cx:341,cy:131,r:4,fill:'#1a1510'},
+      {cx:344,cy:128,r:2,fill:'rgba(255,255,255,0.8)'},
+      {cx:405,cy:155,r:6,fill:'none',stroke:'#c0c0c0',sw:2}
+    ],
+    centres:{dos:[220,122],ventre:[220,183],queue:[48,188],yeux:[340,158]}
   };
 
-  function getCouleurHex(varianteNom) {
-    if (!varianteNom) return '#9a9070';
-    const lower = varianteNom.toLowerCase().trim();
-    /* Chercher correspondance exacte puis partielle */
-    if (COULEUR_MAP[lower]) return COULEUR_MAP[lower];
-    for (const [key, val] of Object.entries(COULEUR_MAP)) {
-      if (lower.includes(key) || key.includes(lower)) return val;
-    }
-    /* Fallback : générer une couleur depuis le hash du nom */
-    let hash = 0;
-    for (let i = 0; i < lower.length; i++) hash = lower.charCodeAt(i) + ((hash << 5) - hash);
-    const h = Math.abs(hash) % 360;
-    return `hsl(${h},55%,55%)`;
-  }
-
-  /* ── SVG SARDINE (formes géométriques par partie) ── */
-  /* Quand des photos PNG seront disponibles, elles remplaceront ces formes */
-  const SVG_SARDINE = {
-    viewBox: '0 0 400 240',
-    parts: {
-      dos: {
-        /* Partie haute du corps */
-        path: 'M 60 120 Q 120 60 220 55 Q 300 52 360 90 Q 380 105 370 120 Q 300 100 220 100 Q 120 100 60 120 Z',
-        label: 'Dos'
-      },
-      ventre: {
-        /* Partie basse du corps */
-        path: 'M 60 120 Q 120 100 220 100 Q 300 100 370 120 Q 380 135 360 150 Q 300 175 220 178 Q 120 180 60 120 Z',
-        label: 'Ventre'
-      },
-      queue: {
-        /* Queue */
-        path: 'M 60 120 L 20 80 L 5 120 L 20 160 Z',
-        label: 'Queue'
-      },
-      /* Détails fixes */
-      oeil: {
-        cx: 340, cy: 115, r: 8,
-        fixed: true, color: '#1a1510'
-      },
-      oeil_reflet: {
-        cx: 343, cy: 112, r: 3,
-        fixed: true, color: 'rgba(255,255,255,0.7)'
-      }
-    }
-  };
-
-  /* ── CHARGEMENT ── */
-  async function init() {
-    /* Charger les modèles depuis boutique_settings */
-    const { data: sets } = await sb.from('boutique_settings').select('value').eq('key','configurateur_modeles').single();
-    modeles = sets?.value || [];
-
-    /* Si pas encore de modèles configurés → utiliser le modèle sardine par défaut */
-    if (!modeles.length) {
-      modeles = [await buildSardineDefault()];
-    }
-
+  /* ── INIT ── */
+  async function init(){
+    const{data:s}=await sb.from('boutique_settings').select('value').eq('key','configurateur_modeles').single();
+    modeles=s?.value||[];
+    if(!modeles.length) modeles=[await buildDefault()];
+    /* Charger les bundles depuis bijoux (ceux qui contiennent 'bundle' ou 'kit' dans le nom) */
+    const{data:bij}=await sb.from('bijoux').select('*').or('nom.ilike.%bundle%,nom.ilike.%kit%,nom.ilike.%poisson%').order('nom');
+    bundles=(bij||[]).filter(b=>!b.no_sell&&!b.draft);
     renderModeleTabs();
-    selectModele(0);
+    await selectModele(0);
+    document.getElementById('config-loading').style.display='none';
+    document.getElementById('config-layout').style.display='grid';
+    /* Ouvrir d'emblée le panneau sur la première partie */
+    if(currentModele?.parties?.length) openPart(currentModele.parties[0].id);
   }
 
-  /* Modèle sardine par défaut — chargé depuis la table materiaux */
-  async function buildSardineDefault() {
-    /* Récupérer le bijou sardine */
-    const { data: bij } = await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
-    bijouBase = bij?.[0] || null;
-
-    /* Récupérer les perles depuis materiaux — filtrer par "Perles" dans nom ou catégorie */
-    const { data: mats } = await sb.from('materiaux')
-      .select('id, nom, variante, prix, stock')
-      .ilike('nom','%perle%')
-      .order('variante');
-
-    const perles = mats || [];
-
-    /* Grouper par couleur disponible — pour la sardine toutes les couleurs vont sur toutes les parties */
-    const partiesDef = [
-      { id: 'dos',    label: 'Dos',    description: 'Partie dorsale du poisson' },
-      { id: 'ventre', label: 'Ventre', description: 'Partie ventrale' },
-      { id: 'queue',  label: 'Queue',  description: 'Nageoire caudale' }
-    ];
-
-    return {
-      id: 'sardine',
-      nom: 'Sardine',
-      ref_bijou: bijouBase?.ref || 'SARDINE',
-      prix_base: parseFloat(bijouBase?.pv || 0),
-      svg: 'sardine',
-      parties: partiesDef.map(p => ({
-        ...p,
-        couleurs: perles.map(m => ({
-          mat_id: m.id,
-          nom: m.variante || m.nom,
-          prix: parseFloat(m.prix || 0),
-          stock: m.stock || 0
-        }))
-      }))
-    };
+  async function buildDefault(){
+    const{data:bij}=await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
+    bijouBase=bij?.[0]||null;
+    const{data:mats}=await sb.from('materiaux').select('id,nom,variante,prix,stock').ilike('nom','%perle%').order('variante');
+    const perles=(mats||[]).map(m=>({mat_id:m.id,nom:m.variante||m.nom,prix:parseFloat(m.prix||0),stock:m.stock||0,image_url:null}));
+    return{id:'sardine',nom:'Petit Poisson — Sardine',ref_bijou:bijouBase?.ref||'',prix_base:parseFloat(bijouBase?.pv||0),svg:'sardine',
+      parties:[
+        {id:'dos',   label:'Dos',   couleurs:perles},
+        {id:'ventre',label:'Ventre',couleurs:perles},
+        {id:'queue', label:'Queue', couleurs:perles},
+        {id:'yeux',  label:'Yeux',  couleurs:perles}
+      ]};
   }
 
-  function renderModeleTabs() {
-    const tabs = document.getElementById('modeles-tabs');
-    tabs.innerHTML = modeles.map((m, i) =>
+  function renderModeleTabs(){
+    document.getElementById('modeles-tabs').innerHTML=modeles.map((m,i)=>
       `<button class="modele-tab ${i===0?'active':''}" onclick="selectModele(${i})">${m.nom}</button>`
     ).join('');
   }
 
-  async function selectModele(idx) {
-    currentModele = modeles[idx];
-    selection = {};
-    document.querySelectorAll('.modele-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  async function selectModele(idx){
+    currentModele=modeles[idx];selection={};activePartie=null;
+    document.querySelectorAll('.modele-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+    if(!currentModele.parties[0]?.couleurs?.length) currentModele=await buildDefault(),modeles[idx]=currentModele;
+    if(!bijouBase||bijouBase.ref!==currentModele.ref_bijou){
+      const{data}=await sb.from('bijoux').select('*').eq('ref',currentModele.ref_bijou).single();
+      bijouBase=data;if(data)currentModele.prix_base=parseFloat(data.pv||currentModele.prix_base||0);
+    }
+    renderSVG();renderPartsRow();renderRecap();renderPanelNav();
+  }
 
-    /* Si modèle sardine et pas encore chargé les couleurs */
-    if (!currentModele.parties[0]?.couleurs?.length) {
-      currentModele = await buildSardineDefault();
-      modeles[idx] = currentModele;
+  /* ── MODES ── */
+  function switchMode(mode,btn){
+    currentMode=mode;
+    document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-couleurs').style.display=mode==='couleurs'?'flex':'none';
+    document.getElementById('panel-bundle').style.display=mode==='bundle'?'flex':'none';
+    document.getElementById('panel-title').textContent=mode==='couleurs'?'COULEURS':'BUNDLE';
+    document.getElementById('panel-sub').textContent=mode==='couleurs'?'Choisissez les couleurs':'Composez votre ensemble';
+    if(mode==='bundle') renderBundlePanel();
+    else if(activePartie) openPart(activePartie);
+  }
+
+  /* ── PANNEAU COULEURS ── */
+  function openPart(partieId){
+    activePartie=partieId;
+    const p=currentModele.parties.find(x=>x.id===partieId);
+    if(!p)return;
+    document.getElementById('side-panel').classList.remove('hidden');
+    document.getElementById('panel-title').textContent=p.label.toUpperCase();
+    document.getElementById('panel-sub').textContent='Choisissez une couleur';
+    renderPanelNav();
+    renderVignettes(p);
+    renderPartsRow();
+    /* Bouton suivant */
+    const idx=currentModele.parties.findIndex(x=>x.id===partieId);
+    const next=currentModele.parties[idx+1];
+    const btn=document.getElementById('panel-next-btn');
+    if(next){btn.textContent='→ '+next.label;btn.style.display='block';}
+    else{btn.textContent='✓ Terminé';btn.style.display='block';}
+  }
+
+  function renderPanelNav(){
+    document.getElementById('panel-nav').innerHTML=(currentModele?.parties||[]).map(p=>
+      `<button class="panel-nav-btn ${p.id===activePartie?'active':''} ${selection[p.id]&&p.id!==activePartie?'done':''}"
+        onclick="openPart('${p.id}')">${p.label}${selection[p.id]&&p.id!==activePartie?' ✓':''}</button>`
+    ).join('');
+  }
+
+  function renderVignettes(partie){
+    const grid=document.getElementById('vignettes-grid');
+    const sel=selection[partie.id];
+    const couleurs=partie.couleurs||[];
+    if(!couleurs.length){grid.innerHTML='<p style="font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);grid-column:1/-1;padding:1.5rem 0;text-align:center;letter-spacing:0.1em">Aucune couleur — configurer dans l\'admin</p>';return;}
+    grid.innerHTML=couleurs.map(c=>{
+      const isSel=sel?.mat_id===c.mat_id;
+      const outStock=c.stock<=0;
+      const couleurHex=hex(c.nom);
+      const isGrad=couleurHex.startsWith('linear-gradient');
+      const preview=c.image_url
+        ?`<img class="vignette-img" src="${c.image_url}" alt="${c.nom}" loading="lazy">`
+        :`<div class="vignette-swatch" style="${isGrad?'background:'+couleurHex:'background:'+couleurHex}"></div>`;
+      return`<div class="vignette ${isSel?'selected':''} ${outStock?'out':''}"
+          onclick="${outStock?'':'selectCouleur(\''+partie.id+'\','+JSON.stringify(c).replace(/"/g,'&quot;')+')'}"
+          title="${c.nom}${outStock?' — Épuisé':''}">
+          <div style="position:relative">
+            ${preview}
+            ${isSel?'<span class="vignette-check">✓</span>':''}
+          </div>
+          <span class="vignette-name">${c.nom}</span>
+          ${outStock?'<span class="vignette-out-lbl">Épuisé</span>':''}
+        </div>`;
+    }).join('');
+  }
+
+  function selectCouleur(partieId,couleur){
+    selection[partieId]=couleur;
+    renderSVG();renderPartsRow();renderRecap();renderPanelNav();
+    /* Rerender les vignettes pour mettre à jour la sélection */
+    const p=currentModele.parties.find(x=>x.id===partieId);
+    if(p)renderVignettes(p);
+  }
+
+  function goNextPart(){
+    const idx=currentModele.parties.findIndex(p=>p.id===activePartie);
+    const next=currentModele.parties[idx+1];
+    if(next)openPart(next.id);
+    else document.getElementById('side-panel').classList.add('hidden');
+  }
+
+  /* ── PANNEAU BUNDLE ── */
+  async function renderBundlePanel(){
+    const body=document.getElementById('bundle-body');
+    body.innerHTML='<div class="spinner"></div>';
+    /* Charger les fermoirs depuis materiaux */
+    const{data:fermoirs}=await sb.from('materiaux').select('id,nom,variante,prix,stock,image_url').ilike('nom','%fermoir%').order('variante');
+    const fermoirsList=fermoirs||[];
+
+    let html='';
+    /* Bundles disponibles */
+    if(bundles.length){
+      html+=`<div><p class="bundle-section-title">Choisir un bundle</p>
+        ${bundles.map((b,i)=>`
+          <div class="bundle-card ${selectedBundle?.id===b.id?'selected':''}" onclick="selectBundle(${i})">
+            ${b.photo?`<img class="bundle-card-img" src="${b.photo}" alt="${b.nom}">`:'<div class="bundle-card-img"></div>'}
+            <div class="bundle-card-info">
+              <p class="bundle-card-name">${b.nom||b.ref}</p>
+              <p class="bundle-card-ref">${b.ref}</p>
+            </div>
+            <span class="bundle-card-price">${b.pv?fmtP(b.pv):''}</span>
+            <span class="bundle-card-check">${selectedBundle?.id===b.id?'✓':''}</span>
+          </div>`).join('')}
+      </div>`;
+    } else {
+      html+=`<p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver);letter-spacing:0.1em">Aucun bundle trouvé — ajouter des références contenant "bundle" ou "kit" dans l'app de gestion.</p>`;
     }
 
-    /* Récupérer le bijou de base si pas encore fait */
-    if (!bijouBase || bijouBase.ref !== currentModele.ref_bijou) {
-      const { data } = await sb.from('bijoux').select('*').eq('ref', currentModele.ref_bijou).single();
-      bijouBase = data;
-      currentModele.prix_base = parseFloat(data?.pv || currentModele.prix_base || 0);
+    /* Choix du fermoir */
+    if(fermoirsList.length){
+      html+=`<div><p class="bundle-section-title" style="margin-top:0.5rem">Choisir un fermoir</p>
+        ${fermoirsList.map((f,i)=>`
+          <div class="bundle-card ${selectedFermoir?.id===f.id?'selected':''}" onclick="selectFermoir(${i},${JSON.stringify(fermoirsList).replace(/"/g,'&quot;')})">
+            ${f.image_url?`<img class="bundle-card-img" src="${f.image_url}" alt="${f.variante||f.nom}" style="border-radius:50%">`:'<div class="bundle-card-img" style="border-radius:50%;background:'+hex(f.variante||f.nom)+'"></div>'}
+            <div class="bundle-card-info">
+              <p class="bundle-card-name">${f.variante||f.nom}</p>
+              <p class="bundle-card-ref">${f.stock>0?'En stock':'Épuisé'}</p>
+            </div>
+            <span class="bundle-card-price">${f.prix?fmtP(f.prix):''}</span>
+            <span class="bundle-card-check">${selectedFermoir?.id===f.id?'✓':''}</span>
+          </div>`).join('')}
+      </div>`;
     }
 
-    document.getElementById('config-loading').style.display = 'none';
-    document.getElementById('config-wrap').style.display = 'grid';
-    renderParts();
-    renderPreview();
-    renderRecap();
+    body.innerHTML=html||'<p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver)">Aucun élément disponible</p>';
   }
 
-  /* ── RENDU PARTIES ── */
-  function renderParts() {
-    const container = document.getElementById('parts-container');
-    container.innerHTML = currentModele.parties.map(partie => `
-      <div class="part-section">
-        <p class="part-title">${partie.label}</p>
-        <p class="part-subtitle">${partie.description || ''}</p>
-        <div class="colors-grid">
-          ${partie.couleurs.map(c => {
-            const hex = getCouleurHex(c.nom);
-            const isGradient = hex.startsWith('linear-gradient');
-            const swatchStyle = isGradient ? `background:${hex}` : `background:${hex}`;
-            const outOfStock = c.stock <= 0;
-            const isSel = selection[partie.id]?.mat_id === c.mat_id;
-            return `<button
-              class="color-btn ${isSel?'selected':''} ${outOfStock?'out-of-stock':''}"
-              onclick="${outOfStock?'':'selectColor(\''+partie.id+'\','+JSON.stringify(c).replace(/'/g,"\\'")+')'}"
-              title="${c.nom}${outOfStock?' — Épuisé':''}"
-            >
-              <span class="color-swatch" style="${swatchStyle}"></span>
-              <span class="color-label">${c.nom}</span>
-              ${outOfStock ? '<span class="color-stock-badge">Épuisé</span>' : ''}
-            </button>`;
-          }).join('')}
-        </div>
-      </div>`).join('');
-  }
+  function selectBundle(idx){selectedBundle=bundles[idx];renderBundlePanel();renderRecap();}
+  function selectFermoir(idx,list){selectedFermoir=list[idx];renderBundlePanel();renderRecap();}
 
-  function selectColor(partieId, couleur) {
-    selection[partieId] = couleur;
-    renderParts();
-    renderPreview();
-    renderRecap();
-  }
-
-  /* ── PRÉVISUALISATION SVG ── */
-  function renderPreview() {
-    const canvas = document.getElementById('fish-canvas');
-    const modSvg = currentModele.svg;
-
-    /* Vérifier si des images PNG sont disponibles */
-    const hasImages = currentModele.parties.some(p => selection[p.id]?.image_url);
-
-    if (hasImages) {
-      /* Mode images PNG superposées */
-      canvas.innerHTML = currentModele.parties.map(p => {
-        const sel = selection[p.id];
-        return sel?.image_url
-          ? `<img src="${sel.image_url}" class="part-img" alt="${p.label}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain">`
-          : '';
-      }).join('');
+  /* ── SVG ── */
+  function renderSVG(){
+    const canvas=document.getElementById('fish-canvas');
+    /* Mode images PNG superposées */
+    const hasImgs=currentModele.parties.some(p=>p.image_url&&selection[p.id]);
+    if(hasImgs){
+      canvas.innerHTML=currentModele.parties.map(p=>p.image_url?`<img src="${p.image_url}" class="part-img-layer" alt="${p.label}">`:'').join('');
       return;
     }
-
-    /* Mode SVG aplats couleur */
-    const svgDef = SVG_SARDINE; /* Pour l'instant un seul modèle SVG */
-    const { viewBox, parts } = svgDef;
-
-    let svgContent = `<svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">`;
-
-    /* Corps du poisson — parties configurables */
-    const partOrder = ['ventre','dos','queue'];
-    partOrder.forEach(partId => {
-      const partDef = parts[partId];
-      if (!partDef || partDef.fixed) return;
-      const sel = selection[partId];
-      const couleur = sel ? getCouleurHex(sel.nom) : 'rgba(154,144,112,0.2)';
-      const isGrad = couleur.startsWith('linear-gradient') || couleur.startsWith('hsl');
-
-      if (couleur.startsWith('linear-gradient')) {
-        /* Gradient SVG */
-        const gradId = 'grad_' + partId;
-        svgContent += `<defs><linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#e74c3c"/>
-          <stop offset="33%" style="stop-color:#f1c40f"/>
-          <stop offset="66%" style="stop-color:#2ecc71"/>
-          <stop offset="100%" style="stop-color:#3498db"/>
-        </linearGradient></defs>`;
-        svgContent += `<path d="${partDef.path}" fill="url(#${gradId})" stroke="rgba(26,21,16,0.3)" stroke-width="1"/>`;
-      } else {
-        svgContent += `<path d="${partDef.path}" fill="${couleur}" stroke="rgba(26,21,16,0.3)" stroke-width="1" style="transition:fill 0.3s"/>`;
+    /* SVG aplats */
+    let defs='',body='';
+    const getCoul=(id,fb='rgba(154,144,112,0.1)')=>{const s=selection[id];return s?hex(s.nom):fb;};
+    ['ventre','dos','queue'].forEach(id=>{
+      const path=SVG.paths[id];if(!path)return;
+      const c=getCoul(id);
+      if(c.startsWith('linear-gradient')){
+        const gid='g_'+id;
+        defs+=`<linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e74c3c"/><stop offset="50%" stop-color="#f1c40f"/><stop offset="100%" stop-color="#2ecc71"/></linearGradient>`;
+        body+=`<path d="${path}" fill="url(#${gid})" stroke="rgba(26,21,16,0.2)" stroke-width="0.8" style="transition:fill 0.3s"/>`;
+      }else{
+        body+=`<path d="${path}" fill="${c}" stroke="rgba(26,21,16,0.2)" stroke-width="0.8" style="transition:fill 0.3s"/>`;
       }
     });
-
-    /* Détails fixes (œil) */
-    if (parts.oeil) svgContent += `<circle cx="${parts.oeil.cx}" cy="${parts.oeil.cy}" r="${parts.oeil.r}" fill="${parts.oeil.color}"/>`;
-    if (parts.oeil_reflet) svgContent += `<circle cx="${parts.oeil_reflet.cx}" cy="${parts.oeil_reflet.cy}" r="${parts.oeil_reflet.r}" fill="${parts.oeil_reflet.color}"/>`;
-
-    /* Indicateurs parties non sélectionnées */
-    currentModele.parties.forEach(p => {
-      if (!selection[p.id]) {
-        const partDef = parts[p.id];
-        if (!partDef || partDef.fixed) return;
-        /* Calculer centroïde approximatif depuis le path pour label */
-      }
+    /* Éléments fixes + iris yeux */
+    const yeuxC=selection['yeux']?hex(selection['yeux'].nom):'#5b9bd5';
+    SVG.fixed.forEach(el=>{
+      const f=el.fill==='__yeux__'?yeuxC:(el.fill||'none');
+      const s=el.stroke?`stroke="${el.stroke}" stroke-width="${el.sw||1}"`:'';
+      body+=`<circle cx="${el.cx}" cy="${el.cy}" r="${el.r}" fill="${f}" ${s} style="transition:fill 0.3s"/>`;
     });
-
-    svgContent += '</svg>';
-    canvas.innerHTML = svgContent;
+    /* Zones cliquables + labels */
+    currentModele.parties.forEach(p=>{
+      const c=SVG.centres[p.id];if(!c)return;
+      body+=`<rect x="${c[0]-38}" y="${c[1]-20}" width="76" height="40" fill="transparent" style="cursor:pointer" onclick="openPart('${p.id}')" title="${p.label}"/>`;
+      if(!selection[p.id])
+        body+=`<text x="${c[0]}" y="${c[1]}" text-anchor="middle" dominant-baseline="middle" font-family="DM Mono" font-size="8" fill="rgba(232,201,122,0.45)" letter-spacing="1" style="pointer-events:none">${p.label.toUpperCase()}</text>`;
+    });
+    canvas.innerHTML=`<svg viewBox="${SVG.vb}" xmlns="http://www.w3.org/2000/svg">${defs?'<defs>'+defs+'</defs>':''}${body}</svg>`;
   }
 
-  /* ── RÉCAP & PRIX ── */
-  function renderRecap() {
-    const allSelected = currentModele.parties.every(p => selection[p.id]);
-    const recapEl = document.getElementById('recap-lines');
-    const priceEl = document.getElementById('price-display');
-    const noteEl = document.getElementById('price-note');
-    const btn = document.getElementById('btn-commander');
-
-    recapEl.innerHTML = currentModele.parties.map(p => {
-      const sel = selection[p.id];
-      return `<div class="recap-line">
-        <span class="recap-part">${p.label}</span>
-        <span class="recap-color">${sel ? sel.nom : '—'}</span>
+  /* ── INDICATEURS PARTIES ── */
+  function renderPartsRow(){
+    document.getElementById('parts-row').innerHTML=(currentModele?.parties||[]).map(p=>{
+      const s=selection[p.id];
+      const dot=s?hex(s.nom):'transparent';
+      return`<div class="part-pill ${p.id===activePartie?'active-part':''} ${s?'done-part':''}" onclick="openPart('${p.id}')">
+        <span class="part-pill-dot" style="background:${dot};border:${s?'none':'1px dashed var(--silver)'}"></span>
+        <span class="part-pill-lbl">${p.label}</span>
+        ${s?`<span class="part-pill-val">— ${s.nom}</span>`:''}
       </div>`;
     }).join('');
+  }
 
-    if (allSelected) {
-      const prixPerles = currentModele.parties.reduce((s,p) => s + (selection[p.id]?.prix || 0), 0);
-      const total = currentModele.prix_base + prixPerles;
-      priceEl.textContent = fmtP(total);
-      noteEl.textContent = `Prix de base ${fmtP(currentModele.prix_base)} + matériaux sélectionnés ${fmtP(prixPerles)}`;
-      btn.disabled = false;
+  /* ── RÉCAP ── */
+  function renderRecap(){
+    const list=document.getElementById('recap-list');
+    const priceEl=document.getElementById('recap-price');
+    const btn=document.getElementById('btn-add');
+
+    if(currentMode==='couleurs'){
+      const allDone=currentModele.parties.every(p=>selection[p.id]);
+      list.innerHTML=(currentModele?.parties||[]).map(p=>{
+        const s=selection[p.id];const dot=s?hex(s.nom):'transparent';
+        return`<div class="recap-item">
+          <span class="recap-item-dot" style="background:${dot};border:${s?'none':'1px dashed var(--silver)'}"></span>
+          <span class="recap-item-label">${p.label}</span>
+          <span class="recap-item-val">${s?s.nom:'—'}</span>
+        </div>`;
+      }).join('');
+      if(allDone){
+        const prixP=currentModele.parties.reduce((s,p)=>s+(selection[p.id]?.prix||0),0);
+        priceEl.textContent=fmtP(currentModele.prix_base+prixP);btn.disabled=false;
+      }else{
+        const rem=currentModele.parties.filter(p=>!selection[p.id]).length;
+        priceEl.textContent=rem+' partie'+(rem>1?'s':'')+' restante'+(rem>1?'s':'');btn.disabled=true;
+      }
     } else {
-      const remaining = currentModele.parties.filter(p => !selection[p.id]).length;
-      priceEl.textContent = '—';
-      noteEl.textContent = `${remaining} partie${remaining>1?'s':''} restante${remaining>1?'s':''} à sélectionner.`;
-      btn.disabled = true;
+      /* Mode bundle */
+      list.innerHTML=`
+        <div class="recap-item"><span class="recap-item-label">Bundle</span><span class="recap-item-val">${selectedBundle?selectedBundle.nom||selectedBundle.ref:'—'}</span></div>
+        <div class="recap-item"><span class="recap-item-label">Fermoir</span><span class="recap-item-val">${selectedFermoir?(selectedFermoir.variante||selectedFermoir.nom):'—'}</span></div>`;
+      if(selectedBundle){
+        const prixF=selectedFermoir?parseFloat(selectedFermoir.prix||0):0;
+        priceEl.textContent=fmtP(parseFloat(selectedBundle.pv||0)+prixF);
+        btn.disabled=false;
+      }else{priceEl.textContent='—';btn.disabled=true;}
     }
   }
 
-  function resetSelection() {
-    selection = {};
-    renderParts();
-    renderPreview();
-    renderRecap();
+  /* ── PANIER ── */
+  function addToCart(){
+    let cart=[];try{cart=JSON.parse(localStorage.getItem('bn_cart')||'[]');}catch(e){}
+    if(currentMode==='couleurs'){
+      const prixP=currentModele.parties.reduce((s,p)=>s+(selection[p.id]?.prix||0),0);
+      const total=currentModele.prix_base+prixP;
+      const desc=currentModele.parties.map(p=>`${p.label}: ${selection[p.id]?.nom}`).join(', ');
+      cart.push({ref:currentModele.ref_bijou+'_CUSTOM_'+Date.now(),name:currentModele.nom+' — '+desc,prix:total,photo:null,variante:desc,qty:1,sur_commande:true});
+    } else {
+      const prixF=selectedFermoir?parseFloat(selectedFermoir.prix||0):0;
+      const total=parseFloat(selectedBundle.pv||0)+prixF;
+      const desc=(selectedBundle.nom||selectedBundle.ref)+(selectedFermoir?' + Fermoir: '+(selectedFermoir.variante||selectedFermoir.nom):'');
+      cart.push({ref:selectedBundle.ref+'_BUNDLE_'+Date.now(),name:'Bundle '+desc,prix:total,photo:null,variante:desc,qty:1,sur_commande:true});
+    }
+    localStorage.setItem('bn_cart',JSON.stringify(cart));
+    toast('Ajouté au panier ✦');
+    setTimeout(()=>{window.location.href='checkout.html';},1500);
   }
 
-  /* ── AJOUTER AU PANIER ── */
-  function addToCart() {
-    const prixPerles = currentModele.parties.reduce((s,p) => s + (selection[p.id]?.prix || 0), 0);
-    const total = currentModele.prix_base + prixPerles;
+  function resetAll(){selection={};selectedBundle=null;selectedFermoir=null;activePartie=null;renderSVG();renderPartsRow();renderRecap();renderPanelNav();if(currentMode==='bundle')renderBundlePanel();}
 
-    /* Construire la description de la commande */
-    const descParts = currentModele.parties.map(p => `${p.label}: ${selection[p.id]?.nom}`).join(', ');
-    const name = `${currentModele.nom} personnalisé — ${descParts}`;
-    const ref = currentModele.ref_bijou + '_CUSTOM_' + Date.now();
-
-    /* Ajouter au panier localStorage */
-    let cart = [];
-    try { cart = JSON.parse(localStorage.getItem('bn_cart') || '[]'); } catch(e) {}
-    cart.push({
-      ref,
-      name,
-      prix: total,
-      photo: null,
-      variante: descParts,
-      qty: 1,
-      sur_commande: true,
-      config: { modele: currentModele.nom, parties: selection }
-    });
-    localStorage.setItem('bn_cart', JSON.stringify(cart));
-
-    toast(`${currentModele.nom} ajouté au panier ✦`);
-    setTimeout(() => { window.location.href = 'checkout.html'; }, 1500);
-  }
-
-  /* ── INIT ── */
   init();
 </script>
 </body>
