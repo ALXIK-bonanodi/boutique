@@ -325,6 +325,7 @@
     <div class="page-tabs">
       <button class="page-tab active" data-page="produits">Produits</button>
       <button class="page-tab" data-page="commandes">Commandes <span class="tab-badge new" id="tb-cmd">0</span></button>
+      <button class="page-tab" data-page="configurateur">Configurateur</button>
       <button class="page-tab" data-page="hero">Page d'accueil</button>
       <button class="page-tab" data-page="pages">Pages & Footer</button>
       <button class="page-tab" data-page="promos">Codes promo</button>
@@ -372,6 +373,18 @@
       <div class="cmd-search"><input type="text" id="cmd-search-input" placeholder="Rechercher par numéro, nom ou email…"/></div>
       <div id="cmd-loading" class="loading-state"><div class="spinner"></div><p class="loading-text">Chargement…</p></div>
       <div class="cmd-list" id="cmd-list" style="display:none"></div>
+    </div>
+
+    <!-- CONFIGURATEUR -->
+    <div id="page-configurateur" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
+        <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">Modèles de poissons configurables</p>
+        <div style="display:flex;gap:0.5rem">
+          <a href="configurateur.html" target="_blank" class="btn-adm">Voir le configurateur →</a>
+          <button class="btn-adm primary" onclick="openModeleModal(null)">+ Nouveau modèle</button>
+        </div>
+      </div>
+      <div id="config-modeles-list"></div>
     </div>
 
     <!-- PAGE D'ACCUEIL -->
@@ -765,6 +778,7 @@
       const p = t.dataset.page;
       document.getElementById('page-produits').classList.toggle('hidden', p !== 'produits');
       document.getElementById('page-commandes').style.display = p === 'commandes' ? 'block' : 'none';
+      document.getElementById('page-configurateur').style.display = p === 'configurateur' ? 'block' : 'none';
       document.getElementById('page-hero').classList.toggle('active', p === 'hero');
       document.getElementById('page-pages').style.display = p === 'pages' ? 'block' : 'none';
       document.getElementById('page-promos').style.display = p === 'promos' ? 'block' : 'none';
@@ -772,6 +786,7 @@
       if (p === 'promos') renderPromos();
       if (p === 'pages')  loadPageEditors();
       if (p === 'commandes') loadCommandes();
+      if (p === 'configurateur') loadConfigurateur();
     });
   });
 
@@ -1404,7 +1419,201 @@
   });
   document.getElementById('cmd-search-input').addEventListener('input',function(){cmdQ=this.value;renderCommandes();});
 
-  /* ══ FIN COMMANDES ══ */
+  /* ══ CONFIGURATEUR ══ */
+  let configModeles = [];
+  let editingModeleIdx = null;
+
+  async function loadConfigurateur() {
+    const { data } = await sb.from('boutique_settings').select('value').eq('key','configurateur_modeles').single();
+    configModeles = data?.value || [];
+    if (!configModeles.length) {
+      /* Charger le modèle sardine par défaut depuis bijoux */
+      const { data: bij } = await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
+      configModeles = [{
+        id: 'sardine', nom: 'Sardine',
+        ref_bijou: bij?.[0]?.ref || '',
+        prix_base: parseFloat(bij?.[0]?.pv || 0),
+        svg: 'sardine',
+        parties: [
+          { id: 'dos',    label: 'Dos',    description: 'Partie dorsale', couleurs: [] },
+          { id: 'ventre', label: 'Ventre', description: 'Partie ventrale', couleurs: [] },
+          { id: 'queue',  label: 'Queue',  description: 'Nageoire caudale', couleurs: [] }
+        ]
+      }];
+    }
+    renderConfigModeles();
+  }
+
+  function renderConfigModeles() {
+    const el = document.getElementById('config-modeles-list');
+    if (!configModeles.length) {
+      el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--silver);padding:2rem;text-align:center;border:1px dashed var(--border)">Aucun modèle — cliquer "+ Nouveau modèle"</p>';
+      return;
+    }
+    el.innerHTML = configModeles.map((m, i) => `
+      <div style="background:var(--ink-md);border:1px solid var(--border);padding:1rem;margin-bottom:0.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.8rem">
+          <div>
+            <p style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.15em;color:var(--sand)">${m.nom}</p>
+            <p style="font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);margin-top:0.2rem">Réf: ${m.ref_bijou} · Prix base: ${fmtP(m.prix_base)} · ${m.parties.length} parties</p>
+          </div>
+          <div style="display:flex;gap:0.4rem">
+            <button class="btn-adm" onclick="editModele(${i})">Modifier</button>
+            <button class="btn-adm" onclick="manageParties(${i})">Gérer les parties & couleurs</button>
+            <button class="btn-adm" onclick="deleteModele(${i})" style="border-color:rgba(196,40,110,0.3);color:var(--fuchsia-lt)">Supprimer</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
+          ${m.parties.map(p => `
+            <div style="padding:0.5rem 0.8rem;background:rgba(232,201,122,0.04);border:1px solid var(--border)">
+              <p style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--fuchsia-lt);margin-bottom:0.3rem">${p.label}</p>
+              <p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver)">${p.couleurs?.length || 0} couleur(s)</p>
+              ${p.image_url ? `<p style="font-family:var(--font-mono);font-size:0.44rem;color:var(--ok);margin-top:0.2rem">✓ Image PNG</p>` : '<p style="font-family:var(--font-mono);font-size:0.44rem;color:var(--silver);margin-top:0.2rem">Aplat couleur</p>'}
+            </div>`).join('')}
+        </div>
+        <!-- GESTION PARTIES & COULEURS (caché par défaut) -->
+        <div id="parties-panel-${i}" style="display:none;margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem">
+          ${m.parties.map((p, pi) => `
+            <div style="margin-bottom:1.2rem">
+              <p style="font-family:var(--font-display);font-size:1.05rem;letter-spacing:0.12em;color:var(--sand);margin-bottom:0.5rem">${p.label}</p>
+              <!-- Upload image PNG -->
+              <div class="upload-zone" style="margin-bottom:0.6rem;max-width:300px">
+                <input type="file" accept="image/png,image/webp" onchange="uploadPartieImg(${i},${pi},this.files)">
+                <div class="upload-icon">🖼</div>
+                <p class="upload-text">Image PNG fond transparent<br><span style="opacity:0.6">Remplace l'aplat couleur · 800×600px</span></p>
+              </div>
+              ${p.image_url ? `<p style="font-family:var(--font-mono);font-size:0.48rem;color:var(--ok);margin-bottom:0.5rem">✓ Image actuelle : <a href="${p.image_url}" target="_blank" style="color:var(--fuchsia-lt)">voir</a> <button onclick="removePartieImg(${i},${pi})" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-size:0.48rem;font-family:var(--font-mono)">✕ Supprimer</button></p>` : ''}
+              <!-- Couleurs disponibles -->
+              <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.4rem">Couleurs disponibles (depuis materiaux)</p>
+              <div id="couleurs-${i}-${pi}" style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.5rem">
+                ${(p.couleurs||[]).map(c => `<span style="font-family:var(--font-mono);font-size:0.46rem;padding:0.2rem 0.5rem;background:rgba(232,201,122,0.08);border:1px solid var(--border);color:var(--silver)">${c.nom}</span>`).join('')}
+              </div>
+              <button class="btn-adm" onclick="reloadCouleurs(${i},${pi})">↺ Recharger depuis Materiaux</button>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+
+  function manageParties(i) {
+    const panel = document.getElementById('parties-panel-' + i);
+    if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function reloadCouleurs(mi, pi) {
+    /* Charger les perles depuis materiaux */
+    const { data: mats } = await sb.from('materiaux')
+      .select('id, nom, variante, prix, stock')
+      .ilike('nom','%perle%')
+      .order('variante');
+    if (!mats?.length) { toast('Aucune perle trouvée dans materiaux — vérifier le nom "perle"', true); return; }
+    configModeles[mi].parties[pi].couleurs = mats.map(m => ({
+      mat_id: m.id, nom: m.variante || m.nom,
+      prix: parseFloat(m.prix || 0), stock: m.stock || 0
+    }));
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    toast(`${mats.length} couleur(s) chargées pour ${configModeles[mi].parties[pi].label} ✦`);
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+  }
+
+  async function uploadPartieImg(mi, pi, files) {
+    if (!files.length) return;
+    const f = files[0];
+    const path = 'configurateur/' + configModeles[mi].id + '_' + configModeles[mi].parties[pi].id + '_' + Date.now() + '.png';
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    configModeles[mi].parties[pi].image_url = ud.publicUrl;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast('Image uploadée ✦');
+  }
+
+  async function removePartieImg(mi, pi) {
+    delete configModeles[mi].parties[pi].image_url;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast('Image supprimée');
+  }
+
+  async function deleteModele(i) {
+    if (!confirm('Supprimer ce modèle ?')) return;
+    configModeles.splice(i, 1);
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    toast('Modèle supprimé');
+  }
+
+  function editModele(i) { openModeleModal(i); }
+
+  function openModeleModal(idx) {
+    editingModeleIdx = idx;
+    const m = idx !== null ? configModeles[idx] : null;
+    const partiesDefault = [
+      { id: 'dos',    label: 'Dos',    description: '', couleurs: [] },
+      { id: 'ventre', label: 'Ventre', description: '', couleurs: [] },
+      { id: 'queue',  label: 'Queue',  description: '', couleurs: [] }
+    ];
+
+    /* Modal inline simple */
+    const existing = document.getElementById('modele-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'modele-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:500;background:rgba(26,21,16,0.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center';
+    modal.innerHTML = `
+      <div style="background:var(--ink-md);border:1px solid var(--border);padding:1.5rem;width:min(500px,95vw);max-height:90vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <p style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.15em;color:var(--sand)">${idx!==null?'MODIFIER':'NOUVEAU MODÈLE'}</p>
+          <button onclick="document.getElementById('modele-modal').remove()" style="background:transparent;border:1px solid var(--border);color:var(--silver);width:28px;height:28px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.8rem">
+          <div class="field"><label>Nom du modèle</label><input type="text" id="mm-nom" value="${m?.nom||''}" placeholder="Sardine, Poisson lune…"></div>
+          <div class="field"><label>Référence bijou (table bijoux)</label><input type="text" id="mm-ref" value="${m?.ref_bijou||''}" placeholder="Ref exacte dans Supabase"></div>
+          <div class="field"><label>Prix de base (€) — remplacé par pv du bijou si trouvé</label><input type="number" id="mm-prix" value="${m?.prix_base||0}" min="0" step="0.5"></div>
+          <div class="field"><label>Parties (une par ligne : id|Label|Description)</label>
+            <textarea id="mm-parties" style="min-height:100px;font-family:var(--font-mono);font-size:0.62rem" placeholder="dos|Dos|Partie dorsale&#10;ventre|Ventre|Partie ventrale&#10;queue|Queue|Nageoire caudale">${(m?.parties||partiesDefault).map(p=>p.id+'|'+p.label+'|'+(p.description||'')).join('\n')}</textarea>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.6rem;margin-top:1.2rem">
+          <button class="btn-adm primary" style="flex:1;justify-content:center" onclick="saveModele()">Enregistrer</button>
+          <button class="btn-adm" onclick="document.getElementById('modele-modal').remove()">Annuler</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  async function saveModele() {
+    const nom = document.getElementById('mm-nom').value.trim();
+    const ref = document.getElementById('mm-ref').value.trim();
+    const prix = parseFloat(document.getElementById('mm-prix').value) || 0;
+    const partiesRaw = document.getElementById('mm-parties').value.trim().split('\n').filter(l=>l.trim());
+    if (!nom) { toast('Nom requis', true); return; }
+
+    const parties = partiesRaw.map(line => {
+      const [id, label, description] = line.split('|').map(s=>s.trim());
+      /* Conserver les couleurs existantes si le parti existe déjà */
+      const existing = editingModeleIdx !== null
+        ? configModeles[editingModeleIdx].parties.find(p => p.id === id)
+        : null;
+      return { id: id||label, label: label||id, description: description||'', couleurs: existing?.couleurs||[], image_url: existing?.image_url };
+    });
+
+    const modele = { id: nom.toLowerCase().replace(/\s+/g,'-'), nom, ref_bijou: ref, prix_base: prix, svg: 'sardine', parties };
+
+    if (editingModeleIdx !== null) configModeles[editingModeleIdx] = modele;
+    else configModeles.push(modele);
+
+    await saveSetting('configurateur_modeles', configModeles);
+    document.getElementById('modele-modal').remove();
+    renderConfigModeles();
+    toast('Modèle sauvegardé ✦');
+  }
+
+  /* ══ FIN CONFIGURATEUR ══ */
 
   async function loadBijoux() {
     try {
