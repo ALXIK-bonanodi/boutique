@@ -24,321 +24,550 @@
     body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:0.03;pointer-events:none;z-index:9999}
     ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--fuchsia)}
 
-    .navbar{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(26,21,16,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
-    .nav-logo{text-decoration:none;display:flex;align-items:center;gap:0.65rem}
-    .nav-logo-img{height:34px;width:34px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
-    .nav-logo-text{display:flex;flex-direction:column;line-height:1}
-    .nav-logo-text .l1{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.2em;color:var(--sand)}
-    .nav-logo-text .l2{font-family:var(--font-body);font-style:italic;font-weight:300;font-size:0.56rem;letter-spacing:0.3em;color:var(--fuchsia-lt);text-transform:uppercase}
-    .nav-back{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);text-decoration:none;transition:color 0.2s}
-    .nav-back:hover{color:var(--sand)}
+    /* ── AUTH SCREENS ── */
+    .auth-wrap{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+    .auth-box{width:100%;max-width:400px;display:flex;flex-direction:column;gap:0}
+    .auth-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+    .auth-tab{flex:1;font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.7rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s}
+    .auth-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
+    .auth-panel{display:none;flex-direction:column;gap:1rem}
+    .auth-panel.active{display:flex}
+    .auth-title{font-family:var(--font-display);font-size:1.8rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.3rem}
+    .auth-sub{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
+    .field{display:flex;flex-direction:column;gap:0.3rem}
+    .field label{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
+    .field input{padding:0.6rem 0.9rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.06em;outline:none;transition:border-color 0.2s;width:100%}
+    .field input:focus{border-color:var(--fuchsia)}
+    .field input::placeholder{color:var(--silver)}
+    .btn-primary{padding:0.85rem;background:var(--fuchsia);color:var(--cream);border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background 0.2s;width:100%}
+    .btn-primary:hover{background:var(--fuchsia-lt)}
+    .btn-secondary{padding:0.7rem;background:transparent;color:var(--sand);border:1px solid rgba(232,201,122,0.3);cursor:pointer;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;transition:all 0.2s;width:100%;text-align:center;text-decoration:none;display:block}
+    .btn-secondary:hover{background:rgba(232,201,122,0.06);border-color:var(--sand)}
+    .auth-err{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--fuchsia);padding:0.6rem 0.8rem;border:1px solid rgba(196,40,110,0.3);background:rgba(196,40,110,0.06);display:none}
+    .auth-err.show{display:block}
+    .auth-ok{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--ok);padding:0.6rem 0.8rem;border:1px solid rgba(126,207,138,0.3);background:rgba(126,207,138,0.06);display:none}
+    .auth-ok.show{display:block}
+    .auth-sep{display:flex;align-items:center;gap:0.8rem;margin:0.3rem 0}
+    .auth-sep-line{flex:1;height:1px;background:var(--border)}
+    .auth-sep span{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
 
-    /* HERO */
-    .account-hero{padding:3rem 2.5rem 2rem;border-bottom:1px solid var(--border)}
-    .account-hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.1em;color:var(--sand);margin-bottom:0.3rem}
-    .account-hero p{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver)}
+    /* ── DASHBOARD ── */
+    #dashboard{display:none}
+    .dash-hero{padding:2.5rem 2.5rem 2rem;border-bottom:1px solid var(--border)}
+    .dash-hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .dash-greeting{font-family:var(--font-display);font-size:clamp(1.5rem,4vw,2.8rem);letter-spacing:0.1em;color:var(--sand)}
+    .dash-email{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver);margin-top:0.2rem}
+    .btn-logout{padding:0.4rem 0.9rem;background:transparent;border:1px solid var(--border);color:var(--silver);font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px))}
+    .btn-logout:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
 
-    /* LAYOUT */
-    .account-wrap{max-width:900px;margin:0 auto;padding:2rem 2.5rem 5rem;display:flex;flex-direction:column;gap:2rem}
+    .dash-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 2.5rem;background:rgba(26,21,16,0.5)}
+    .dash-tab{font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.7rem 1.2rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s}
+    .dash-tab:hover{color:var(--cream)}
+    .dash-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
 
-    /* TABS */
-    .account-tabs{display:flex;gap:0;border-bottom:1px solid var(--border)}
-    .account-tab{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.6rem 1.4rem;cursor:pointer;border:none;background:transparent;color:var(--silver);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.2s}
-    .account-tab:hover{color:var(--cream)}
-    .account-tab.active{color:var(--sand);border-bottom-color:var(--fuchsia)}
-    .tab-panel{display:none}
-    .tab-panel.active{display:block}
+    .dash-content{max-width:900px;margin:0 auto;padding:2rem 2.5rem 5rem}
+    .dash-panel{display:none}
+    .dash-panel.active{display:block}
 
-    /* NOTICE INFO */
-    .info-box{padding:1rem 1.2rem;border:1px solid var(--border);background:rgba(232,201,122,0.04);margin-bottom:1.2rem}
-    .info-box p{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--silver);line-height:1.7}
-    .info-box strong{color:var(--sand)}
+    /* COMMANDES */
+    .orders-empty{padding:3rem 0;text-align:center}
+    .orders-empty p{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver)}
+    .orders-empty a{display:inline-block;margin-top:1rem;font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--fuchsia-lt);text-decoration:none;padding:0.5rem 1rem;border:1px solid rgba(196,40,110,0.3);transition:all 0.2s}
+    .orders-empty a:hover{background:rgba(196,40,110,0.1)}
 
-    /* FORMULAIRE RECHERCHE COMMANDE */
-    .order-search{display:flex;flex-direction:column;gap:0.8rem;max-width:480px}
-    .order-search label{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--silver)}
-    .order-search input{padding:0.6rem 0.9rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;outline:none;transition:border-color 0.2s}
-    .order-search input:focus{border-color:var(--fuchsia)}
-    .order-search input::placeholder{color:var(--silver)}
-    .btn-search{padding:0.7rem 1.4rem;background:var(--fuchsia);color:var(--cream);border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));transition:background 0.2s;width:100%}
-    .btn-search:hover{background:var(--fuchsia-lt)}
-
-    /* RÉSULTAT COMMANDE */
-    .order-result{margin-top:1.5rem}
-    .order-card{background:var(--ink-md);border:1px solid var(--border);padding:1.2rem}
-    .order-num{font-family:var(--font-display);font-size:1.3rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.3rem}
-    .order-meta{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;color:var(--silver);margin-bottom:1rem;display:flex;gap:1rem;flex-wrap:wrap}
-    .order-statut{padding:0.15rem 0.5rem;font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase}
-    .statut-en_attente{background:rgba(232,201,122,0.1);border:1px solid rgba(232,201,122,0.3);color:var(--sand)}
-    .statut-confirme{background:rgba(126,207,138,0.1);border:1px solid rgba(126,207,138,0.3);color:var(--ok)}
-    .statut-expedie{background:rgba(100,180,255,0.1);border:1px solid rgba(100,180,255,0.3);color:#64b4ff}
-    .statut-livre{background:rgba(126,207,138,0.15);border:1px solid rgba(126,207,138,0.5);color:var(--ok)}
-    .statut-annule{background:rgba(196,40,110,0.1);border:1px solid rgba(196,40,110,0.3);color:var(--fuchsia-lt)}
-    .order-items{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem}
-    .order-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border)}
-    .order-item-name{font-family:var(--font-body);font-style:italic;font-size:0.95rem;color:var(--cream)}
-    .order-item-qty{font-family:var(--font-mono);font-size:0.5rem;color:var(--silver)}
+    .order-card{background:var(--ink-md);border:1px solid var(--border);margin-bottom:0.8rem;overflow:hidden}
+    .order-card-header{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.2rem;cursor:pointer;transition:background 0.15s;gap:1rem;flex-wrap:wrap}
+    .order-card-header:hover{background:rgba(232,201,122,0.03)}
+    .order-num{font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.12em;color:var(--sand)}
+    .order-date{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;color:var(--silver);margin-top:0.15rem}
+    .order-statut{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.55rem}
+    .s-en_attente{background:rgba(232,201,122,0.1);border:1px solid rgba(232,201,122,0.3);color:var(--sand)}
+    .s-confirme,.s-en_cours{background:rgba(100,180,255,0.1);border:1px solid rgba(100,180,255,0.3);color:#64b4ff}
+    .s-expedie{background:rgba(196,40,110,0.1);border:1px solid rgba(196,40,110,0.3);color:var(--fuchsia-lt)}
+    .s-livre{background:rgba(126,207,138,0.12);border:1px solid rgba(126,207,138,0.4);color:var(--ok)}
+    .s-annule{background:rgba(100,100,100,0.1);border:1px solid rgba(100,100,100,0.3);color:var(--silver)}
+    .order-total-pill{font-family:var(--font-display);font-size:1.1rem;color:var(--fuchsia-lt)}
+    .order-toggle{font-family:var(--font-mono);font-size:0.6rem;color:var(--fuchsia-lt);transition:transform 0.2s}
+    .order-card.expanded .order-toggle{transform:rotate(180deg)}
+    .order-detail{display:none;border-top:1px solid var(--border);padding:1rem 1.2rem;background:rgba(26,21,16,0.3)}
+    .order-card.expanded .order-detail{display:block}
+    .order-items-list{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+    .order-item-row{display:flex;justify-content:space-between;align-items:center;padding:0.35rem 0;border-bottom:1px solid var(--border)}
+    .order-item-name{font-family:var(--font-body);font-style:italic;font-size:0.9rem;color:var(--cream)}
+    .order-item-qty{font-family:var(--font-mono);font-size:0.48rem;color:var(--silver)}
     .order-item-price{font-family:var(--font-display);font-size:0.95rem;color:var(--fuchsia-lt)}
-    .order-total{display:flex;justify-content:space-between;padding-top:0.5rem}
-    .order-total-label{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
-    .order-total-val{font-family:var(--font-display);font-size:1.4rem;color:var(--sand)}
-    .order-suivi{margin-top:0.8rem;padding:0.6rem 0.9rem;border:1px solid rgba(100,180,255,0.3);background:rgba(100,180,255,0.06)}
-    .order-suivi p{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;color:#64b4ff}
-    .order-error{padding:1rem;font-family:var(--font-mono);font-size:0.6rem;color:var(--fuchsia);letter-spacing:0.1em}
+    .order-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.8rem}
+    .order-meta-block p:first-child{font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver);margin-bottom:0.2rem}
+    .order-meta-block p:last-child{font-family:var(--font-mono);font-size:0.56rem;color:var(--cream)}
+    .suivi-box{margin-top:0.8rem;padding:0.6rem 0.9rem;border:1px solid rgba(100,180,255,0.3);background:rgba(100,180,255,0.06)}
+    .suivi-box p{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;color:#64b4ff}
 
     /* WISHLIST */
     .wishlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px}
-    .wishlist-card{background:rgba(232,201,122,0.04);border:1px solid var(--border);overflow:hidden;aspect-ratio:3/4;display:flex;flex-direction:column;position:relative;cursor:pointer;transition:border-color 0.2s}
-    .wishlist-card:hover{border-color:rgba(196,40,110,0.4)}
-    .wishlist-card-img{flex:1;object-fit:cover;width:100%;opacity:0.85}
-    .wishlist-card-img-ph{flex:1;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:1.5rem;background:#221a11}
-    .wishlist-card-info{padding:0.6rem 0.8rem;border-top:1px solid var(--border);background:rgba(26,21,16,0.7)}
-    .wishlist-card-name{font-family:var(--font-body);font-style:italic;font-size:0.9rem;color:var(--cream)}
-    .wishlist-card-price{font-family:var(--font-display);font-size:1rem;color:var(--fuchsia-lt)}
-    .wishlist-del{position:absolute;top:0.4rem;right:0.4rem;background:rgba(26,21,16,0.85);border:1px solid var(--border);color:var(--silver);width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:0.65rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
-    .wishlist-del:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
-    .wishlist-empty{padding:3rem 0;text-align:center}
-    .wishlist-empty p{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver)}
-    .wishlist-empty a{display:inline-block;margin-top:1rem;font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--fuchsia-lt);text-decoration:none;padding:0.5rem 1rem;border:1px solid rgba(196,40,110,0.3);transition:all 0.2s}
-    .wishlist-empty a:hover{background:rgba(196,40,110,0.1)}
+    .wish-card{background:rgba(232,201,122,0.04);border:1px solid var(--border);overflow:hidden;aspect-ratio:3/4;display:flex;flex-direction:column;position:relative;cursor:pointer;transition:border-color 0.2s}
+    .wish-card:hover{border-color:rgba(196,40,110,0.4)}
+    .wish-img{flex:1;object-fit:cover;width:100%;opacity:0.85}
+    .wish-ph{flex:1;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:1.5rem;background:#221a11}
+    .wish-info{padding:0.6rem 0.8rem;border-top:1px solid var(--border);background:rgba(26,21,16,0.7)}
+    .wish-name{font-family:var(--font-body);font-style:italic;font-size:0.9rem;color:var(--cream)}
+    .wish-price{font-family:var(--font-display);font-size:1rem;color:var(--fuchsia-lt)}
+    .wish-del{position:absolute;top:0.4rem;right:0.4rem;background:rgba(26,21,16,0.85);border:1px solid var(--border);color:var(--silver);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
+    .wish-del:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
+    .wish-empty{padding:3rem 0;text-align:center}
+    .wish-empty p{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver)}
+    .wish-empty a{display:inline-block;margin-top:1rem;font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--fuchsia-lt);text-decoration:none;padding:0.5rem 1rem;border:1px solid rgba(196,40,110,0.3);transition:all 0.2s}
 
-    /* INFOS SAV */
-    .sav-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    /* ADRESSES */
+    .addr-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.2rem}
+    .addr-card{padding:1rem 1.2rem;background:var(--ink-md);border:1px solid var(--border);position:relative}
+    .addr-card.is-defaut{border-color:rgba(232,201,122,0.4)}
+    .addr-defaut-badge{font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.12rem 0.4rem;background:rgba(232,201,122,0.12);border:1px solid rgba(232,201,122,0.3);color:var(--sand);display:inline-block;margin-bottom:0.5rem}
+    .addr-name{font-family:var(--font-body);font-size:1rem;font-weight:600;color:var(--cream);margin-bottom:0.3rem}
+    .addr-line{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.08em;color:var(--silver);line-height:1.7}
+    .addr-actions{display:flex;gap:0.5rem;margin-top:0.8rem}
+    .btn-sm{padding:0.28rem 0.7rem;font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--silver);transition:all 0.2s}
+    .btn-sm:hover{border-color:var(--fuchsia);color:var(--fuchsia-lt)}
+    .btn-sm.del:hover{border-color:rgba(196,40,110,0.5);color:var(--fuchsia-lt)}
+
+    .addr-form{background:var(--ink-md);border:1px solid var(--border);padding:1.2rem;display:none;flex-direction:column;gap:0.8rem;margin-top:0.5rem}
+    .addr-form.open{display:flex}
+    .addr-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem}
+    .addr-form-grid .span2{grid-column:1/-1}
+    .section-title{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+
+    /* SAV */
+    .sav-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
     .sav-card{padding:1.2rem;background:var(--ink-md);border:1px solid var(--border)}
     .sav-card h3{font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.15em;color:var(--sand);margin-bottom:0.5rem}
     .sav-card p{font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.08em;color:var(--silver);line-height:1.7}
     .sav-card a{color:var(--fuchsia-lt);text-decoration:none}
-    .sav-card a:hover{text-decoration:underline}
 
     /* SPINNER */
-    .spinner{width:24px;height:24px;border:1px solid var(--border);border-top-color:var(--fuchsia);border-radius:50%;animation:spin 0.8s linear infinite;margin:2rem auto;display:block}
+    .spinner{width:28px;height:28px;border:1px solid var(--border);border-top-color:var(--fuchsia);border-radius:50%;animation:spin 0.8s linear infinite;margin:3rem auto;display:block}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-    .foot-logo{font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.2em;color:var(--sand);opacity:0.35}
-    .foot-copy{font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;color:var(--silver)}
+    #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);padding:0.65rem 1.4rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream);background:var(--fuchsia);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:500;white-space:nowrap}
+    #toast.show{opacity:1}
 
-    @media(max-width:700px){.navbar,.account-hero,.account-wrap{padding-left:1.2rem;padding-right:1.2rem}.sav-grid{grid-template-columns:1fr}}
+    @media(max-width:700px){
+      .dash-hero,.dash-tabs,.dash-content{padding-left:1.2rem;padding-right:1.2rem}
+      .addr-grid,.order-meta-grid,.sav-grid{grid-template-columns:1fr}
+      .addr-form-grid{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
+<script src="nav-footer.js"></script>
 
-<nav class="navbar">
-  <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="Bona Nodi" class="nav-logo-img" onerror="this.style.display='none'"/>
-    <div class="nav-logo-text"><span class="l1">BONA NODI</span><span class="l2">bijoux artisanaux</span></div>
-  </a>
-  <a href="index.html" class="nav-back">← Retour à la boutique</a>
-</nav>
-
-<div class="account-hero">
-  <h1>MON COMPTE</h1>
-  <p>Suivre vos commandes · Wishlist · SAV</p>
-</div>
-
-<div class="account-wrap">
-  <div class="account-tabs">
-    <button class="account-tab active" data-tab="commandes">Mes commandes</button>
-    <button class="account-tab" data-tab="wishlist">Wishlist</button>
-    <button class="account-tab" data-tab="sav">SAV & Contact</button>
-  </div>
-
-  <!-- COMMANDES -->
-  <div class="tab-panel active" id="tab-commandes">
-    <div class="info-box">
-      <p>Entrez votre <strong>numéro de commande</strong> (format BN-AAMM-XXXX) et l'<strong>email</strong> utilisé lors de la commande pour retrouver votre suivi.</p>
+<!-- ── ÉCRAN AUTH ── -->
+<div id="auth-screen" class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-auth="login">Se connecter</button>
+      <button class="auth-tab" data-auth="register">Créer un compte</button>
     </div>
-    <div class="order-search">
-      <label>Numéro de commande</label>
-      <input type="text" id="order-num-input" placeholder="BN-2505-1234"/>
-      <label>Email</label>
-      <input type="email" id="order-email-input" placeholder="votre@email.fr"/>
-      <button class="btn-search" onclick="searchOrder()">Rechercher ma commande</button>
-    </div>
-    <div class="order-result" id="order-result"></div>
-  </div>
 
-  <!-- WISHLIST -->
-  <div class="tab-panel" id="tab-wishlist">
-    <div class="info-box" style="margin-bottom:1.2rem">
-      <p>Votre wishlist est sauvegardée sur cet appareil. Cliquez sur le <strong>♡</strong> sur une fiche produit pour ajouter un bijou.</p>
+    <!-- LOGIN -->
+    <div class="auth-panel active" id="panel-login">
+      <div>
+        <p class="auth-title">BONJOUR</p>
+        <p class="auth-sub">Connectez-vous à votre espace Bona Nodi</p>
+      </div>
+      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="votre@email.fr"/></div>
+      <div class="field"><label>Mot de passe</label><input type="password" id="login-pwd" placeholder="••••••••"/></div>
+      <div class="auth-err" id="login-err"></div>
+      <button class="btn-primary" onclick="doLogin()">Se connecter →</button>
+      <div class="auth-sep"><div class="auth-sep-line"></div><span>ou</span><div class="auth-sep-line"></div></div>
+      <a href="index.html#boutique" class="btn-secondary">Continuer sans compte</a>
+      <p style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-align:center;color:var(--silver)">
+        <span style="cursor:pointer;color:var(--fuchsia-lt)" onclick="showResetPwd()">Mot de passe oublié ?</span>
+      </p>
     </div>
-    <div id="wishlist-wrap"></div>
-  </div>
 
-  <!-- SAV -->
-  <div class="tab-panel" id="tab-sav">
-    <div class="sav-grid">
-      <div class="sav-card">
-        <h3>RETOURS</h3>
-        <p>Vous disposez de <strong style="color:var(--sand)">14 jours</strong> après réception pour retourner un article intact.<br><br>
-        Contactez-nous d'abord par email avec votre numéro de commande :<br>
-        <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a></p>
+    <!-- INSCRIPTION -->
+    <div class="auth-panel" id="panel-register">
+      <div>
+        <p class="auth-title">BIENVENUE</p>
+        <p class="auth-sub">Créez votre espace Bona Nodi</p>
       </div>
-      <div class="sav-card">
-        <h3>RÉPARATIONS</h3>
-        <p>Défaut de fabrication dans le <strong style="color:var(--sand)">mois suivant la réception</strong> ? Réparation gratuite (retour à vos frais).<br><br>
-        Au-delà, contactez-nous pour un devis :<br>
-        <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a></p>
+      <div class="field"><label>Prénom *</label><input type="text" id="reg-prenom" placeholder="Marie"/></div>
+      <div class="field"><label>Email *</label><input type="email" id="reg-email" placeholder="votre@email.fr"/></div>
+      <div class="field"><label>Mot de passe *</label><input type="password" id="reg-pwd" placeholder="8 caractères minimum"/></div>
+      <div class="field"><label>Confirmer le mot de passe *</label><input type="password" id="reg-pwd2" placeholder="••••••••"/></div>
+      <div class="auth-err" id="reg-err"></div>
+      <div class="auth-ok" id="reg-ok"></div>
+      <button class="btn-primary" onclick="doRegister()">Créer mon compte →</button>
+      <div class="auth-sep"><div class="auth-sep-line"></div><span>ou</span><div class="auth-sep-line"></div></div>
+      <a href="index.html#boutique" class="btn-secondary">Continuer sans compte</a>
+    </div>
+
+    <!-- RESET PWD -->
+    <div class="auth-panel" id="panel-reset">
+      <div>
+        <p class="auth-title">RÉINITIALISER</p>
+        <p class="auth-sub">Un lien vous sera envoyé par email</p>
       </div>
-      <div class="sav-card">
-        <h3>CONTACT</h3>
-        <p>Pour toute question :<br>
-        <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a><br><br>
-        Réponse sous 48h ouvrées.<br>
-        Précisez votre numéro de commande si disponible.</p>
-      </div>
-      <div class="sav-card">
-        <h3>CGV & INFOS LÉGALES</h3>
-        <p>Consultez nos <a href="cgv.html">Conditions Générales de Vente</a> complètes incluant :<br><br>
-        Délais d'expédition · Droit de rétractation · Garanties légales · Données personnelles</p>
-      </div>
+      <div class="field"><label>Email</label><input type="email" id="reset-email" placeholder="votre@email.fr"/></div>
+      <div class="auth-ok" id="reset-ok"></div>
+      <div class="auth-err" id="reset-err"></div>
+      <button class="btn-primary" onclick="doReset()">Envoyer le lien →</button>
+      <button class="btn-secondary" style="margin-top:0.3rem" onclick="showLogin()">← Retour à la connexion</button>
     </div>
   </div>
 </div>
 
-<footer>
-  <span class="foot-logo">BONA NODI</span>
-  <span class="foot-copy">© 2025 Bona Nodi — Bijoux artisanaux fait main</span>
-</footer>
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <div class="dash-hero">
+    <div class="dash-hero-inner">
+      <div>
+        <p class="dash-greeting" id="dash-greeting">MON ESPACE</p>
+        <p class="dash-email" id="dash-email"></p>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <div class="dash-tabs">
+    <button class="dash-tab active" data-dash="commandes">Mes commandes</button>
+    <button class="dash-tab" data-dash="wishlist">Wishlist</button>
+    <button class="dash-tab" data-dash="adresses">Adresses</button>
+    <button class="dash-tab" data-dash="sav">SAV & Contact</button>
+  </div>
+
+  <div class="dash-content">
+
+    <!-- COMMANDES -->
+    <div class="dash-panel active" id="dash-commandes">
+      <div class="spinner" id="orders-spinner"></div>
+      <div id="orders-list"></div>
+    </div>
+
+    <!-- WISHLIST -->
+    <div class="dash-panel" id="dash-wishlist">
+      <div class="spinner" id="wish-spinner" style="display:none"></div>
+      <div id="wishlist-wrap"></div>
+    </div>
+
+    <!-- ADRESSES -->
+    <div class="dash-panel" id="dash-adresses">
+      <p class="section-title">Mes adresses de livraison</p>
+      <div class="addr-grid" id="addr-list"></div>
+      <button class="btn-secondary" style="max-width:280px" onclick="toggleAddrForm()">+ Ajouter une adresse</button>
+      <div class="addr-form" id="addr-form">
+        <p class="section-title">Nouvelle adresse</p>
+        <div class="addr-form-grid">
+          <div class="field"><label>Prénom *</label><input type="text" id="af-prenom" placeholder="Marie"/></div>
+          <div class="field"><label>Nom *</label><input type="text" id="af-nom" placeholder="Dupont"/></div>
+          <div class="field span2"><label>Adresse *</label><input type="text" id="af-rue" placeholder="12 rue des Acacias"/></div>
+          <div class="field span2"><label>Complément</label><input type="text" id="af-complement" placeholder="Bât. B, apt. 42"/></div>
+          <div class="field"><label>Code postal *</label><input type="text" id="af-cp" placeholder="75001"/></div>
+          <div class="field"><label>Ville *</label><input type="text" id="af-ville" placeholder="Paris"/></div>
+          <div class="field span2">
+            <label>Pays *</label>
+            <select id="af-pays" style="padding:0.6rem 0.8rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.62rem;outline:none;width:100%">
+              <option>France</option><option>Belgique</option><option>Suisse</option>
+              <option>Luxembourg</option><option>Allemagne</option><option>Espagne</option>
+              <option>Italie</option><option>Pays-Bas</option><option>Portugal</option><option>Autriche</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.6rem;margin-top:0.4rem">
+          <button class="btn-primary" style="flex:1" onclick="saveAddress()">Enregistrer l'adresse</button>
+          <button class="btn-secondary" style="width:auto;padding:0.7rem 1rem" onclick="toggleAddrForm()">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAV -->
+    <div class="dash-panel" id="dash-sav">
+      <div class="sav-grid">
+        <div class="sav-card">
+          <h3>RETOURS</h3>
+          <p>14 jours après réception pour retourner un article intact.<br><br>
+          Contactez-nous avec votre numéro de commande :<br>
+          <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a></p>
+        </div>
+        <div class="sav-card">
+          <h3>RÉPARATIONS</h3>
+          <p>Défaut de fabrication dans le mois suivant la réception ? Réparation gratuite (retour à vos frais).<br><br>
+          <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a></p>
+        </div>
+        <div class="sav-card">
+          <h3>CONTACT</h3>
+          <p>Pour toute question :<br>
+          <a href="mailto:contact@bonanodi.fr">contact@bonanodi.fr</a><br><br>
+          Réponse sous 48h ouvrées.</p>
+        </div>
+        <div class="sav-card">
+          <h3>CGV</h3>
+          <p>Consultez nos <a href="cgv.html">Conditions Générales de Vente</a> complètes.<br><br>
+          Délais · Retours · Garanties légales · Données personnelles</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
   const SB_URL = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
-  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDv0FszLeyYw91zgE';
   const { createClient } = supabase;
   const sb = createClient(SB_URL, SB_KEY);
-  const fmtP = p => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p || 0);
+  const fmtP = p => new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p||0);
+  const fmtD = d => new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-  /* TABS */
-  document.querySelectorAll('.account-tab').forEach(t => {
-    t.addEventListener('click', () => {
-      document.querySelectorAll('.account-tab').forEach(x => x.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+  /* ── AUTH TABS ── */
+  document.querySelectorAll('.auth-tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.auth-panel').forEach(x=>x.classList.remove('active'));
       t.classList.add('active');
-      document.getElementById('tab-' + t.dataset.tab).classList.add('active');
-      if (t.dataset.tab === 'wishlist') renderWishlist();
+      document.getElementById('panel-'+t.dataset.auth).classList.add('active');
+    });
+  });
+  function showLogin(){
+    document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.auth-panel').forEach(x=>x.classList.remove('active'));
+    document.querySelector('[data-auth="login"]').classList.add('active');
+    document.getElementById('panel-login').classList.add('active');
+  }
+  function showResetPwd(){
+    document.querySelectorAll('.auth-panel').forEach(x=>x.classList.remove('active'));
+    document.getElementById('panel-reset').classList.add('active');
+  }
+
+  /* ── LOGIN ── */
+  async function doLogin(){
+    const email=document.getElementById('login-email').value.trim();
+    const pwd=document.getElementById('login-pwd').value;
+    const errEl=document.getElementById('login-err');
+    errEl.classList.remove('show');
+    if(!email||!pwd){errEl.textContent='Email et mot de passe requis.';errEl.classList.add('show');return;}
+    const{error}=await sb.auth.signInWithPassword({email,password:pwd});
+    if(error){errEl.textContent=error.message==='Invalid login credentials'?'Email ou mot de passe incorrect.':error.message;errEl.classList.add('show');}
+  }
+
+  /* ── INSCRIPTION ── */
+  async function doRegister(){
+    const prenom=document.getElementById('reg-prenom').value.trim();
+    const email=document.getElementById('reg-email').value.trim();
+    const pwd=document.getElementById('reg-pwd').value;
+    const pwd2=document.getElementById('reg-pwd2').value;
+    const errEl=document.getElementById('reg-err');
+    const okEl=document.getElementById('reg-ok');
+    errEl.classList.remove('show');okEl.classList.remove('show');
+    if(!prenom||!email||!pwd){errEl.textContent='Tous les champs sont requis.';errEl.classList.add('show');return;}
+    if(pwd.length<8){errEl.textContent='Le mot de passe doit faire au moins 8 caractères.';errEl.classList.add('show');return;}
+    if(pwd!==pwd2){errEl.textContent='Les mots de passe ne correspondent pas.';errEl.classList.add('show');return;}
+    const{error}=await sb.auth.signUp({email,password:pwd,options:{data:{prenom}}});
+    if(error){errEl.textContent=error.message;errEl.classList.add('show');}
+    else{okEl.textContent='Compte créé ! Vérifiez votre email pour confirmer votre inscription.';okEl.classList.add('show');}
+  }
+
+  /* ── RESET PASSWORD ── */
+  async function doReset(){
+    const email=document.getElementById('reset-email').value.trim();
+    const okEl=document.getElementById('reset-ok');
+    const errEl=document.getElementById('reset-err');
+    if(!email){errEl.textContent='Email requis.';errEl.classList.add('show');return;}
+    const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/compte.html'});
+    if(error){errEl.textContent=error.message;errEl.classList.add('show');}
+    else{okEl.textContent='Lien envoyé ! Vérifiez votre boîte email.';okEl.classList.add('show');}
+  }
+
+  /* ── LOGOUT ── */
+  async function doLogout(){
+    await sb.auth.signOut();
+    document.getElementById('dashboard').style.display='none';
+    document.getElementById('auth-screen').style.display='flex';
+  }
+
+  /* ── SESSION ── */
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(session?.user){
+      document.getElementById('auth-screen').style.display='none';
+      document.getElementById('dashboard').style.display='block';
+      const prenom=session.user.user_metadata?.prenom||'';
+      document.getElementById('dash-greeting').textContent=prenom?'BONJOUR '+prenom.toUpperCase():'MON ESPACE';
+      document.getElementById('dash-email').textContent=session.user.email;
+      loadOrders(session.user.id);
+      loadAddresses(session.user.id);
+      /* Migrer la wishlist locale vers Supabase */
+      migrateLocalWishlist(session.user.id);
+    }
+  });
+
+  /* ── DASH TABS ── */
+  document.querySelectorAll('.dash-tab').forEach(t=>{
+    t.addEventListener('click',async()=>{
+      document.querySelectorAll('.dash-tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.dash-panel').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('dash-'+t.dataset.dash).classList.add('active');
+      const{data:{user}}=await sb.auth.getUser();
+      if(t.dataset.dash==='wishlist'&&user) loadWishlist(user.id);
     });
   });
 
-  /* Ouvrir depuis URL hash */
-  if (window.location.hash === '#commandes') document.querySelector('[data-tab="commandes"]').click();
-  if (window.location.hash === '#wishlist')  { document.querySelector('[data-tab="wishlist"]').click(); }
-
   /* ── COMMANDES ── */
-  const STATUT_LABELS = {
-    en_attente: 'En attente',
-    confirme:   'Confirmé',
-    en_cours:   'En préparation',
-    expedie:    'Expédié',
-    livre:      'Livré',
-    annule:     'Annulé'
-  };
+  const STATUTS={en_attente:'En attente',confirme:'Confirmé',en_cours:'En préparation',expedie:'Expédié',livre:'Livré',annule:'Annulé'};
 
-  async function searchOrder() {
-    const num   = (document.getElementById('order-num-input').value || '').trim().toUpperCase();
-    const email = (document.getElementById('order-email-input').value || '').trim().toLowerCase();
-    const res   = document.getElementById('order-result');
-
-    if (!num || !email) { res.innerHTML = '<p class="order-error">Merci de renseigner le numéro de commande et l\'email.</p>'; return; }
-
-    res.innerHTML = '<div class="spinner"></div>';
-
-    const { data, error } = await sb
-      .from('commandes')
-      .select('*')
-      .eq('numero_commande', num)
-      .ilike('client_email', email)
-      .limit(1);
-
-    if (error || !data?.length) {
-      res.innerHTML = '<p class="order-error">Commande introuvable. Vérifiez le numéro et l\'email utilisé lors de la commande.</p>';
+  async function loadOrders(userId){
+    const sp=document.getElementById('orders-spinner');
+    const el=document.getElementById('orders-list');
+    sp.style.display='block';el.innerHTML='';
+    const{data,error}=await sb.from('commandes').select('*').eq('user_id',userId).order('created_at',{ascending:false});
+    sp.style.display='none';
+    if(error||!data?.length){
+      el.innerHTML='<div class="orders-empty"><p>Aucune commande pour le moment</p><a href="index.html#boutique">Découvrir la boutique →</a></div>';
       return;
     }
-
-    const o = data[0];
-    const statut = o.statut || 'en_attente';
-    const produits = o.produits || [];
-    const adresse = o.client_adresse || {};
-
-    res.innerHTML = `
-      <div class="order-card">
-        <p class="order-num">${o.numero_commande || num}</p>
-        <div class="order-meta">
-          <span class="order-statut statut-${statut}">${STATUT_LABELS[statut] || statut}</span>
-          <span>Passée le ${new Date(o.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })}</span>
-          ${adresse.ville ? `<span>→ ${adresse.ville}, ${adresse.pays || ''}</span>` : ''}
+    el.innerHTML=data.map((o,i)=>`
+      <div class="order-card" id="oc-${i}">
+        <div class="order-card-header" onclick="document.getElementById('oc-${i}').classList.toggle('expanded')">
+          <div>
+            <p class="order-num">${o.numero_commande||'—'}</p>
+            <p class="order-date">${fmtD(o.created_at)}</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap">
+            <span class="order-statut s-${o.statut||'en_attente'}">${STATUTS[o.statut]||o.statut}</span>
+            <span class="order-total-pill">${fmtP(o.total)}</span>
+            <span class="order-toggle">▼</span>
+          </div>
         </div>
-        <div class="order-items">
-          ${produits.map(p => `
-            <div class="order-item">
-              <div><p class="order-item-name">${p.name || p.ref}</p><p class="order-item-qty">× ${p.qty}</p></div>
-              <span class="order-item-price">${fmtP(p.prix * p.qty)}</span>
-            </div>`).join('')}
+        <div class="order-detail">
+          <div class="order-items-list">
+            ${(o.produits||[]).map(p=>`
+              <div class="order-item-row">
+                <div><p class="order-item-name">${p.name||p.ref}</p><p class="order-item-qty">× ${p.qty}</p></div>
+                <span class="order-item-price">${fmtP(p.prix*p.qty)}</span>
+              </div>`).join('')}
+          </div>
+          <div class="order-meta-grid">
+            <div class="order-meta-block">
+              <p>Livraison</p>
+              <p>${o.mode_envoi||'—'}</p>
+            </div>
+            <div class="order-meta-block">
+              <p>Adresse</p>
+              <p>${o.client_adresse?o.client_adresse.rue+', '+o.client_adresse.cp+' '+o.client_adresse.ville:'—'}</p>
+            </div>
+            ${o.message_client?`<div class="order-meta-block" style="grid-column:1/-1"><p>Message</p><p>${o.message_client}</p></div>`:''}
+          </div>
+          ${o.numero_suivi?`<div class="suivi-box"><p>📦 Numéro de suivi : <strong>${o.numero_suivi}</strong></p></div>`:''}
         </div>
-        <div class="order-total">
-          <span class="order-total-label">Total payé</span>
-          <span class="order-total-val">${fmtP(o.total)}</span>
-        </div>
-        ${o.numero_suivi ? `<div class="order-suivi"><p>📦 Numéro de suivi : <strong>${o.numero_suivi}</strong></p></div>` : ''}
-        ${o.delai_estime ? `<p style="font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);letter-spacing:0.1em;margin-top:0.8rem">⏱ ${o.delai_estime}</p>` : ''}
-      </div>`;
+      </div>`).join('');
   }
 
-  document.getElementById('order-num-input').addEventListener('keydown', e => { if (e.key === 'Enter') searchOrder(); });
-  document.getElementById('order-email-input').addEventListener('keydown', e => { if (e.key === 'Enter') searchOrder(); });
-
   /* ── WISHLIST ── */
-  function getWishlist() { try { return JSON.parse(localStorage.getItem('bn_wishlist') || '[]'); } catch { return []; } }
-  function saveWishlist(w) { localStorage.setItem('bn_wishlist', JSON.stringify(w)); }
+  async function migrateLocalWishlist(userId){
+    try{
+      const local=JSON.parse(localStorage.getItem('bn_wishlist')||'[]');
+      if(!local.length)return;
+      const inserts=local.map(ref=>({user_id:userId,bij_ref:ref}));
+      await sb.from('wishlists').upsert(inserts,{onConflict:'user_id,bij_ref',ignoreDuplicates:true});
+      localStorage.removeItem('bn_wishlist');
+    }catch(e){}
+  }
 
-  async function renderWishlist() {
-    const wrap = document.getElementById('wishlist-wrap');
-    const refs = getWishlist();
-
-    if (!refs.length) {
-      wrap.innerHTML = `<div class="wishlist-empty"><p>Votre wishlist est vide</p><a href="index.html#boutique">Découvrir la boutique →</a></div>`;
+  async function loadWishlist(userId){
+    document.getElementById('wish-spinner').style.display='block';
+    document.getElementById('wishlist-wrap').innerHTML='';
+    const{data:wItems}=await sb.from('wishlists').select('bij_ref').eq('user_id',userId);
+    if(!wItems?.length){
+      document.getElementById('wish-spinner').style.display='none';
+      document.getElementById('wishlist-wrap').innerHTML='<div class="wish-empty"><p>Votre wishlist est vide</p><a href="index.html#boutique">Découvrir la boutique →</a></div>';
       return;
     }
-
-    wrap.innerHTML = '<div class="spinner"></div>';
-
-    const [{ data: bijoux }, { data: content }] = await Promise.all([
-      sb.from('bijoux').select('*').in('ref', refs),
-      sb.from('boutique_content').select('*').in('ref', refs)
+    const refs=wItems.map(w=>w.bij_ref);
+    const[{data:bijoux},{data:content}]=await Promise.all([
+      sb.from('bijoux').select('*').in('ref',refs),
+      sb.from('boutique_content').select('*').in('ref',refs)
     ]);
-
-    const contentMap = {};
-    if (content) content.forEach(r => { contentMap[r.ref] = r; });
-
-    if (!bijoux?.length) { wrap.innerHTML = '<div class="wishlist-empty"><p>Produits introuvables</p></div>'; return; }
-
-    wrap.innerHTML = `<div class="wishlist-grid">
-      ${bijoux.map(b => {
-        const c = contentMap[b.ref] || {};
-        const name  = c.nom_public || b.nom || b.ref || '—';
-        const photo = c.photo_principale || (c.photos && c.photos[0]) || null;
-        const prix  = b.pv != null ? parseFloat(b.pv) : null;
-        return `<div class="wishlist-card" onclick="window.location.href='product.html?ref=${encodeURIComponent(b.ref)}'">
-          ${photo ? `<img class="wishlist-card-img" src="${photo}" alt="${name}" loading="lazy">` : '<div class="wishlist-card-img-ph">📷</div>'}
-          <button class="wishlist-del" onclick="removeWish('${b.ref}',event)" title="Retirer de la wishlist">✕</button>
-          <div class="wishlist-card-info">
-            <p class="wishlist-card-name">${name}</p>
-            ${prix != null ? `<p class="wishlist-card-price">${fmtP(prix)}</p>` : ''}
+    document.getElementById('wish-spinner').style.display='none';
+    const cMap={};if(content)content.forEach(r=>{cMap[r.ref]=r;});
+    document.getElementById('wishlist-wrap').innerHTML=`<div class="wishlist-grid">
+      ${(bijoux||[]).map(b=>{
+        const c=cMap[b.ref]||{};
+        const name=c.nom_public||b.nom||b.ref||'—';
+        const photo=c.photo_principale||(c.photos&&c.photos[0])||null;
+        const prix=b.pv!=null?parseFloat(b.pv):null;
+        return `<div class="wish-card" onclick="window.location.href='product.html?ref=${encodeURIComponent(b.ref)}'">
+          ${photo?`<img class="wish-img" src="${photo}" alt="${name}" loading="lazy">`:'<div class="wish-ph">📷</div>'}
+          <button class="wish-del" onclick="removeWish('${b.ref}',event,${JSON.stringify(userId).replace(/"/g,'&quot;')})">✕</button>
+          <div class="wish-info">
+            <p class="wish-name">${name}</p>
+            ${prix!=null?`<p class="wish-price">${fmtP(prix)}</p>`:''}
           </div>
         </div>`;
       }).join('')}
     </div>`;
   }
 
-  function removeWish(ref, e) {
+  async function removeWish(ref,e,userId){
     e.stopPropagation();
-    const w = getWishlist().filter(r => r !== ref);
-    saveWishlist(w);
-    renderWishlist();
+    await sb.from('wishlists').delete().eq('user_id',userId).eq('bij_ref',ref);
+    loadWishlist(userId);
   }
 
-  /* Init */
-  if (window.location.hash === '#wishlist') renderWishlist();
+  /* ── ADRESSES ── */
+  async function loadAddresses(userId){
+    const{data}=await sb.from('adresses').select('*').eq('user_id',userId).order('created_at');
+    const el=document.getElementById('addr-list');
+    if(!data?.length){el.innerHTML='<p style="font-family:var(--font-mono);font-size:0.56rem;color:var(--silver);letter-spacing:0.1em">Aucune adresse enregistrée.</p>';return;}
+    el.innerHTML=data.map(a=>`
+      <div class="addr-card ${a.est_defaut?'is-defaut':''}">
+        ${a.est_defaut?'<span class="addr-defaut-badge">Adresse principale</span>':''}
+        <p class="addr-name">${a.prenom||''} ${a.nom||''}</p>
+        <p class="addr-line">${a.rue||''}<br>${a.complement?a.complement+'<br>':''}${a.cp||''} ${a.ville||''}<br>${a.pays||''}</p>
+        <div class="addr-actions">
+          ${!a.est_defaut?`<button class="btn-sm" onclick="setDefaultAddr('${a.id}','${userId}')">Définir principale</button>`:''}
+          <button class="btn-sm del" onclick="deleteAddr('${a.id}','${userId}')">Supprimer</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function toggleAddrForm(){document.getElementById('addr-form').classList.toggle('open');}
+
+  async function saveAddress(){
+    const{data:{user}}=await sb.auth.getUser();if(!user)return;
+    const prenom=document.getElementById('af-prenom').value.trim();
+    const nom=document.getElementById('af-nom').value.trim();
+    const rue=document.getElementById('af-rue').value.trim();
+    const cp=document.getElementById('af-cp').value.trim();
+    const ville=document.getElementById('af-ville').value.trim();
+    if(!prenom||!nom||!rue||!cp||!ville){toast('Remplir tous les champs obligatoires');return;}
+    const{error}=await sb.from('adresses').insert([{
+      user_id:user.id,prenom,nom,rue,
+      complement:document.getElementById('af-complement').value.trim()||null,
+      cp,ville,pays:document.getElementById('af-pays').value,
+      est_defaut:false
+    }]);
+    if(error){toast('Erreur : '+error.message);return;}
+    toggleAddrForm();
+    ['af-prenom','af-nom','af-rue','af-complement','af-cp','af-ville'].forEach(id=>{document.getElementById(id).value='';});
+    loadAddresses(user.id);toast('Adresse enregistrée ✦');
+  }
+
+  async function setDefaultAddr(id,userId){
+    await sb.from('adresses').update({est_defaut:false}).eq('user_id',userId);
+    await sb.from('adresses').update({est_defaut:true}).eq('id',id);
+    loadAddresses(userId);
+  }
+  async function deleteAddr(id,userId){
+    if(!confirm('Supprimer cette adresse ?'))return;
+    await sb.from('adresses').delete().eq('id',id);
+    loadAddresses(userId);
+  }
+
+  /* Enter key sur login */
+  document.getElementById('login-pwd').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('login-email').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 </script>
 </body>
 </html>
