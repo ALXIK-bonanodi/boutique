@@ -47,7 +47,10 @@
     .auth-err.show{display:block}
     .auth-ok{font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--ok);padding:0.6rem 0.8rem;border:1px solid rgba(126,207,138,0.3);background:rgba(126,207,138,0.06);display:none}
     .auth-ok.show{display:block}
-    .auth-sep{display:flex;align-items:center;gap:0.8rem;margin:0.3rem 0}
+    .pwd-wrap{position:relative;display:flex;align-items:center}
+    .pwd-wrap input{flex:1;padding-right:2.5rem}
+    .pwd-eye{position:absolute;right:0.6rem;background:none;border:none;color:var(--silver);cursor:pointer;font-size:1rem;padding:0.2rem;transition:color 0.2s;line-height:1}
+    .pwd-eye:hover{color:var(--cream)}
     .auth-sep-line{flex:1;height:1px;background:var(--border)}
     .auth-sep span{font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver)}
 
@@ -174,7 +177,7 @@
         <p class="auth-sub">Connectez-vous à votre espace Bona Nodi</p>
       </div>
       <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="votre@email.fr"/></div>
-      <div class="field"><label>Mot de passe</label><input type="password" id="login-pwd" placeholder="••••••••"/></div>
+      <div class="field"><label>Mot de passe</label><div class="pwd-wrap"><input type="password" id="login-pwd" placeholder="••••••••"/><button class="pwd-eye" type="button" onclick="togglePwd('login-pwd',this)" title="Voir le mot de passe">👁</button></div></div>
       <div class="auth-err" id="login-err"></div>
       <button class="btn-primary" onclick="doLogin()">Se connecter →</button>
       <div class="auth-sep"><div class="auth-sep-line"></div><span>ou</span><div class="auth-sep-line"></div></div>
@@ -192,8 +195,8 @@
       </div>
       <div class="field"><label>Prénom *</label><input type="text" id="reg-prenom" placeholder="Marie"/></div>
       <div class="field"><label>Email *</label><input type="email" id="reg-email" placeholder="votre@email.fr"/></div>
-      <div class="field"><label>Mot de passe *</label><input type="password" id="reg-pwd" placeholder="8 caractères minimum"/></div>
-      <div class="field"><label>Confirmer le mot de passe *</label><input type="password" id="reg-pwd2" placeholder="••••••••"/></div>
+      <div class="field"><label>Mot de passe *</label><div class="pwd-wrap"><input type="password" id="reg-pwd" placeholder="8 caractères minimum"/><button class="pwd-eye" type="button" onclick="togglePwd('reg-pwd',this)" title="Voir le mot de passe">👁</button></div></div>
+      <div class="field"><label>Confirmer le mot de passe *</label><div class="pwd-wrap"><input type="password" id="reg-pwd2" placeholder="••••••••"/><button class="pwd-eye" type="button" onclick="togglePwd('reg-pwd2',this)" title="Voir le mot de passe">👁</button></div></div>
       <div class="auth-err" id="reg-err"></div>
       <div class="auth-ok" id="reg-ok"></div>
       <button class="btn-primary" onclick="doRegister()">Créer mon compte →</button>
@@ -314,12 +317,27 @@
 
 <script>
   const SB_URL = 'https://twtstslwhvrhmjfcfvvu.supabase.co';
-  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDv0FszLeyYw91zgE';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3dHN0c2x3aHZyaG1qZmNmdnZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTQ1MzcsImV4cCI6MjA5MDQ3MDUzN30.11Ejag3jxcBtx9unK33dnaCjSIJDu0FszLeyYw91zgE';
   const { createClient } = supabase;
   const sb = createClient(SB_URL, SB_KEY);
   const fmtP = p => new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(p||0);
   const fmtD = d => new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
   function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+  /* ── VOIR MOT DE PASSE ── */
+  function togglePwd(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🙈';
+      btn.title = 'Cacher le mot de passe';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁';
+      btn.title = 'Voir le mot de passe';
+    }
+  }
 
   /* ── AUTH TABS ── */
   document.querySelectorAll('.auth-tab').forEach(t=>{
