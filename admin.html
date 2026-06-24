@@ -1483,71 +1483,163 @@
   }
 
   /* ── BIBLIOTHÈQUE PERLES ── */
-  let perlesImages = {}; /* { mat_id: { swatch, dos, ventre, queue } } */
+  /* perlesImages[mat_id] = { visible, swatch, dos, ventre, queue } */
+  let perlesImages = {};
+  let perlesFiltreCateg = 'all';
+  let allMatsPerles = [];
 
   async function loadPerlesLibrary() {
     const el = document.getElementById('perles-library-list');
     el.innerHTML = '<div style="text-align:center;padding:2rem"><div class="spinner"></div></div>';
 
-    /* Charger les perles depuis materiaux — filtre sur sc ou designation */
+    /* Charger TOUS les matériaux de type création + perles */
     const { data: mats, error } = await sb.from('materiaux')
       .select('id, mc, sc, designation, variante, prix, qty')
-      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%')
-      .order('variante');
+      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,mc.ilike.%perle%,mc.ilike.%création%,mc.ilike.%creation%')
+      .order('sc').order('variante');
 
     if (error || !mats?.length) {
-      el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.56rem;color:var(--silver);padding:1rem">Aucune perle trouvée dans materiaux (filtre sur "perle" dans le nom).</p>';
+      el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.56rem;color:var(--silver);padding:1rem">Aucun matériau trouvé.</p>';
       return;
     }
+    allMatsPerles = mats;
 
-    /* Charger les images existantes */
+    /* Charger les images + visibilité */
     const { data: imgSet } = await sb.from('boutique_settings').select('value').eq('key', 'perles_images').single();
     perlesImages = imgSet?.value || {};
 
+    /* Construire les catégories uniques */
+    const categs = ['all', ...new Set(mats.map(m => m.sc).filter(Boolean))];
+    renderPerlesFiltres(categs);
+    renderPerlesList();
+  }
+
+  function renderPerlesFiltres(categs) {
+    const existing = document.getElementById('perles-filtres');
+    if (existing) existing.remove();
+    const bar = document.createElement('div');
+    bar.id = 'perles-filtres';
+    bar.style.cssText = 'margin-bottom:1rem';
+    /* Ligne 1 : boutons filtre catégorie */
+    const filtLine = document.createElement('div');
+    filtLine.style.cssText = 'display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.5rem';
+    filtLine.innerHTML = categs.map(c => `
+      <button onclick="filtrerPerles('${c}',this)"
+        style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.7rem;border:1px solid ${c===perlesFiltreCateg?'var(--fuchsia)':'var(--border)'};background:${c===perlesFiltreCateg?'rgba(196,40,110,0.15)':'transparent'};color:${c===perlesFiltreCateg?'var(--cream)':'var(--silver)'};cursor:pointer;transition:all 0.2s">
+        ${c === 'all' ? 'Toutes' : c}
+      </button>`).join('');
+    bar.appendChild(filtLine);
+    /* Ligne 2 : actions groupées pour la catégorie active */
+    const actLine = document.createElement('div');
+    actLine.id = 'perles-actions';
+    actLine.style.cssText = 'display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center';
+    actLine.innerHTML = `
+      <span style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver)">Visibilité :</span>
+      <button onclick="toggleAllVisible(true)"
+        style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.1em;padding:0.22rem 0.6rem;border:1px solid rgba(126,207,138,0.4);background:transparent;color:var(--ok);cursor:pointer;transition:all 0.2s"
+        onmouseover="this.style.background='rgba(126,207,138,0.1)'" onmouseout="this.style.background='transparent'">
+        ✓ Tout cocher
+      </button>
+      <button onclick="toggleAllVisible(false)"
+        style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.1em;padding:0.22rem 0.6rem;border:1px solid var(--border);background:transparent;color:var(--silver);cursor:pointer;transition:all 0.2s"
+        onmouseover="this.style.borderColor='var(--fuchsia)';this.style.color='var(--fuchsia-lt)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--silver)'">
+        ✕ Tout décocher
+      </button>
+      <span id="perles-count" style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.08em;color:var(--silver);margin-left:0.3rem"></span>`;
+    bar.appendChild(actLine);
+    document.getElementById('perles-library-list').before(bar);
+  }
+
+  function filtrerPerles(categ, btn) {
+    perlesFiltreCateg = categ;
+    document.querySelectorAll('#perles-filtres button').forEach(b => {
+      b.style.borderColor = 'var(--border)'; b.style.background = 'transparent'; b.style.color = 'var(--silver)';
+    });
+    btn.style.borderColor = 'var(--fuchsia)'; btn.style.background = 'rgba(196,40,110,0.15)'; btn.style.color = 'var(--cream)';
+    renderPerlesList();
+  }
+
+  async function toggleAllVisible(visible) {
+    const mats = perlesFiltreCateg === 'all' ? allMatsPerles : allMatsPerles.filter(m => m.sc === perlesFiltreCateg);
+    mats.forEach(m => {
+      if (!perlesImages[m.id]) perlesImages[m.id] = {};
+      perlesImages[m.id].visible = visible;
+    });
+    await saveSetting('perles_images', perlesImages);
+    renderPerlesList();
+    toast(`${mats.length} matériau(x) ${visible ? 'cochés ✦' : 'décochés'}`);
+  }
+
+  function renderPerlesList() {
+    const el = document.getElementById('perles-library-list');
+    const mats = perlesFiltreCateg === 'all' ? allMatsPerles : allMatsPerles.filter(m => m.sc === perlesFiltreCateg);
+    /* Mettre à jour le compteur */
+    const visibles = mats.filter(m => perlesImages[m.id]?.visible !== false).length;
+    const countEl = document.getElementById('perles-count');
+    if (countEl) countEl.textContent = `${visibles}/${mats.length} visible${visibles>1?'s':''} dans le configurateur`;
+    const VUES = [
+      { key: 'swatch', label: 'Swatch', desc: 'Rond sélection' },
+      { key: 'dos',    label: 'Dos',    desc: 'Vue dos' },
+      { key: 'ventre', label: 'Ventre', desc: 'Vue ventre' },
+      { key: 'queue',  label: 'Queue',  desc: 'Vue queue' }
+    ];
     el.innerHTML = mats.map(m => {
       const mid = m.id;
       const imgs = perlesImages[mid] || {};
+      const visible = imgs.visible !== false; /* visible par défaut */
       const nom = m.variante || m.designation || m.sc;
-      const VUES = [
-        { key: 'swatch', label: 'Swatch',  desc: 'Rond couleur' },
-        { key: 'dos',    label: 'Dos',     desc: 'Vue dos' },
-        { key: 'ventre', label: 'Ventre',  desc: 'Vue ventre' },
-        { key: 'queue',  label: 'Queue',   desc: 'Vue queue' }
-      ];
+      const imgCount = ['swatch','dos','ventre','queue'].filter(k=>imgs[k]).length;
       return `
-        <div style="background:var(--ink-md);border:1px solid var(--border);padding:1rem;margin-bottom:0.5rem">
-          <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem">
+        <div style="background:var(--ink-md);border:1px solid ${visible?'var(--border)':'rgba(100,100,100,0.2)'};padding:1rem;margin-bottom:0.4rem;opacity:${visible?1:0.55}">
+          <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:${visible?'0.8rem':'0'}">
             ${imgs.swatch
-              ? `<img src="${imgs.swatch}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--ok)">`
-              : `<div style="width:36px;height:36px;border-radius:50%;background:var(--ink-lt);border:2px dashed var(--border)"></div>`}
-            <div>
-              <p style="font-family:var(--font-display);font-size:1rem;letter-spacing:0.12em;color:var(--sand)">${nom}</p>
-              <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em">${m.mc} / ${m.sc} · ${m.qty || 0} en stock · ${m.prix ? fmtP(m.prix) : '—'}</p>
+              ? `<img src="${imgs.swatch}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--ok);flex-shrink:0">`
+              : `<div style="width:36px;height:36px;border-radius:50%;flex-shrink:0;background:var(--ink-lt);border:2px dashed var(--border)"></div>`}
+            <div style="flex:1;min-width:0">
+              <p style="font-family:var(--font-display);font-size:0.95rem;letter-spacing:0.1em;color:var(--sand)">${nom}</p>
+              <p style="font-family:var(--font-mono);font-size:0.44rem;color:var(--silver);letter-spacing:0.08em;margin-top:0.1rem">${m.sc||m.mc} · ${m.qty||0} en stock · ${m.prix?fmtP(m.prix):'—'}</p>
             </div>
-            <div style="margin-left:auto;font-family:var(--font-mono);font-size:0.46rem;color:${Object.keys(imgs).length === 4 ? 'var(--ok)' : 'var(--silver)'};letter-spacing:0.1em">
-              ${Object.keys(imgs).length}/4 images
+            <div style="display:flex;align-items:center;gap:0.6rem;flex-shrink:0">
+              <span style="font-family:var(--font-mono);font-size:0.44rem;color:${imgCount===4?'var(--ok)':'var(--silver)'}">${imgCount}/4</span>
+              <!-- TOGGLE VISIBLE CONFIGURATEUR -->
+              <div style="display:flex;align-items:center;gap:0.4rem;cursor:pointer" onclick="togglePerleVisible('${mid}','${nom}')">
+                <div style="width:32px;height:18px;border-radius:9px;background:${visible?'var(--fuchsia)':'var(--ink-lt)'};border:1px solid ${visible?'var(--fuchsia)':'var(--border)'};position:relative;transition:all 0.2s;flex-shrink:0">
+                  <div style="position:absolute;top:2px;${visible?'right:2px':'left:2px'};width:12px;height:12px;border-radius:50%;background:${visible?'var(--cream)':'var(--silver)'};transition:all 0.2s"></div>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.08em;text-transform:uppercase;color:${visible?'var(--cream)':'var(--silver)'}">
+                  ${visible?'Visible':'Masqué'}
+                </span>
+              </div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem">
+          ${visible ? `
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem">
             ${VUES.map(v => `
-              <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem;padding:0.6rem;background:rgba(232,201,122,0.03);border:1px solid ${imgs[v.key] ? 'rgba(126,207,138,0.4)' : 'var(--border)'}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:0.35rem;padding:0.5rem 0.3rem;background:rgba(232,201,122,0.03);border:1px solid ${imgs[v.key]?'rgba(126,207,138,0.4)':'var(--border)'}">
                 ${imgs[v.key]
-                  ? `<img src="${imgs[v.key]}" style="width:${v.key === 'swatch' ? '48px;height:48px;border-radius:50%' : '100%;height:56px;object-fit:contain'};border:1px solid var(--ok)">`
-                  : `<div style="width:${v.key === 'swatch' ? '48px;height:48px;border-radius:50%' : '100%;height:56px'};background:var(--ink-lt);border:1px dashed var(--border);display:flex;align-items:center;justify-content:center"><span style="font-size:1.2rem;opacity:0.3">📷</span></div>`}
-                <p style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver);text-align:center">${v.label}</p>
-                <p style="font-family:var(--font-mono);font-size:0.4rem;color:var(--silver);opacity:0.7;text-align:center">${v.desc}</p>
-                <label style="font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid var(--border);color:var(--silver);cursor:pointer;position:relative;transition:all 0.2s"
+                  ? `<img src="${imgs[v.key]}" style="width:${v.key==='swatch'?'44px;height:44px;border-radius:50%':'100%;height:50px;object-fit:contain'};border:1px solid var(--ok)">`
+                  : `<div style="width:${v.key==='swatch'?'44px;height:44px;border-radius:50%':'100%;height:50px'};background:var(--ink-lt);border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;opacity:0.3">📷</div>`}
+                <p style="font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--silver);text-align:center">${v.label}</p>
+                <label style="font-family:var(--font-mono);font-size:0.4rem;letter-spacing:0.08em;padding:0.18rem 0.45rem;border:1px solid var(--border);color:var(--silver);cursor:pointer;position:relative;transition:all 0.2s"
                   onmouseover="this.style.borderColor='var(--fuchsia)';this.style.color='var(--cream)'"
                   onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--silver)'">
                   Upload
                   <input type="file" accept="image/png,image/webp,image/jpeg" style="position:absolute;inset:0;opacity:0;cursor:pointer"
                     onchange="uploadPerleImg('${mid}','${v.key}',this.files,'${nom}')">
                 </label>
-                ${imgs[v.key] ? `<button onclick="removePerleImg('${mid}','${v.key}')" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-family:var(--font-mono);font-size:0.4rem;letter-spacing:0.06em">✕ Supprimer</button>` : ''}
+                ${imgs[v.key]?`<button onclick="removePerleImg('${mid}','${v.key}')" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-family:var(--font-mono);font-size:0.38rem">✕</button>`:''}
               </div>`).join('')}
-          </div>
+          </div>` : ''}
         </div>`;
     }).join('');
+  }
+
+  async function togglePerleVisible(matId, nom) {
+    if (!perlesImages[matId]) perlesImages[matId] = {};
+    perlesImages[matId].visible = perlesImages[matId].visible === false ? true : false;
+    await saveSetting('perles_images', perlesImages);
+    renderPerlesList();
+    toast((perlesImages[matId].visible ? '✦ ' + nom + ' visible' : nom + ' masqué') + ' dans le configurateur');
   }
 
   async function uploadPerleImg(matId, vue, files, nomPerle) {
@@ -1582,13 +1674,22 @@
     el.innerHTML = configModeles.map((m, i) => `
       <div style="background:var(--ink-md);border:1px solid var(--border);padding:1rem;margin-bottom:0.5rem">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.8rem">
-          <div>
-            <p style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.15em;color:var(--sand)">${m.nom}</p>
-            <p style="font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);margin-top:0.2rem">Réf: ${m.ref_bijou} · Prix base: ${fmtP(m.prix_base)} · ${m.parties.length} parties</p>
+          <div style="display:flex;align-items:center;gap:0.8rem">
+            ${m.bg_url ? `<img src="${m.bg_url}" style="width:52px;height:40px;object-fit:cover;border-radius:2px;border:1px solid var(--border)">` : ''}
+            <div>
+              <p style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:0.15em;color:var(--sand)">${m.nom}</p>
+              <p style="font-family:var(--font-mono);font-size:0.5rem;color:var(--silver);margin-top:0.2rem">Réf: ${m.ref_bijou} · Prix base: ${fmtP(m.prix_base)} · ${m.parties.length} parties</p>
+            </div>
           </div>
-          <div style="display:flex;gap:0.4rem">
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
             <button class="btn-adm" onclick="editModele(${i})">Modifier</button>
             <button class="btn-adm" onclick="manageParties(${i})">Gérer les parties & couleurs</button>
+            <!-- UPLOAD FOND -->
+            <label class="btn-adm" style="cursor:pointer;position:relative" title="Uploader un fond pour la prévisualisation">
+              🖼 Fond
+              <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer" onchange="uploadModeleBg(${i},this.files)">
+            </label>
+            ${m.bg_url ? `<button class="btn-adm" onclick="removeModeleBg(${i})" style="border-color:rgba(196,40,110,0.3);color:var(--fuchsia-lt)">✕ Fond</button>` : ''}
             <button class="btn-adm" onclick="deleteModele(${i})" style="border-color:rgba(196,40,110,0.3);color:var(--fuchsia-lt)">Supprimer</button>
           </div>
         </div>
@@ -1603,29 +1704,49 @@
         <!-- GESTION PARTIES & COULEURS (caché par défaut) -->
         <div id="parties-panel-${i}" style="display:none;margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem">
           ${m.parties.map((p, pi) => `
-            <div style="margin-bottom:1.5rem">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem">
-                <p style="font-family:var(--font-display);font-size:1.05rem;letter-spacing:0.12em;color:var(--sand)">${p.label}</p>
-                <button class="btn-adm" onclick="reloadCouleurs(${i},${pi})">↺ Sync depuis Materiaux</button>
+            <div style="margin-bottom:1.2rem;padding:0.8rem;background:rgba(232,201,122,0.02);border:1px solid var(--border)">
+              <!-- EN-TÊTE PARTIE -->
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.7rem">
+                <div>
+                  <p style="font-family:var(--font-display);font-size:1rem;letter-spacing:0.12em;color:var(--sand)">${p.label}</p>
+                  <p style="font-family:var(--font-mono);font-size:0.43rem;color:var(--silver);margin-top:0.1rem">
+                    ${(p.enabled_mats||[]).length} matériau(x) activé(s) sur ${p.couleurs?.length||0}
+                    · ${p.multi?'✦ Multi-sélection':'Sélection unique'}
+                  </p>
+                </div>
+                <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center">
+                  <button class="btn-adm" onclick="reloadCouleurs(${i},${pi})">↺ Sync</button>
+                  <button class="btn-adm" onclick="toggleMulti(${i},${pi})" style="${p.multi?'border-color:var(--ok);color:var(--ok)':''}">
+                    ${p.multi?'✓ Multi':'Multi'}
+                  </button>
+                  <button class="btn-adm" onclick="toggleAllMats(${i},${pi},true)">Tout ✓</button>
+                  <button class="btn-adm" onclick="toggleAllMats(${i},${pi},false)">Tout ✕</button>
+                  ${p.multi?`<div style="display:flex;align-items:center;gap:0.35rem">
+                    <label style="font-family:var(--font-mono);font-size:0.43rem;color:var(--silver)">+€ supp.</label>
+                    <input type="number" value="${p.supplement_prix||0}" min="0" step="0.5"
+                      style="width:55px;padding:0.22rem 0.45rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.58rem;outline:none"
+                      onchange="setSupplementPrix(${i},${pi},this.value)">
+                  </div>`:''}
+                </div>
               </div>
-              <p style="font-family:var(--font-mono);font-size:0.48rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.6rem">Couleurs disponibles — cliquer sur une couleur pour uploader son image PNG</p>
-              <div id="mats-grid-${i}-${pi}" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem">
+              <!-- GRILLE MATÉRIAUX AVEC CASES À COCHER -->
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:0.35rem;max-height:320px;overflow-y:auto">
                 ${(p.couleurs||[]).length === 0
-                  ? `<p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver);grid-column:1/-1">Aucune couleur — cliquer "Sync depuis Materiaux"</p>`
-                  : (p.couleurs||[]).map((c,ci) => `
-                    <div style="background:var(--ink-lt);border:1px solid ${c.image_url?'rgba(126,207,138,0.4)':'var(--border)'};padding:0.6rem;display:flex;flex-direction:column;align-items:center;gap:0.4rem;position:relative">
-                      ${c.image_url
-                        ? `<img src="${c.image_url}" style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:2px solid var(--ok)">`
-                        : `<div style="width:48px;height:48px;border-radius:50%;background:${getCouleurHexAdmin(c.nom)};border:2px dashed var(--border)"></div>`}
-                      <p style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--silver);text-align:center;line-height:1.4">${c.nom}</p>
-                      <label style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid var(--border);color:var(--silver);cursor:pointer;transition:all 0.2s;position:relative"
-                        onmouseover="this.style.borderColor='var(--fuchsia)';this.style.color='var(--cream)'"
-                        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--silver)'">
-                        📷 Upload
-                        <input type="file" accept="image/png,image/webp" style="position:absolute;inset:0;opacity:0;cursor:pointer" onchange="uploadMatImg(${i},${pi},${ci},this.files)">
-                      </label>
-                      ${c.image_url?`<button onclick="removeMatImg(${i},${pi},${ci})" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em">✕ Supprimer</button>`:''}
-                    </div>`).join('')}
+                  ? `<p style="font-family:var(--font-mono);font-size:0.48rem;color:var(--silver);grid-column:1/-1;padding:0.4rem 0">Aucun matériau — cliquer "↺ Sync"</p>`
+                  : (p.couleurs||[]).map((c,ci) => {
+                      const isEnabled = !p.enabled_mats || p.enabled_mats.includes(c.mat_id);
+                      return `<div onclick="toggleMatPartie(${i},${pi},'${c.mat_id}')"
+                        style="background:${isEnabled?'rgba(126,207,138,0.07)':'var(--ink-lt)'};border:1px solid ${isEnabled?'rgba(126,207,138,0.45)':'var(--border)'};padding:0.45rem 0.3rem;display:flex;flex-direction:column;align-items:center;gap:0.3rem;cursor:pointer;transition:all 0.18s;position:relative">
+                        <!-- Case à cocher visuelle -->
+                        <div style="position:absolute;top:3px;left:4px;width:13px;height:13px;border:1.5px solid ${isEnabled?'var(--ok)':'var(--silver)'};background:${isEnabled?'var(--ok)':'transparent'};border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;color:var(--ink);transition:all 0.18s">
+                          ${isEnabled?'✓':''}
+                        </div>
+                        ${perlesImages[c.mat_id]?.swatch
+                          ? `<img src="${perlesImages[c.mat_id].swatch}" style="width:38px;height:38px;object-fit:cover;border-radius:50%;border:2px solid ${isEnabled?'var(--ok)':'var(--border)'};margin-top:0.5rem">`
+                          : `<div style="width:38px;height:38px;border-radius:50%;background:${getCouleurHexAdmin(c.nom)};border:2px solid ${isEnabled?'var(--ok)':'var(--border)'};margin-top:0.5rem;opacity:${isEnabled?1:0.45}"></div>`}
+                        <p style="font-family:var(--font-mono);font-size:0.38rem;letter-spacing:0.05em;text-transform:uppercase;color:${isEnabled?'var(--cream)':'var(--silver)'};text-align:center;line-height:1.3">${c.nom}</p>
+                      </div>`;
+                    }).join('')}
               </div>
             </div>`).join('')}
         </div>
@@ -1635,6 +1756,78 @@
   function manageParties(i) {
     const panel = document.getElementById('parties-panel-' + i);
     if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function uploadModeleBg(mi, files) {
+    if (!files.length) return;
+    const f = files[0];
+    const path = 'configurateur/bg_' + configModeles[mi].id + '_' + Date.now() + '.' + f.name.split('.').pop();
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    configModeles[mi].bg_url = ud.publicUrl;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    toast('Fond uploadé ✦ — visible dans le configurateur');
+  }
+
+  async function removeModeleBg(mi) {
+    delete configModeles[mi].bg_url;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    toast('Fond supprimé');
+  }
+
+  async function toggleMatPartie(mi, pi, matId) {
+    const p = configModeles[mi].parties[pi];
+    /* enabled_mats = liste des mat_id activés. Si undefined = tous activés */
+    if (!p.enabled_mats) {
+      /* Initialiser avec tous les mat_ids sauf celui qu'on décoche */
+      p.enabled_mats = p.couleurs.map(c => c.mat_id).filter(id => id !== matId);
+    } else {
+      const idx = p.enabled_mats.indexOf(matId);
+      if (idx >= 0) p.enabled_mats.splice(idx, 1); /* décocher */
+      else p.enabled_mats.push(matId); /* cocher */
+    }
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+  }
+
+  async function toggleAllMats(mi, pi, enable) {
+    const p = configModeles[mi].parties[pi];
+    if (enable) {
+      p.enabled_mats = p.couleurs.map(c => c.mat_id);
+    } else {
+      p.enabled_mats = [];
+    }
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast(enable ? 'Tous les matériaux activés ✦' : 'Tous les matériaux désactivés');
+  }
+
+  async function toggleMulti(mi, pi) {
+    configModeles[mi].parties[pi].multi = !configModeles[mi].parties[pi].multi;
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
+    toast(`${configModeles[mi].parties[pi].label} — multi-sélection ${configModeles[mi].parties[pi].multi ? 'activée' : 'désactivée'}`);
+  }
+
+  async function setSupplementPrix(mi, pi, val) {
+    configModeles[mi].parties[pi].supplement_prix = parseFloat(val) || 0;
+    /* Appliquer aussi à chaque couleur de la partie */
+    (configModeles[mi].parties[pi].couleurs||[]).forEach(c => { c.supplement_prix = parseFloat(val)||0; });
+    await saveSetting('configurateur_modeles', configModeles);
+    toast('Prix supplément sauvegardé ✦');
+  }
+
+  async function removeCouleurFromPartie(mi, pi, ci) {
+    configModeles[mi].parties[pi].couleurs.splice(ci, 1);
+    await saveSetting('configurateur_modeles', configModeles);
+    renderConfigModeles();
+    document.getElementById('parties-panel-' + mi).style.display = 'block';
   }
 
   /* Couleur hex pour l'admin (inline, pas de module externe) */
