@@ -116,11 +116,13 @@ function bnBuildNav(cfg) {
             types.map(function(t){return '<a href="'+t.href+'">'+t.label+'</a>';}).join('') +
           '</div>' +
         '</div>' +
+        '<a href="configurateur.html" style="font-family:\'DM Mono\',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#e8c97a;padding:0.55rem 0.9rem;text-decoration:none;transition:opacity 0.2s;white-space:nowrap">✦ Créer mon poisson</a>' +
         '<div class="bn-nav-item">' +
           '<button class="bn-nav-btn">À propos <span class="bn-caret">▼</span></button>' +
           '<div class="bn-dropdown">' +
             '<a href="about.html">La créatrice</a>' +
             '<a href="entretien.html">Entretien des bijoux</a>' +
+            '<div class="bn-dd-sep"></div>' +
             '<a href="cgv.html#art8">SAV & Réparations</a>' +
             '<a href="contact.html">Contact</a>' +
           '</div>' +
@@ -140,6 +142,8 @@ function bnBuildNav(cfg) {
       cols.map(function(c){return '<a href="'+c.href+'">'+c.label+'</a>';}).join('') +
       '<span class="bn-mob-sec">Par type</span>' +
       types.map(function(t){return '<a href="'+t.href+'">'+t.label+'</a>';}).join('') +
+      '<span class="bn-mob-sec">Personnalisation</span>' +
+      '<a href="configurateur.html" style="color:#e8c97a">✦ Créer mon poisson</a>' +
       '<span class="bn-mob-sec">Infos</span>' +
       '<a href="about.html">À propos</a>' +
       '<a href="entretien.html">Entretien</a>' +
