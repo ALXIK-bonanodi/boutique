@@ -1494,11 +1494,31 @@
     const el = document.getElementById('perles-library-list');
     el.innerHTML = '<div style="text-align:center;padding:2rem"><div class="spinner"></div></div>';
 
-    /* Charger TOUS les matériaux de type création + perles + fermoirs */
-    const { data: mats, error } = await sb.from('materiaux')
-      .select('id, mc, sc, designation, variante, prix, qty')
-      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,sc.ilike.%fermoir%,sc.ilike.%anneau%,mc.ilike.%perle%,mc.ilike.%création%,mc.ilike.%creation%,designation.ilike.%fermoir%')
-      .order('sc').order('variante');
+    /* Charger matériaux + bijoux composition (type COMP) */
+    const [matsRes, bijRes] = await Promise.all([
+      sb.from('materiaux')
+        .select('id, mc, sc, designation, variante, prix, qty')
+        .or('sc.ilike.%rocaille%,sc.ilike.%perle%,sc.ilike.%fermoir%,sc.ilike.%anneau%,mc.ilike.%perle%,mc.ilike.%création%,mc.ilike.%creation%,designation.ilike.%fermoir%')
+        .order('sc').order('variante'),
+      sb.from('bijoux')
+        .select('id, ref, nom, variante, pv')
+        .or('ref.ilike.COMP%,nom.ilike.%arête%,nom.ilike.%arete%,nom.ilike.%composition%')
+        .order('nom')
+    ]);
+    /* Fusionner : bijoux composition traités comme matériaux */
+    const bijCompo = (bijRes.data || []).map(b => ({
+      id: 'bij_' + b.id,
+      mc: 'Bijoux composition',
+      sc: 'Bijoux composition',
+      designation: b.nom,
+      variante: b.variante || b.nom,
+      prix: parseFloat(b.pv || 0),
+      qty: 0,
+      _isBijou: true,
+      ref: b.ref
+    }));
+    const mats = [...(matsRes.data || []), ...bijCompo];
+    const error = matsRes.error;
 
     if (error || !mats?.length) {
       el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.56rem;color:var(--silver);padding:1rem">Aucun matériau trouvé.</p>';
@@ -1970,19 +1990,24 @@
   }
 
   async function reloadCouleurs(mi, pi) {
-    /* Charger les perles depuis materiaux */
+    /* Charger tous les matériaux pertinents avec sc et mc */
     const { data: mats } = await sb.from('materiaux')
       .select('id, mc, sc, designation, variante, prix, qty')
-      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%')
-      .order('variante');
-    if (!mats?.length) { toast('Aucune perle trouvée dans materiaux — vérifier le nom "perle"', true); return; }
+      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,sc.ilike.%fermoir%,sc.ilike.%anneau%,designation.ilike.%rocaille%,designation.ilike.%perle%,designation.ilike.%fermoir%')
+      .order('sc').order('variante');
+    if (!mats?.length) { toast('Aucun matériau trouvé', true); return; }
     configModeles[mi].parties[pi].couleurs = mats.map(m => ({
-      mat_id: m.id, nom: m.variante || m.designation || m.sc,
-      prix: parseFloat(m.prix || 0), stock: m.qty || 0
+      mat_id: m.id,
+      nom: m.variante || m.designation || m.sc,
+      sc: m.sc || '',
+      mc: m.mc || '',
+      prix: parseFloat(m.prix || 0),
+      stock: m.qty || 0
     }));
     await saveSetting('configurateur_modeles', configModeles);
     renderConfigModeles();
-    toast(`${mats.length} couleur(s) chargées pour ${configModeles[mi].parties[pi].label} ✦`);
+    setTimeout(renderAllPartieMatsGrids, 0);
+    toast(mats.length + ' matériau(x) chargés pour ' + configModeles[mi].parties[pi].label + ' ✦');
     document.getElementById('parties-panel-' + mi).style.display = 'block';
   }
 
