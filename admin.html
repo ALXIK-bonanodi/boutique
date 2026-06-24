@@ -377,14 +377,43 @@
 
     <!-- CONFIGURATEUR -->
     <div id="page-configurateur" style="display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
-        <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">Modèles de poissons configurables</p>
-        <div style="display:flex;gap:0.5rem">
-          <a href="configurateur.html" target="_blank" class="btn-adm">Voir le configurateur →</a>
-          <button class="btn-adm primary" onclick="openModeleModal(null)">+ Nouveau modèle</button>
+      <!-- SOUS-ONGLETS CONFIGURATEUR -->
+      <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.2rem">
+        <button class="tab active" data-ctab="modeles" onclick="switchConfigTab('modeles',this)">Modèles</button>
+        <button class="tab" data-ctab="perles" onclick="switchConfigTab('perles',this)">Bibliothèque de perles</button>
+      </div>
+
+      <!-- ONGLET MODÈLES -->
+      <div id="ctab-modeles">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
+          <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">Modèles de poissons configurables</p>
+          <div style="display:flex;gap:0.5rem">
+            <a href="configurateur.html" target="_blank" class="btn-adm">Voir le configurateur →</a>
+            <button class="btn-adm primary" onclick="openModeleModal(null)">+ Nouveau modèle</button>
+          </div>
+        </div>
+        <div id="config-modeles-list"></div>
+      </div>
+
+      <!-- ONGLET BIBLIOTHÈQUE PERLES -->
+      <div id="ctab-perles" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem">
+          <p style="font-family:var(--font-mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver)">
+            Images par référence perle — swatch + vues poisson
+          </p>
+          <button class="btn-adm" onclick="loadPerlesLibrary()">↺ Recharger depuis Materiaux</button>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.1em;color:var(--silver);margin-bottom:1rem;line-height:1.7;padding:0.7rem;background:rgba(232,201,122,0.04);border:1px solid var(--border)">
+          Pour chaque perle : uploader 4 images PNG fond transparent (800×600px recommandé).<br>
+          <strong style="color:var(--sand)">Swatch</strong> — rond de couleur pour la sélection ·
+          <strong style="color:var(--sand)">Dos</strong> — poisson vu du dessus ·
+          <strong style="color:var(--sand)">Ventre</strong> — poisson vu du dessous ·
+          <strong style="color:var(--sand)">Queue</strong> — nageoire caudale
+        </div>
+        <div id="perles-library-list">
+          <div style="text-align:center;padding:2rem"><div class="spinner"></div></div>
         </div>
       </div>
-      <div id="config-modeles-list"></div>
     </div>
 
     <!-- PAGE D'ACCUEIL -->
@@ -1423,7 +1452,104 @@
   let configModeles = [];
   let editingModeleIdx = null;
 
-  async function loadConfigurateur() {
+  function switchConfigTab(name, btn) {
+    document.getElementById('ctab-modeles').style.display = name === 'modeles' ? 'block' : 'none';
+    document.getElementById('ctab-perles').style.display  = name === 'perles'  ? 'block' : 'none';
+    document.querySelectorAll('[data-ctab]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (name === 'perles') loadPerlesLibrary();
+  }
+
+  /* ── BIBLIOTHÈQUE PERLES ── */
+  let perlesImages = {}; /* { mat_id: { swatch, dos, ventre, queue } } */
+
+  async function loadPerlesLibrary() {
+    const el = document.getElementById('perles-library-list');
+    el.innerHTML = '<div style="text-align:center;padding:2rem"><div class="spinner"></div></div>';
+
+    /* Charger les perles depuis materiaux */
+    const { data: mats, error } = await sb.from('materiaux')
+      .select('id, nom, variante, prix, stock')
+      .ilike('nom', '%perle%')
+      .order('variante');
+
+    if (error || !mats?.length) {
+      el.innerHTML = '<p style="font-family:var(--font-mono);font-size:0.56rem;color:var(--silver);padding:1rem">Aucune perle trouvée dans materiaux (filtre sur "perle" dans le nom).</p>';
+      return;
+    }
+
+    /* Charger les images existantes */
+    const { data: imgSet } = await sb.from('boutique_settings').select('value').eq('key', 'perles_images').single();
+    perlesImages = imgSet?.value || {};
+
+    el.innerHTML = mats.map(m => {
+      const mid = m.id;
+      const imgs = perlesImages[mid] || {};
+      const nom = m.variante || m.nom;
+      const VUES = [
+        { key: 'swatch', label: 'Swatch',  desc: 'Rond couleur' },
+        { key: 'dos',    label: 'Dos',     desc: 'Vue dos' },
+        { key: 'ventre', label: 'Ventre',  desc: 'Vue ventre' },
+        { key: 'queue',  label: 'Queue',   desc: 'Vue queue' }
+      ];
+      return `
+        <div style="background:var(--ink-md);border:1px solid var(--border);padding:1rem;margin-bottom:0.5rem">
+          <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem">
+            ${imgs.swatch
+              ? `<img src="${imgs.swatch}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--ok)">`
+              : `<div style="width:36px;height:36px;border-radius:50%;background:var(--ink-lt);border:2px dashed var(--border)"></div>`}
+            <div>
+              <p style="font-family:var(--font-display);font-size:1rem;letter-spacing:0.12em;color:var(--sand)">${nom}</p>
+              <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em">${m.nom} · ${m.stock || 0} en stock · ${m.prix ? fmtP(m.prix) : '—'}</p>
+            </div>
+            <div style="margin-left:auto;font-family:var(--font-mono);font-size:0.46rem;color:${Object.keys(imgs).length === 4 ? 'var(--ok)' : 'var(--silver)'};letter-spacing:0.1em">
+              ${Object.keys(imgs).length}/4 images
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem">
+            ${VUES.map(v => `
+              <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem;padding:0.6rem;background:rgba(232,201,122,0.03);border:1px solid ${imgs[v.key] ? 'rgba(126,207,138,0.4)' : 'var(--border)'}">
+                ${imgs[v.key]
+                  ? `<img src="${imgs[v.key]}" style="width:${v.key === 'swatch' ? '48px;height:48px;border-radius:50%' : '100%;height:56px;object-fit:contain'};border:1px solid var(--ok)">`
+                  : `<div style="width:${v.key === 'swatch' ? '48px;height:48px;border-radius:50%' : '100%;height:56px'};background:var(--ink-lt);border:1px dashed var(--border);display:flex;align-items:center;justify-content:center"><span style="font-size:1.2rem;opacity:0.3">📷</span></div>`}
+                <p style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--silver);text-align:center">${v.label}</p>
+                <p style="font-family:var(--font-mono);font-size:0.4rem;color:var(--silver);opacity:0.7;text-align:center">${v.desc}</p>
+                <label style="font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.5rem;border:1px solid var(--border);color:var(--silver);cursor:pointer;position:relative;transition:all 0.2s"
+                  onmouseover="this.style.borderColor='var(--fuchsia)';this.style.color='var(--cream)'"
+                  onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--silver)'">
+                  Upload
+                  <input type="file" accept="image/png,image/webp,image/jpeg" style="position:absolute;inset:0;opacity:0;cursor:pointer"
+                    onchange="uploadPerleImg('${mid}','${v.key}',this.files,'${nom}')">
+                </label>
+                ${imgs[v.key] ? `<button onclick="removePerleImg('${mid}','${v.key}')" style="background:transparent;border:none;color:var(--fuchsia-lt);cursor:pointer;font-family:var(--font-mono);font-size:0.4rem;letter-spacing:0.06em">✕ Supprimer</button>` : ''}
+              </div>`).join('')}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function uploadPerleImg(matId, vue, files, nomPerle) {
+    if (!files.length) return;
+    const f = files[0];
+    const path = 'perles/' + matId + '_' + vue + '_' + Date.now() + '.' + f.name.split('.').pop();
+    const { error } = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: f.type });
+    if (error) { toast('Upload: ' + error.message, true); return; }
+    const { data: ud } = sb.storage.from(BUCKET).getPublicUrl(path);
+    if (!perlesImages[matId]) perlesImages[matId] = {};
+    perlesImages[matId][vue] = ud.publicUrl;
+    await saveSetting('perles_images', perlesImages);
+    toast(`${nomPerle} — ${vue} uploadé ✦`);
+    loadPerlesLibrary();
+  }
+
+  async function removePerleImg(matId, vue) {
+    if (!perlesImages[matId]) return;
+    delete perlesImages[matId][vue];
+    if (!Object.keys(perlesImages[matId]).length) delete perlesImages[matId];
+    await saveSetting('perles_images', perlesImages);
+    loadPerlesLibrary();
+    toast('Image supprimée');
+  }
     const { data } = await sb.from('boutique_settings').select('value').eq('key','configurateur_modeles').single();
     configModeles = data?.value || [];
     if (!configModeles.length) {
