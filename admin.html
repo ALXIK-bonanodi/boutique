@@ -1489,10 +1489,10 @@
     const el = document.getElementById('perles-library-list');
     el.innerHTML = '<div style="text-align:center;padding:2rem"><div class="spinner"></div></div>';
 
-    /* Charger les perles depuis materiaux */
+    /* Charger les perles depuis materiaux — filtre sur sc ou designation */
     const { data: mats, error } = await sb.from('materiaux')
-      .select('id, nom, variante, prix, stock')
-      .ilike('nom', '%perle%')
+      .select('id, nom, sc, designation, variante, prix, stock')
+      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%')
       .order('variante');
 
     if (error || !mats?.length) {
@@ -1695,8 +1695,8 @@
   async function reloadCouleurs(mi, pi) {
     /* Charger les perles depuis materiaux */
     const { data: mats } = await sb.from('materiaux')
-      .select('id, nom, variante, prix, stock')
-      .ilike('nom','%perle%')
+      .select('id, nom, sc, designation, variante, prix, stock')
+      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%')
       .order('variante');
     if (!mats?.length) { toast('Aucune perle trouvée dans materiaux — vérifier le nom "perle"', true); return; }
     configModeles[mi].parties[pi].couleurs = mats.map(m => ({
