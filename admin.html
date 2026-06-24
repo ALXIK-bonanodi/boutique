@@ -553,7 +553,7 @@
   const MATIERES_LIST = ['Acier inoxydable','Laiton','Métal','Cuivre','Argent','Or','Bronze','Verre','Cristal','Perles naturelles','Polystyrène','Acrylique','Coton','Fil nylon','Cordon ciré','Résine','Bois'];
   const BUILTIN_SLIDES = [
     {id:'__builtin_0',eyebrow:'✦ Collection artisanale · fait main',title:'BONA',title_em:'&',title2:'NODI',sub:'Entre la brutalité du métal et la douceur des perles.',btn_label:'→ Découvrir la boutique',btn_href:'#boutique',btn_style:'primary',photo:'',logo_url:'',pos:'left'},
-    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie en temps réel.',btn_label:'→ Personnaliser',btn_href:'product.html',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
+    {id:'__builtin_1',eyebrow:'✦ Personnalisation',title:'TON',title_em:'',title2:'POISSON',sub:'Choisis les couleurs de chaque partie en temps réel.',btn_label:'→ Personnaliser',btn_href:'configurateur.html',btn_style:'secondary',photo:'',logo_url:'',pos:'left'}
   ];
 
   const { createClient } = supabase;
@@ -1494,10 +1494,10 @@
     const el = document.getElementById('perles-library-list');
     el.innerHTML = '<div style="text-align:center;padding:2rem"><div class="spinner"></div></div>';
 
-    /* Charger TOUS les matériaux de type création + perles */
+    /* Charger TOUS les matériaux de type création + perles + fermoirs */
     const { data: mats, error } = await sb.from('materiaux')
       .select('id, mc, sc, designation, variante, prix, qty')
-      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,mc.ilike.%perle%,mc.ilike.%création%,mc.ilike.%creation%')
+      .or('sc.ilike.%rocaille%,sc.ilike.%perle%,sc.ilike.%fermoir%,sc.ilike.%anneau%,mc.ilike.%perle%,mc.ilike.%création%,mc.ilike.%creation%,designation.ilike.%fermoir%')
       .order('sc').order('variante');
 
     if (error || !mats?.length) {
@@ -1723,12 +1723,13 @@
                   </button>
                   <button class="btn-adm" onclick="toggleAllMats(${i},${pi},true)">Tout ✓</button>
                   <button class="btn-adm" onclick="toggleAllMats(${i},${pi},false)">Tout ✕</button>
-                  ${p.multi?`<div style="display:flex;align-items:center;gap:0.35rem">
-                    <label style="font-family:var(--font-mono);font-size:0.43rem;color:var(--silver)">+€ supp.</label>
+                  <div style="display:flex;align-items:center;gap:0.35rem">
+                    <label style="font-family:var(--font-mono);font-size:0.43rem;color:var(--silver)">Prix supp. €</label>
                     <input type="number" value="${p.supplement_prix||0}" min="0" step="0.5"
-                      style="width:55px;padding:0.22rem 0.45rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.58rem;outline:none"
-                      onchange="setSupplementPrix(${i},${pi},this.value)">
-                  </div>`:''}
+                      style="width:58px;padding:0.22rem 0.45rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.58rem;outline:none"
+                      onchange="setSupplementPrix(${i},${pi},this.value)"
+                      title="Prix ajouté au total si cette partie a un supplément sélectionné">
+                  </div>
                 </div>
               </div>
               <!-- GRILLE MATÉRIAUX AVEC CASES À COCHER + FILTRES CATÉGORIE -->

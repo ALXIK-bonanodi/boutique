@@ -605,30 +605,53 @@
     const{data:fermoirs}=await sb.from('materiaux').select('id,mc,sc,designation,variante,prix,qty').or('sc.ilike.%fermoir%,designation.ilike.%fermoir%,variante.ilike.%fermoir%').order('variante');
     const fl=fermoirs||[];
     let html='';
+
     if(bundles.length){
-      html+=`<div><p class="bundle-section-title">Choisir un bundle</p>
-        ${bundles.map((b,i)=>`<div class="bundle-card ${selectedBundle?.id===b.id?'selected':''}" onclick="selectBundle(${i})">
-          ${b.photo?`<img class="bundle-card-img" src="${b.photo}" alt="">`:'<div class="bundle-card-img"></div>'}
-          <span class="bundle-card-name">${b.nom||b.ref}</span>
-          <span class="bundle-card-price">${b.pv?fmtP(b.pv):''}</span>
-          <span class="bundle-card-check">${selectedBundle?.id===b.id?'✓':''}</span>
-        </div>`).join('')}</div>`;
+      html+='<div><p class="bundle-section-title">Choisir un bundle</p>';
+      bundles.forEach(function(b,i){
+        const isSel=selectedBundle&&selectedBundle.id===b.id;
+        const desc=b.description||b.variante||'';
+        html+='<div class="bundle-card '+(isSel?'selected':'')+'" onclick="selectBundle('+i+')" style="flex-direction:column;align-items:flex-start;gap:0.45rem">';
+        html+='<div style="display:flex;align-items:center;gap:0.6rem;width:100%">';
+        html+=(b.photo?'<img class="bundle-card-img" src="'+b.photo+'" alt="" style="flex-shrink:0">':'<div class="bundle-card-img" style="flex-shrink:0"></div>');
+        html+='<div style="flex:1;min-width:0"><span class="bundle-card-name" style="display:block">'+(b.nom||b.ref)+'</span>';
+        html+='<span style="font-family:var(--font-mono);font-size:0.44rem;letter-spacing:0.08em;color:var(--silver)">Réf. '+(b.ref||'—')+'</span></div>';
+        html+='<span class="bundle-card-price">'+(b.pv?fmtP(b.pv):'')+'</span>';
+        html+='<span class="bundle-card-check">'+(isSel?'✓':'')+'</span>';
+        html+='</div>';
+        if(desc) html+='<p style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.06em;color:var(--silver);line-height:1.5;padding:0.35rem 0.5rem;background:rgba(232,201,122,0.04);border:1px solid var(--border);width:100%">'+desc+'</p>';
+        html+='<div style="display:flex;gap:0.3rem;flex-wrap:wrap">';
+        ['Petit poisson personnalisé','Petite arête','Fermoir'].forEach(function(item){
+          html+='<span style="font-family:var(--font-mono);font-size:0.42rem;letter-spacing:0.06em;padding:0.12rem 0.4rem;border:1px solid var(--border);color:var(--silver)">'+item+'</span>';
+        });
+        html+='</div></div>';
+      });
+      html+='</div>';
     } else {
-      html+='<p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver)">Aucun bundle trouvé — ajouter des références contenant "bundle" ou "kit" dans l\'app de gestion.</p>';
+      html+='<p style="font-family:var(--font-mono);font-size:0.52rem;color:var(--silver)">Aucun bundle disponible.</p>';
     }
+
     if(fl.length){
-      html+=`<div><p class="bundle-section-title">Choisir un fermoir</p>
-        ${fl.map((f,i)=>`<div class="bundle-card ${selectedFermoir?.id===f.id?'selected':''}" onclick="selectFermoirItem(${i})" data-fi="${i}">
-          ${perlesImages[f.id]?.swatch?`<img class="bundle-card-img" src="${perlesImages[f.id].swatch}" alt="" style="border-radius:50%">`:`<div class="bundle-card-img" style="border-radius:50%;background:${hex(f.variante||f.sc||'')}"></div>`}
-          <span class="bundle-card-name">${f.variante||f.designation||f.sc}</span>
-          <span class="bundle-card-price">${f.prix?'+'+fmtP(f.prix):''}</span>
-          <span class="bundle-card-check">${selectedFermoir?.id===f.id?'✓':''}</span>
-        </div>`).join('')}
-      </div>`;
+      html+='<div><p class="bundle-section-title">Personnaliser le fermoir</p>';
+      fl.forEach(function(f,i){
+        const isSel=selectedFermoir&&selectedFermoir.id===f.id;
+        const swImg=perlesImages[f.id]&&perlesImages[f.id].swatch;
+        html+='<div class="bundle-card '+(isSel?'selected':'')+'" onclick="selectFermoirItem('+i+')" data-fi="'+i+'">';
+        html+=(swImg?'<img class="bundle-card-img" src="'+swImg+'" alt="" style="border-radius:50%;flex-shrink:0">':'<div class="bundle-card-img" style="border-radius:50%;background:'+hex(f.variante||f.sc||'')+';flex-shrink:0"></div>');
+        html+='<div style="flex:1;min-width:0"><span class="bundle-card-name" style="display:block">'+(f.variante||f.designation||f.sc)+'</span>';
+        if(f.sc&&f.sc!==f.variante) html+='<span style="font-family:var(--font-mono);font-size:0.42rem;color:var(--silver)">'+f.sc+'</span>';
+        html+='</div>';
+        html+='<span class="bundle-card-price">'+(f.prix?'+'+fmtP(f.prix):'inclus')+'</span>';
+        html+='<span class="bundle-card-check">'+(isSel?'✓':'')+'</span>';
+        html+='</div>';
+      });
+      html+='</div>';
     }
+
     body.innerHTML=html;
     body._fermoirs=fl;
   }
+
 
   function selectBundle(idx){selectedBundle=bundles[idx];renderBundlePanel();renderRecap();}
   function selectFermoirItem(idx){
