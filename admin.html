@@ -1452,6 +1452,28 @@
   let configModeles = [];
   let editingModeleIdx = null;
 
+  async function loadConfigurateur() {
+    const { data } = await sb.from('boutique_settings').select('value').eq('key','configurateur_modeles').single();
+    configModeles = data?.value || [];
+    if (!configModeles.length) {
+      const { data: bij } = await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
+      configModeles = [{
+        id: 'sardine', nom: 'Petit Poisson — Sardine',
+        ref_bijou: bij?.[0]?.ref || '',
+        prix_base: parseFloat(bij?.[0]?.pv || 0),
+        svg: 'sardine',
+        parties: [
+          { id: 'dos',     label: 'Dos',     description: '48 perles — partie dorsale', couleurs: [] },
+          { id: 'ventre',  label: 'Ventre',  description: '48 perles — partie ventrale', couleurs: [] },
+          { id: 'queue',   label: 'Queue',   description: '31 perles — nageoire caudale', couleurs: [] },
+          { id: 'yeux',    label: 'Yeux',    description: 'Iris de l\'œil + pupilles', couleurs: [] },
+          { id: 'fermoir', label: 'Fermoir', description: '2 perles + anneau de suspension', couleurs: [] }
+        ]
+      }];
+    }
+    renderConfigModeles();
+  }
+
   function switchConfigTab(name, btn) {
     document.getElementById('ctab-modeles').style.display = name === 'modeles' ? 'block' : 'none';
     document.getElementById('ctab-perles').style.display  = name === 'perles'  ? 'block' : 'none';
@@ -1549,27 +1571,6 @@
     await saveSetting('perles_images', perlesImages);
     loadPerlesLibrary();
     toast('Image supprimée');
-  }
-    const { data } = await sb.from('boutique_settings').select('value').eq('key','configurateur_modeles').single();
-    configModeles = data?.value || [];
-    if (!configModeles.length) {
-      /* Charger le modèle sardine par défaut depuis bijoux */
-      const { data: bij } = await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
-      configModeles = [{
-        id: 'sardine', nom: 'Petit Poisson — Sardine',
-        ref_bijou: bij?.[0]?.ref || '',
-        prix_base: parseFloat(bij?.[0]?.pv || 0),
-        svg: 'sardine',
-        parties: [
-          { id: 'dos',     label: 'Dos',     description: '48 perles — partie dorsale', couleurs: [] },
-          { id: 'ventre',  label: 'Ventre',  description: '48 perles — partie ventrale', couleurs: [] },
-          { id: 'queue',   label: 'Queue',   description: '31 perles — nageoire caudale', couleurs: [] },
-          { id: 'yeux',    label: 'Yeux',    description: 'Iris de l\'œil + pupilles', couleurs: [] },
-          { id: 'fermoir', label: 'Fermoir', description: '2 perles + anneau de suspension', couleurs: [] }
-        ]
-      }];
-    }
-    renderConfigModeles();
   }
 
   function renderConfigModeles() {
