@@ -274,8 +274,8 @@
   async function buildDefault(){
     const{data:bij}=await sb.from('bijoux').select('*').ilike('nom','%sardine%').limit(1);
     bijouBase=bij?.[0]||null;
-    const{data:mats}=await sb.from('materiaux').select('id,nom,sc,designation,variante,prix,stock').or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%').order('variante');
-    const perles=(mats||[]).map(m=>({mat_id:m.id,nom:m.variante||m.nom,prix:parseFloat(m.prix||0),stock:m.stock||0,image_url:null}));
+    const{data:mats}=await sb.from('materiaux').select('id,mc,sc,designation,variante,prix,qty').or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%').order('variante');
+    const perles=(mats||[]).map(m=>({mat_id:m.id,nom:m.variante||m.designation||m.sc,prix:parseFloat(m.prix||0),stock:m.qty||0,image_url:null}));
     return{id:'sardine',nom:'Petit Poisson — Sardine',ref_bijou:bijouBase?.ref||'',prix_base:parseFloat(bijouBase?.pv||0),svg:'sardine',
       parties:[
         {id:'dos',   label:'Dos',   couleurs:perles},

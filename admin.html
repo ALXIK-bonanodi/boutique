@@ -1491,7 +1491,7 @@
 
     /* Charger les perles depuis materiaux — filtre sur sc ou designation */
     const { data: mats, error } = await sb.from('materiaux')
-      .select('id, nom, sc, designation, variante, prix, stock')
+      .select('id, mc, sc, designation, variante, prix, qty')
       .or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%')
       .order('variante');
 
@@ -1507,7 +1507,7 @@
     el.innerHTML = mats.map(m => {
       const mid = m.id;
       const imgs = perlesImages[mid] || {};
-      const nom = m.variante || m.nom;
+      const nom = m.variante || m.designation || m.sc;
       const VUES = [
         { key: 'swatch', label: 'Swatch',  desc: 'Rond couleur' },
         { key: 'dos',    label: 'Dos',     desc: 'Vue dos' },
@@ -1522,7 +1522,7 @@
               : `<div style="width:36px;height:36px;border-radius:50%;background:var(--ink-lt);border:2px dashed var(--border)"></div>`}
             <div>
               <p style="font-family:var(--font-display);font-size:1rem;letter-spacing:0.12em;color:var(--sand)">${nom}</p>
-              <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em">${m.nom} · ${m.stock || 0} en stock · ${m.prix ? fmtP(m.prix) : '—'}</p>
+              <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);letter-spacing:0.08em">${m.mc} / ${m.sc} · ${m.qty || 0} en stock · ${m.prix ? fmtP(m.prix) : '—'}</p>
             </div>
             <div style="margin-left:auto;font-family:var(--font-mono);font-size:0.46rem;color:${Object.keys(imgs).length === 4 ? 'var(--ok)' : 'var(--silver)'};letter-spacing:0.1em">
               ${Object.keys(imgs).length}/4 images
@@ -1695,13 +1695,13 @@
   async function reloadCouleurs(mi, pi) {
     /* Charger les perles depuis materiaux */
     const { data: mats } = await sb.from('materiaux')
-      .select('id, nom, sc, designation, variante, prix, stock')
+      .select('id, mc, sc, designation, variante, prix, qty')
       .or('sc.ilike.%rocaille%,sc.ilike.%perle%,designation.ilike.%rocaille%,designation.ilike.%perle%')
       .order('variante');
     if (!mats?.length) { toast('Aucune perle trouvée dans materiaux — vérifier le nom "perle"', true); return; }
     configModeles[mi].parties[pi].couleurs = mats.map(m => ({
-      mat_id: m.id, nom: m.variante || m.nom,
-      prix: parseFloat(m.prix || 0), stock: m.stock || 0
+      mat_id: m.id, nom: m.variante || m.designation || m.sc,
+      prix: parseFloat(m.prix || 0), stock: m.qty || 0
     }));
     await saveSetting('configurateur_modeles', configModeles);
     renderConfigModeles();
