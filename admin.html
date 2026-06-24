@@ -1564,6 +1564,8 @@
     document.getElementById('parties-panel-' + mi).style.display = 'block';
     toast('Image supprimée');
   }
+
+  async function reloadCouleurs(mi, pi) {
     /* Charger les perles depuis materiaux */
     const { data: mats } = await sb.from('materiaux')
       .select('id, nom, variante, prix, stock')
