@@ -116,7 +116,7 @@ function bnBuildNav(cfg) {
             types.map(function(t){return '<a href="'+t.href+'">'+t.label+'</a>';}).join('') +
           '</div>' +
         '</div>' +
-        '<a href="configurateur.html" style="font-family:\'DM Mono\',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#e8c97a;padding:0.55rem 0.9rem;text-decoration:none;transition:opacity 0.2s;white-space:nowrap">✦ Créer mon poisson</a>' +
+        (pagesVis.configurateur !== false ? '<a href="configurateur.html" style="font-family:\'DM Mono\',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#e8c97a;padding:0.55rem 0.9rem;text-decoration:none;transition:opacity 0.2s;white-space:nowrap">✦ Créer mon poisson</a>' : '') +
         '<div class="bn-nav-item">' +
           '<button class="bn-nav-btn">À propos <span class="bn-caret">▼</span></button>' +
           '<div class="bn-dropdown">' +
@@ -142,8 +142,7 @@ function bnBuildNav(cfg) {
       cols.map(function(c){return '<a href="'+c.href+'">'+c.label+'</a>';}).join('') +
       '<span class="bn-mob-sec">Par type</span>' +
       types.map(function(t){return '<a href="'+t.href+'">'+t.label+'</a>';}).join('') +
-      '<span class="bn-mob-sec">Personnalisation</span>' +
-      '<a href="configurateur.html" style="color:#e8c97a">✦ Créer mon poisson</a>' +
+      (pagesVis.configurateur !== false ? '<span class="bn-mob-sec">Personnalisation</span><a href="configurateur.html" style="color:#e8c97a">✦ Créer mon poisson</a>' : '') +
       '<span class="bn-mob-sec">Infos</span>' +
       '<a href="about.html">À propos</a>' +
       '<a href="entretien.html">Entretien</a>' +
@@ -233,17 +232,24 @@ function bnInit() {
     var sb = window.supabase.createClient(BN_SB_URL, BN_SB_KEY);
     sb.from('boutique_settings')
       .select('key,value')
-      .in('key', ['nav_footer','instagram','tiktok','pinterest'])
+      .in('key', ['nav_footer','instagram','tiktok','pinterest','pages_visibility','offre_lancement'])
       .then(function(res) {
         var cfg = {};
+        var pagesVis = {};
+        var offre = {};
         if (res.data) {
           res.data.forEach(function(r) {
             if (r.key === 'nav_footer' && r.value) Object.assign(cfg, r.value);
+            else if (r.key === 'pages_visibility') pagesVis = r.value || {};
+            else if (r.key === 'offre_lancement') offre = r.value || {};
             else if (r.value) cfg[r.key] = r.value;
           });
         }
+        cfg.pagesVis = pagesVis;
+        cfg.offre = offre;
         bnBuildNav(cfg);
         bnBuildFooter(cfg);
+        bnBuildBandeau(offre);
       })
       .catch(function() {
         bnBuildNav({});
@@ -259,5 +265,38 @@ function bnInit() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', bnInit);
 } else {
-  bnInit();
+  
+/* ── BANDEAU OFFRE DE LANCEMENT ── */
+function bnBuildBandeau(offre) {
+  var existing = document.getElementById('bn-bandeau');
+  if (existing) existing.remove();
+  if (!offre || !offre.active || !offre.texte) return;
+
+  var colors = {
+    fuchsia: { bg: '#c4286e', text: '#faf5e8' },
+    sand:    { bg: '#e8c97a', text: '#1a1510' },
+    dark:    { bg: '#1a1510', text: '#e8c97a', border: '1px solid rgba(232,201,122,0.3)' }
+  };
+  var c = colors[offre.couleur] || colors.fuchsia;
+
+  var bar = document.createElement('div');
+  bar.id = 'bn-bandeau';
+  bar.style.cssText = 'background:' + c.bg + ';color:' + c.text + ';text-align:center;padding:0.55rem 1rem;position:relative;z-index:299;' + (c.border || '');
+  bar.innerHTML =
+    '<span style="font-family:\'DM Mono\',monospace;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase">' + offre.texte + '</span>' +
+    (offre.sous_texte ? '<span style="font-family:\'DM Mono\',monospace;font-size:0.48rem;letter-spacing:0.1em;opacity:0.8;margin-left:1rem">' + offre.sous_texte + '</span>' : '') +
+    '<button onclick="this.parentElement.style.display=\'none\'" style="position:absolute;right:0.8rem;top:50%;transform:translateY(-50%);background:transparent;border:none;color:' + c.text + ';cursor:pointer;font-size:1rem;opacity:0.7">✕</button>';
+
+  /* Insérer avant la navbar */
+  var nav = document.getElementById('bn-navbar');
+  if (nav) {
+    document.body.insertBefore(bar, nav);
+    /* Ajuster le padding-top pour compenser le bandeau */
+    document.body.style.paddingTop = (80 + bar.offsetHeight) + 'px';
+  } else {
+    document.body.insertBefore(bar, document.body.firstChild);
+  }
+}
+
+bnInit();
 }

@@ -480,6 +480,38 @@
           <div class="field"><label>Label autre réseau</label><input type="text" id="footer-autre-label" placeholder="Facebook, Etsy…"></div>
         </div>
         <button class="btn-adm primary" style="margin-top:0.8rem" onclick="saveFooter()">Sauvegarder le footer</button>
+
+        <!-- VISIBILITÉ DES PAGES -->
+        <div style="margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--border)">
+          <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.3rem">Visibilité des pages dans le menu</p>
+          <p style="font-family:var(--font-mono);font-size:0.46rem;color:var(--silver);margin-bottom:0.8rem;line-height:1.6">Masquer retire le lien du menu — la page reste accessible par son URL directe.</p>
+          <div id="pages-visibility-list" style="display:flex;flex-direction:column;gap:0.5rem;max-width:480px"></div>
+          <button class="btn-adm primary" style="margin-top:0.8rem" onclick="savePagesVisibility()">Sauvegarder la visibilité</button>
+        </div>
+
+        <!-- OFFRE DE LANCEMENT -->
+        <div style="margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--border)">
+          <p style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--silver);margin-bottom:0.8rem">Offre de lancement — bandeau accueil</p>
+          <div style="display:flex;flex-direction:column;gap:0.7rem;max-width:480px">
+            <div style="display:flex;align-items:center;gap:0.8rem">
+              <div id="offre-toggle" onclick="toggleOffreLancement()" style="width:36px;height:20px;border-radius:10px;background:var(--ink-lt);border:1px solid var(--border);position:relative;cursor:pointer;transition:all 0.2s;flex-shrink:0">
+                <div id="offre-toggle-dot" style="position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--silver);transition:all 0.2s"></div>
+              </div>
+              <span id="offre-toggle-label" style="font-family:var(--font-mono);font-size:0.52rem;letter-spacing:0.1em;color:var(--silver)">Offre désactivée</span>
+            </div>
+            <div class="field"><label>Texte du bandeau</label><input type="text" id="offre-texte" placeholder="🎁 2 porte-clés achetés = 1 fermoir rond offert"></div>
+            <div class="field"><label>Sous-texte (facultatif)</label><input type="text" id="offre-sous-texte" placeholder="Offre valable jusqu'au 31 décembre · Code automatique"></div>
+            <div class="field"><label>Code promo associé (facultatif)</label><input type="text" id="offre-code" placeholder="LANCEMENT2025"></div>
+            <div class="field"><label>Couleur fond bandeau</label>
+              <select id="offre-couleur" style="padding:0.48rem 0.72rem;background:var(--ink-lt);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:0.7rem;outline:none;width:100%">
+                <option value="fuchsia">Rose fuchsia (défaut)</option>
+                <option value="sand">Doré</option>
+                <option value="dark">Sombre</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-adm primary" style="margin-top:0.8rem" onclick="saveOffreLancement()">Sauvegarder l'offre</button>
+        </div>
       </div>
     </div>
 
@@ -854,6 +886,7 @@
     document.getElementById('footer-pinterest').value   = m.pinterest   || nf.pinterest   || '';
     document.getElementById('footer-autre').value       = nf.autre       || '';
     document.getElementById('footer-autre-label').value = nf.autre_label || '';
+    loadPagesVisibility();
   }
 
   function renderSectionEditor(page, sections) {
@@ -920,6 +953,93 @@
     };
     await saveSetting('page_cgv', cgv);
     toast('Infos CGV sauvegardées ✦');
+  }
+
+  /* ── VISIBILITÉ PAGES ── */
+  const PAGES_LISTE = [
+    { key: 'configurateur', label: '✦ Créer mon poisson', href: 'configurateur.html' },
+    { key: 'bundle',        label: 'Bundle (onglet configurateur)', href: null },
+    { key: 'about',         label: 'À propos', href: 'about.html' },
+    { key: 'entretien',     label: 'Entretien', href: 'entretien.html' },
+    { key: 'contact',       label: 'Contact', href: 'contact.html' },
+    { key: 'cgv',           label: 'CGV', href: 'cgv.html' },
+  ];
+  let pagesVisibility = {};
+  let offreLancement = { active: false, texte: '', sous_texte: '', code: '', couleur: 'fuchsia' };
+
+  async function loadPagesVisibility() {
+    const { data } = await sb.from('boutique_settings').select('value').eq('key','pages_visibility').single();
+    pagesVisibility = data?.value || {};
+    const { data: offre } = await sb.from('boutique_settings').select('value').eq('key','offre_lancement').single();
+    offreLancement = offre?.value || { active: false, texte: '', sous_texte: '', code: '', couleur: 'fuchsia' };
+    renderPagesVisibility();
+    renderOffreUI();
+  }
+
+  function renderPagesVisibility() {
+    const el = document.getElementById('pages-visibility-list');
+    if (!el) return;
+    el.innerHTML = PAGES_LISTE.map(p => {
+      const visible = pagesVisibility[p.key] !== false;
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.7rem;background:var(--ink-md);border:1px solid var(--border)">
+        <div>
+          <span style="font-family:var(--font-mono);font-size:0.54rem;letter-spacing:0.1em;color:var(--cream)">${p.label}</span>
+          ${p.href ? `<a href="${p.href}" target="_blank" style="font-family:var(--font-mono);font-size:0.44rem;color:var(--fuchsia-lt);text-decoration:none;margin-left:0.5rem">↗</a>` : ''}
+        </div>
+        <div onclick="togglePageVisible('${p.key}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+          <div style="width:32px;height:18px;border-radius:9px;background:${visible ? 'var(--fuchsia)' : 'var(--ink-lt)'};border:1px solid ${visible ? 'var(--fuchsia)' : 'var(--border)'};position:relative;transition:all 0.2s">
+            <div style="position:absolute;top:2px;${visible ? 'right:2px' : 'left:2px'};width:12px;height:12px;border-radius:50%;background:${visible ? 'var(--cream)' : 'var(--silver)'};transition:all 0.2s"></div>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:0.46rem;letter-spacing:0.08em;color:${visible ? 'var(--cream)' : 'var(--silver)'}">${visible ? 'Visible' : 'Masqué'}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function togglePageVisible(key) {
+    pagesVisibility[key] = pagesVisibility[key] === false ? true : false;
+    renderPagesVisibility();
+  }
+
+  async function savePagesVisibility() {
+    await saveSetting('pages_visibility', pagesVisibility);
+    toast('Visibilité des pages sauvegardée ✦ — le menu se met à jour automatiquement');
+  }
+
+  /* ── OFFRE LANCEMENT ── */
+  function renderOffreUI() {
+    const tog = document.getElementById('offre-toggle');
+    const dot = document.getElementById('offre-toggle-dot');
+    const lbl = document.getElementById('offre-toggle-label');
+    const texte = document.getElementById('offre-texte');
+    const sousTexte = document.getElementById('offre-sous-texte');
+    const code = document.getElementById('offre-code');
+    const couleur = document.getElementById('offre-couleur');
+    if (!tog) return;
+    const active = offreLancement.active;
+    tog.style.background = active ? 'var(--fuchsia)' : 'var(--ink-lt)';
+    dot.style.left = active ? '20px' : '3px';
+    dot.style.background = active ? 'var(--cream)' : 'var(--silver)';
+    lbl.textContent = active ? 'Offre active — visible sur l\'accueil' : 'Offre désactivée';
+    lbl.style.color = active ? 'var(--ok)' : 'var(--silver)';
+    if (texte) texte.value = offreLancement.texte || '';
+    if (sousTexte) sousTexte.value = offreLancement.sous_texte || '';
+    if (code) code.value = offreLancement.code || '';
+    if (couleur) couleur.value = offreLancement.couleur || 'fuchsia';
+  }
+
+  function toggleOffreLancement() {
+    offreLancement.active = !offreLancement.active;
+    renderOffreUI();
+  }
+
+  async function saveOffreLancement() {
+    offreLancement.texte     = document.getElementById('offre-texte').value.trim();
+    offreLancement.sous_texte= document.getElementById('offre-sous-texte').value.trim();
+    offreLancement.code      = document.getElementById('offre-code').value.trim();
+    offreLancement.couleur   = document.getElementById('offre-couleur').value;
+    await saveSetting('offre_lancement', offreLancement);
+    toast(offreLancement.active ? 'Offre activée et sauvegardée ✦' : 'Offre sauvegardée (désactivée)');
   }
 
   async function saveFooter() {
